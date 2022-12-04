@@ -1,0 +1,274 @@
+.topbar {
+  width: 100%;
+  height: 5rem;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.topbarWrapper {
+  height: 100%;
+  padding: 0rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoLink {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 3rem;
+  color: darkblue;
+  cursor: pointer;
+}
+
+.topRight{
+    display: flex;
+    align-items: center;
+}
+
+.topbarIconContainer {
+  position: relative;
+  cursor: pointer;
+  margin-right: 1rem;
+  color: #555;
+  font-size: 2rem;
+}
+
+.topbarIcon{
+  font-size: 2.4rem !important;
+}
+
+.topIconBadge{
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    top: -.5rem;
+    right: 0rem;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.topAvatar{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.logo {
+  font-size: 2rem;
+
+  /* font-size: 2.25rem; */
+  text-transform: uppercase;
+  font-weight: 700;
+  
+  background-image: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);
+
+  background-image: #833ab4;  
+  /* fallback for old browsers */
+  background-image: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);  
+  
+  /* Chrome 10-25, Safari 5.1-6 */
+  background-image: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); 
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  background-size: 400%;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  
+  color: transparent;
+
+  letter-spacing: 0.1rem;
+  line-height: 1.3;
+  display: inline-block;
+
+  background-size: 300%;
+  animation: bg-animation 15s infinite alternate;
+  
+}
+
+@keyframes bg-animation {
+	0% {
+		background-position: left;
+	}
+
+	100% {
+		background-position: right;
+	}
+}
+
+.loginButton {
+  /* background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#f12711),
+    to(#f5af19)
+    ); */
+    /* background: linear-gradient(to right, #f12711, #f5af19); */
+    /* background: linear-gradient(to right, #8e2de2, #4a00e0); */
+    /* background: linear-gradient(to right, #0575e6, #021b79); */
+    /* background: linear-gradient(to right, #000428, #004e92); */
+
+  /* background: linear-gradient(to right, #6190e8, #a7bfe8); */
+  background: linear-gradient(to right, #4776e6, #8e54e9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  cursor: pointer;
+  border: none;
+  padding: 1rem;
+
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 10rem;
+  display: inline-block;
+  text-decoration: none;
+
+  overflow: hidden;
+
+  position: relative;
+  /*background-color: #04AA6D;
+  border: none;
+  font-size: 28px;
+  color: #FFFFFF;
+  padding: 20px;
+  width: 200px;
+  text-align: center;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  text-decoration: none;
+  overflow: hidden; */
+
+}
+
+.loginButton:after {
+  content: "";
+  /* background: #90EE90; */
+  background: #05fb05;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  
+  margin-left: -180px!important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all .7s
+}
+
+.loginButton:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.authStyle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.menuItem {
+  font-size: 1.6rem;
+}
+
+.menuGeneralButton {
+  border-radius: .5rem;
+  border: none;
+  padding: .5rem;
+  /* margin: .5rem; */
+  cursor: pointer;
+  /* background-color: darkblue; */
+  color: black;
+  font-size: 1.2rem;
+  /* font-weight: 600; */
+  text-decoration: none;
+}
+
+
+.liga__flex {
+  display: flex;
+  align-items: center;
+}
+
+.iconos__placeOrder {
+  font-size: 2.2rem;
+  color: #f0c14b;
+}
+
+.iconos__general {
+  font-size: 2.2rem;
+}
+
+.tipografia {
+  font-size: 1.8rem;
+}
+
+.online-offline {
+  height: 1.2rem;
+  width: 1.2rem;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -.2rem;
+  right: 0;
+  border: .2rem solid white;
+}
+
+.online {
+  background-color: limegreen;
+}
+
+.offline {
+  background-color: red;
+}
+
+/* 680px */
+@media (max-width:42.5em) {
+  /* .logo {
+    font-size: 1.8rem;
+  } */
+
+  .topbarWrapper {
+    padding: 0rem 1rem;
+  }
+}
+
+/* 580px */
+@media (max-width:36.25em) {
+  /* .logo {
+    font-size: 1.6rem;
+  } */
+  
+}
+
+/* 480px */
+@media (max-width:30em) {
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .logoutButton,
+  .loginButton,
+  .crearPedidoButton {
+    padding: 1rem;
+    
+    /* font-size: 1rem;
+    font-weight: 400; */
+    /* font-size: 1.1rem; */
+    /* font-weight: 600; */
+  }
+}
+

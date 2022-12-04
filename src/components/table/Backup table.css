@@ -1,0 +1,143 @@
+table {
+  width: 110rem;
+  margin: 1rem 0rem;
+  padding: .5rem .5rem;
+  border-collapse: collapse;
+  border-spacing: 1rem;
+  color: #444;
+  font-size: .9em;
+  min-width: 40rem;
+
+}
+
+table tr th {
+  background-color: #009879;
+  color: #fff;
+  text-align: left;
+  padding: 0 .5rem;
+  margin-bottom: 2rem;
+}
+
+th {
+  width: 20rem;
+  text-align: left;
+  font-size: 1.6rem;
+}
+
+td {
+  width: 20rem;
+  font-size: 1.6rem;
+}
+
+.abrirCliente__link{
+  border: none;
+  border-radius: 1rem;
+  padding: .5rem 1rem;
+  background-color: #3bb077;
+  color: white;
+  cursor: pointer;
+  margin-right: 2rem;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+
+table tr th:nth-child(1), table tr td:nth-child(1) {
+  width: 1%;
+} 
+
+table tr th:nth-child(2), table tr td:nth-child(2) {
+  width: 2%;
+} 
+
+table tr th:nth-child(3), table tr td:nth-child(3) {
+  width: 2%;
+} 
+
+
+table tr th:nth-child(4), table tr td:nth-child(4) {
+  width: 3%;
+} 
+
+
+/* 780px */
+@media (max-width:48.75em) {
+  table {
+    width: 70rem;
+  }
+
+  th {
+    width: 15rem;
+  }
+
+  td {
+    width: 15rem;
+  }
+}
+
+/* 680px */
+@media (max-width:42.5em) {
+  
+  table {
+    width: 58rem;
+  }
+
+}
+
+/* 580px */
+@media (max-width:36.25em) {
+  /* table tr th:nth-child(4), table tr td:nth-child(4) {
+    display: none;
+  } */
+
+  table {
+    width: 52rem;
+  }
+}
+
+/* 520px */
+@media (max-width:32.5em) {
+
+  table tr th:nth-child(1), table tr td:nth-child(1) {
+    width: 1%;
+  } 
+
+  table {
+    width: 48rem;
+
+  }
+
+  /* td {
+    width: 15rem;
+    font-size: 1.6rem;
+  } */
+
+  .abrirCliente__link {
+    font-size: 1.3rem;
+  }
+}
+
+/* 430px */
+@media (max-width:26.875em) {
+  table {
+    width: 35rem;
+    /* padding: 0 1rem; */
+  }
+
+  /* table tr th:nth-child(1), table tr td:nth-child(1) {
+    width: 1%;
+  } 
+
+  table tr th:nth-child(2), table tr td:nth-child(2) {
+    width: 1%;
+  } 
+  
+  table tr th:nth-child(3), table tr td:nth-child(3) {
+    width: 1%;
+  } 
+  
+
+  table tr th:nth-child(4), table tr td:nth-child(4) {
+    width: 1%;
+  }  */
+  
+}

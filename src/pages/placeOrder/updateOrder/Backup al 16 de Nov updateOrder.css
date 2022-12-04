@@ -1,0 +1,335 @@
+.updateOrder {
+  flex: 4;
+  overflow-x: hidden;
+}
+
+.salesHeader, .salesFooter {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: .5rem 2.4rem;
+
+}
+
+.salesFooter {
+  justify-content: center;
+  
+}
+
+.estatusPedidoPlaceOrder {
+  width: 100%
+}
+
+.businessInfo {
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  padding: 1rem 2.2rem;
+}
+
+.businessInfo__businessName {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.businessInfo__cellPhone {
+  font-size: 1.6rem;
+  color: #444;
+}
+
+.businessInfo__esMayorista {
+  font-size: 1.6rem;
+  color: #444; 
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.productSearch {
+  /* font-size: 3rem !important; */
+  font-size: 3rem !important;
+  border-top: .1rem solid black;
+  border-right: .1rem solid black;
+  border-bottom: .1rem solid black;
+}
+
+.estatusPedidoPlaceOrder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4rem;
+}
+
+.searchInput {
+  border: none;
+  width: 45rem;
+  height: 3rem;
+  border: .1rem solid black;
+  padding: 1rem;
+  font-size: 1.4rem;
+}
+
+
+.descuento{
+  display: flex;
+  /* align-items: center; */
+  /* justify-content: center; */
+  /* flex-direction: column; */
+  /* margin-top: 1rem; */
+}
+
+.descuento__checkbox {
+  width: 8rem;
+  height: 2.4rem;
+} 
+
+.descuento__label {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+}
+
+
+.total {
+  font-size: 2rem;
+}
+
+.makeOrder {
+  /* display: flex;
+  justify-content: space-between; */
+  border: 1px solid;
+  margin: 0 2rem;
+  margin-bottom: 1.8rem;
+  padding: 1rem;
+}
+
+.topPanel {
+  margin-bottom: 4rem;
+}
+
+.leftPanel {
+  width: 25vw;
+  margin-right: 4rem;
+}
+
+.rightPanel {
+  width: 25vw;
+}
+
+.productDetail {
+  display: flex;
+  justify-content: space-between;
+}
+
+.placeOrderButton {
+  width: 12rem;
+  border-radius: 10rem;
+  /* border: none; */
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  /* background-color: darkblue; */
+  /* background: linear-gradient(to right, #8e2de2, #4a00e0); */
+  /* color: white; */
+  font-size: 1.4rem;
+  /* font-weight: 600; */
+  font-weight: 400;
+
+  background: #f0c14b;
+  border: 1px solid;
+  border-color: #a88734 #9c7e31 #846a29;
+  color: #111;
+}
+
+.deleteOrderButton {
+  width: 10rem;
+  border-radius: 10rem;
+  border: none;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  /* background-color: rgba(159, 9, 9, 0.844); */
+  background: linear-gradient(to right, #f00000, #dc281e);
+
+  color: white;
+  font-size: 1.4rem;
+  /* font-weight: 600; */
+  font-weight: 400;
+}
+
+.placeOrderButton:disabled,
+.placeOrderButton[disabled] {
+  background-color: gray;
+}
+
+.productListTitle {
+  font-size: 2.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.orderedProductsTitle {
+  font-size: 2.4rem;
+}
+
+
+.container-estatusPedido > label {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: rgb(151, 150, 150);
+}
+
+.container-estatusPedido__select{
+  font-size: 1.4rem;
+  font-weight: 400;
+  height: 4rem;
+  width: 20rem;
+  border-radius: .5rem;
+}
+
+
+.container {
+  /* padding: 3rem; */
+  /* margin: 2rem; */
+  /* gap: 16px; */
+  /* max-width: 100vw; */
+  /* height: 300px; */
+
+  display: flex;
+  /* align-items alinea VERTICAL */
+  align-items: center;
+  /* justify-content alinea HORIZONTAL */
+  justify-content: center;
+  overflow-x: scroll;
+  scroll-snap-type: x proximity;
+
+}
+
+/* .container > p {
+  font-size: 1.2rem;
+} */
+
+.carousel {
+  display: flex;
+  gap: 1.6rem;
+  padding: 2rem;
+  margin: 1rem;
+
+}
+
+.totalPedido{
+  padding: 0 2rem;
+}
+
+.totalPedido__container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.totalPedido__item{
+  font-size: 2rem;
+  margin-bottom: .7rem;
+  width: 24rem;
+}
+
+.totalPedido__currency {
+  color: #555;
+  width: 20rem;
+  font-size: 2rem;
+  margin-bottom: .7rem;
+  text-align: right;
+}
+
+.pedidoTotal {
+  border-top: 1px solid black;
+}
+
+.newOrder__container{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.newOrder--ordersTitle {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}
+
+.newOrderIconContainer {
+  position: relative;
+  cursor: pointer;
+  margin-right: 1rem;
+  color: #555;
+  font-size: 2rem;
+}
+
+.newOrderIcon{
+  font-size: 4rem !important;
+}
+
+.newOrderIconBadge{
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    top: -1rem;
+    right: -.8rem;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* 780px */
+/* @media (max-width:48.75em) {
+  .estatusPedidoPlaceOrder {
+    flex-direction: column;
+    align-items: end;
+  }
+} */
+
+/* 580px */
+@media (max-width:36.25em) {
+  .container-estatusPedido__select {
+    height: 4rem;
+    width: 12rem;
+  }
+
+  .searchInput {
+    width: 35rem;
+  }
+}
+
+/* 480px */
+@media (max-width:30em) {
+  .searchInput {
+    width: 30rem;
+  }
+
+  .container-estatusPedido__select {
+    height: 4rem;
+    width: 10rem;
+  }
+
+  .placeOrderButton {
+    width: 10rem;
+  }
+
+  .totalPedido__item{
+    font-size: 1.6rem;
+  }
+
+  .productListTitle {
+    margin-bottom: .8rem;
+  }
+  .carousel {
+    padding: .8rem 2rem;
+    margin: .5rem 1rem;
+  }
+  
+}

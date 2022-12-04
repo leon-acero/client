@@ -1,0 +1,303 @@
+.client {
+  flex: 4;
+  padding: 2rem;
+}
+
+.clientTitleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clientTitle {
+  font-size: 2.8rem;
+  color: #343a40;
+}
+
+.clientAddButton {
+  width: 8rem;
+  border: none;
+  padding: .5rem;
+  border-radius: .5rem;
+  cursor: pointer;
+  /* background-color: teal; */
+  /* color: white; */
+  /* font-size: 1.6rem; */
+  color: #111;
+  /* font-size: 1.4rem; */
+
+  background: #ffd60a; 
+  border: 1px solid;
+  border-color:  #838d12;
+  font-size: 1.4rem;
+}
+
+.clientContainer {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.clientShow {
+  flex: 1;
+  padding: 2rem;
+  -webkit-box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+  box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+}
+
+.clientUpdate {
+  flex: 2;
+  padding: 2rem 0rem;
+  -webkit-box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+  box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+  margin-left: 2rem;
+}
+
+.clientShowTop {
+  display: flex;
+  align-items: center;
+}
+
+.clientShowImg {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.clientShowTopTitle {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2rem;
+}
+
+.clientShowClientname {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.clientShowClientTitle {
+  font-size: 1.4rem;
+  font-weight: 300;
+}
+
+.clientShowBottom{
+    margin-top: 2rem;
+}
+
+.clientShowTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgb(175, 170, 170);
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.clientShowInfo{
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.6rem;
+    color: #444;
+    font-size: 1.4rem;
+    font-weight: 400;
+    padding-left: 1rem;
+}
+
+.clientShowIcon{
+    font-size: 1.6rem !important;
+}
+
+.clientShowInfoTitle{
+    margin-left: 1rem;
+}
+
+.clientUpdateTitle{
+  font-size: 2.4rem;
+  font-weight: 600;
+  padding-left: 1rem;
+  color: #343a40;
+}
+
+.clientUpdateForm{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.clientUpdateItem{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.8rem;   
+}
+
+.clientUpdateItemCheckbox {
+  width: 7rem;
+  display: flex;
+  flex-direction: column;
+  /* margin-right: 2rem;
+  margin-bottom: 2rem; */
+}
+
+.clientUpdateItem>label{
+    margin-bottom: 0rem;
+    font-size: 1.4rem;
+}
+
+.clientUpdateInput {
+    border: none;
+    width: 25rem;
+    height: 3rem;
+    border-bottom: .1rem solid gray;
+    padding: 1rem;
+    font-size: 1.4rem;
+}
+
+.labelCheckbox {
+  color: rgb(151, 150, 150);
+  font-size: 1.4rem;
+  font-weight: 600;
+  width: 12rem;
+}
+
+.inputCheckboxDataType {
+  width: 2rem;
+  height: 2.8rem;
+  padding: 1rem 1rem;
+  border: .1rem solid gray;
+  border-radius: .5rem;
+  font-size: 1.4rem;
+}
+
+.clientUpdateLeft {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+  padding-right: 1rem;
+}
+
+.clientUpdateRight{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1.2rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clientUpdateUpload{
+    display: flex;
+    align-items: center;
+}
+
+.clientUpdateImg{
+    width: 30rem;
+    height: 30rem;
+    border-radius: 1rem;
+    object-fit: cover;
+    margin-right: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.clientUpdateIcon__upload {
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.clientUpdateButton{
+  /* width: 24rem; */
+  width: 18rem;
+  border-radius: .5rem;
+  border: none;
+  /* padding: 1.5rem; */
+  padding: .7rem 1rem;
+  cursor: pointer;
+  /* background-color: darkblue; */
+  color: white;
+  /* font-size: 1.6rem; */
+  letter-spacing: .1rem;
+  /* font-weight: 600; */
+  
+  background: #0164ce;
+  border: 1px solid; 
+  /* border-color: #225184 #639bd6 #023368; */
+  border-color: hsla(211, 96%, 21%, 0.933) ;
+  /* color: #111; */
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.clientUpdateButton:disabled,
+.clientUpdateButton[disabled] {
+  background-color: gray;
+}
+
+/* 480px */
+@media (max-width:30em) {
+  /* .client{ 
+    transform: rotate(90deg);
+  } */
+
+  .client {
+    overflow-x: hidden;
+  }
+
+  .clientShow {
+    display: none;
+  }
+
+  .clientUpdate {
+    margin-left: 0rem;
+    /* margin-right: 5rem; */
+    width: 10rem;
+    /* background-color: red; */
+  }
+
+  /* .clientTitleContainer { 
+    margin-left: 1.4rem;
+    margin-right: 1rem;
+  } */
+
+  .clientUpdateForm{ 
+    flex-direction: column;
+  }
+
+  .clientUpdateInput {
+    width: 28rem;
+  }
+
+  .clientUpdateUpload {
+    flex-direction: column;
+    margin-bottom: 3rem;
+    justify-content: center;
+    margin-right: 0rem;
+  }
+
+  .clientUpdateImg{
+    width: 26rem;
+    padding-right: 0;
+    margin-right: 0;
+    /* height: 26rem; */
+  }
+
+  .clientUpdateRight{
+    /* padding-top: 1rem;
+    padding-bottom: 1rem;*/
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+
+  /* .clientUpdateIcon__upload {
+    margin-right: 1rem;
+  } */
+
+  .clientUpdateItemCheckbox {
+    width: 3rem;
+  }
+
+  .labelCheckbox {
+    width: 2rem;
+  }
+}

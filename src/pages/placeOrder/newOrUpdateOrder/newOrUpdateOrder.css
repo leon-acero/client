@@ -1,0 +1,195 @@
+.newOrUpdateOrder {
+  flex: 4;
+}
+
+.regresarAPaginaAnterior {
+  width: 100%;
+  height: 4rem;
+  /* background-color: red; */
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.4rem;
+  display: none;
+}
+
+.arrowLeftGoBack {
+  margin-left: 2rem;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+h2 {
+  font-size: 1rem;
+  margin-bottom: 1.6rem;
+  padding: 1rem 1rem;
+}
+
+.businessInfo {
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  padding: 1rem 2.2rem;
+}
+
+.editarCliente {
+  display: flex;
+  gap: 2rem;
+}
+
+.businessInfo__businessName {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.businessInfo__cellPhone {
+  font-size: 1.6rem;
+  color: #444;
+}
+
+.businessInfo__esMayorista {
+  font-size: 1.6rem;
+  color: #444; 
+}
+
+.pedidosPorEntregar__title {
+  font-size: 2rem;
+  padding-bottom: 2rem;
+  text-align: center;
+}
+
+.pedidosPorEntregar__nohay {
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.pedidosPorEntregar p {
+  font-size: 1.6rem;
+}
+
+.linkNuevoPedido {
+  font-size: 1.6rem;
+}
+
+
+.ultimosPedidos__container {
+  margin: 0 auto;
+  max-width: 65rem;
+  background-color: #fff;
+  -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
+  padding: 5rem 7rem;
+  border-radius: 5px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem
+}
+
+.linkNuevoPedido__button{
+  /* border: none;
+  border-radius: 1rem;
+  padding: .5rem 1rem;
+  background-color: #3bb077;
+  color: white;
+  cursor: pointer;
+  margin-right: 0rem;
+  font-size: 2rem; */
+
+  background-color: #55c57a;
+  color: #fff;
+
+  font-size: 1.6rem;
+  padding: 1.4rem 3rem;
+  border-radius: 10rem;
+  text-transform: uppercase;
+  display: inline-block;
+  text-decoration: none;
+  position: relative;
+  font-weight: 400;
+
+  /* ANIMATION */
+  -webkit-transition: all 0.4s;
+  transition: all 0.4s;
+  
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /*Add later when we use this for the button in form*/
+  border: none;
+  cursor: pointer;
+
+  overflow: hidden;
+  position: relative;
+
+  /* background: #ecf39e;
+  border: 1px solid;
+  border-color: #c0c86c #c4cf4a #838d12;
+  color: #111; */
+  /* font-size: 1.4rem; */
+
+  background-color: #0150a5;
+  border: 1px solid;
+  border-color: #8bbdf2 #0377f3 #616c78;
+  color: #fff;
+}
+
+.linkActualizarPedido__button {
+  /* border: none; */
+  border-radius: 10rem;
+  padding: 1rem 1rem;
+  /* background-color: teal; */
+  
+  /* color: white; */
+  cursor: pointer;
+  margin-bottom: 1.2rem;
+  font-size: 1.4rem;  
+
+  overflow: hidden;
+  position: relative;
+
+  /* background-color: #a5aa6f;
+  border: 1px solid;
+  border-color: #d4d7b7 #d4e04f #6a7120;
+  color: #111; */
+
+  background: #e6f0fa;
+  border: 1px solid;
+  border-color: #989eaa #99b4e5 #4d6185;
+  color: #111;
+  
+  width: 25rem;
+}
+
+
+
+.linkActualizarPedido__button:after,
+.linkNuevoPedido__button:after {
+  content: "";
+  /* background: #90EE90; */
+  background: #05fb05;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  
+  margin-left: -180px!important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all .7s
+}
+
+.linkActualizarPedido__button:active:after,
+.linkNuevoPedido__button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.ultimosCincoPedidos_group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}

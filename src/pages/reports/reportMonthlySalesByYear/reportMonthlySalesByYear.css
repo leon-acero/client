@@ -1,0 +1,42 @@
+.reportMonthlySalesByYear{
+  flex: 4;
+  height: calc(100vh - 5rem);
+  /* width: 100%; */
+}
+
+.yearsList {
+  padding: 0px 20px;
+  margin: 20px;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+/* 430px */
+/* @media (max-width:26.875em) {
+  .reportMonthlySalesByYear {
+      display: none;
+  }
+
+} */
+
+
+/* 1290px */
+/* @media (max-width:80.625em) {
+  .reportMonthlySalesByYear {
+   width: 60rem;
+  } 
+ } */
+ 
+ /* 680px */
+ @media (max-width:42.5em) {
+   .reportMonthlySalesByYear {
+    width: 50rem;
+   } 
+  }
+ 
+/* 480px */
+  @media (max-width:30em) {
+    .reportMonthlySalesByYear {
+      width: 35rem;
+     }
+  }

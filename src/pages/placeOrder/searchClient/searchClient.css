@@ -1,0 +1,151 @@
+.searchClient {
+  flex: 4;
+  padding: 2rem 3rem;
+  overflow: hidden;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1.6rem;
+  padding: 1rem 1rem;
+}
+
+.searchClientInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  height: 5.6rem;
+  width: 100%;
+  font-size: 1.6rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.clientSearchInput {
+  padding: 1rem;
+  font-size: 2rem;
+  width: 50rem;
+  /* border: none; */
+  outline: none;
+}
+
+.btnSearchClient {
+  width: 20rem;
+  height: 4rem;
+  border: none;
+  /* background: linear-gradient(to left, #0575e6, #021b79); */
+
+  color: white;
+  padding: .7rem 1rem;
+  font-weight: 600;
+  border-radius: 1.4rem;
+  cursor: pointer;
+  font-size: 1.6rem;
+
+  overflow: hidden;
+  position: relative;
+
+  /* font-size: 1.4rem; */
+
+  background: #0164ce;
+  border: 1px solid; 
+  border-color: #225184 #639bd6 #023368;
+  font-weight: 400;
+}
+
+.btnSearchClient:after {
+  content: "";
+  background: #05fb05;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  
+  margin-left: -180px!important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all .7s
+}
+
+.btnSearchClient:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.btnSearchClient:disabled,
+.btnSearchClient[disabled] {
+  background-color: gray;
+}
+
+/* 780px */
+@media (max-width:48.75em) {
+  .clientSearchInput {
+    padding: 1rem;
+    font-size: 2rem;
+    width: 48rem;
+  }
+
+  .btnSearchClient {
+    width: 14rem;
+  }
+}
+
+/* 680px */
+@media (max-width:42.5em) {
+  .clientSearchInput {
+    padding: 1rem;
+    font-size: 1.8rem;
+    width: 41rem;
+  }
+
+  .btnSearchClient {
+    width: 12rem;
+  }
+}
+
+/* 580px */
+@media (max-width:36.25em) {
+  .clientSearchInput {
+    padding: 1rem;
+    font-size: 1.6rem;
+    width: 36rem;
+  }
+
+  .btnSearchClient {
+    width: 10rem;
+  }
+}
+
+/* 520px */
+@media (max-width:32.5em) {
+
+  .searchClientInput {
+    justify-content:space-evenly;
+  }
+
+  .searchClient {
+    padding: 2rem 1.5rem;
+  }
+
+}
+
+/* 480px */
+@media (max-width:30em) {
+  .clientSearchInput {
+    padding: 1rem;
+    font-size: 1.2rem;
+    width: 30rem;
+  }
+
+  .btnSearchClient {
+    width: 8rem;
+    font-size: 1.2rem;
+  }
+
+  .searchClient {
+    padding: 2rem .5rem;
+  }
+}

@@ -1,0 +1,174 @@
+.newClient {
+  flex: 4;
+}
+
+.newClientTitle {
+  font-size: 2rem;
+  color: #343a40;
+}
+
+.newClientForm {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  
+  /* flex-wrap: wrap; */
+}
+
+.newClientItem {
+  width: 25rem;
+  display: flex;
+  flex-direction: column;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+}
+
+.newClientItemCheckbox {
+  width: 7rem;
+  display: flex;
+  flex-direction: column;
+  /* margin-right: 2rem;
+  margin-bottom: 2rem; */
+}
+
+
+.newClientItem > label {
+  color: rgb(151, 150, 150);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: .25rem;
+}
+
+.labelCheckbox {
+  color: rgb(151, 150, 150);
+  font-size: 1.4rem;
+  font-weight: 600;
+  width: 12rem;
+}
+
+.inputGeneralDataType {
+  width: 40rem;
+}
+
+.inputCheckboxDataType {
+  width: 2rem;
+}
+
+.inputGeneralDataType,
+.inputCheckboxDataType {
+  height: 2.8rem;
+  padding: 1rem 1rem;
+  border: .1rem solid gray;
+  border-radius: .5rem;
+  font-size: 1.4rem;
+}
+
+
+
+.newClientButton{
+  /* width: 20rem; */
+  width: 18rem;
+  margin-top: 3rem;
+  padding: .7rem 1rem;
+  border: none;
+  border-radius: 1rem;
+  /* background-color: darkblue; */
+  color: white;
+  /* font-weight: 600; */
+  cursor: pointer;
+  /* font-size: 1.6rem; */
+
+  background: #0164ce;
+  border: 1px solid; 
+  /* border-color: #225184 #639bd6 #023368; */
+  border-color: hsla(211, 96%, 21%, 0.933) ;
+
+  /* color: #111; */
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.newClientButton:disabled,
+.newClientButton[disabled] {
+  background-color: gray;
+}
+
+.newClientLeft {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 3rem;
+  padding-right: 2rem;
+}
+
+.newClientRight{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+  padding-right: 3rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.newClientUpload{
+  display: flex;
+  align-items: center;
+}
+
+.newClientImg{
+  width: 30rem;
+  height: 30rem;
+  border-radius: 1rem;
+  object-fit: cover;
+  margin-right: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* 480px */
+@media (max-width:30em) {
+
+  .newClient {
+    overflow-x: hidden;
+  }
+  
+  .newClientForm { 
+    flex-direction: column;
+  }
+
+  .newClientTitle {
+    margin-left: 1rem;
+  }
+
+  .newClientItem > input {
+    width: 30rem;
+  }
+
+  /* .newClientImg{
+    width: 30rem;
+    height: 30rem;
+  } */
+
+  .newClientUpload {
+    flex-direction: column;
+    margin-bottom: 3rem;
+    justify-content: center;
+    margin-right: 0rem;
+  }
+
+  .newClientRight{
+    /* padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 2rem; */
+    padding-right: 0rem;
+  }
+
+  .newClientItemCheckbox {
+    width: 3rem;
+  }
+
+  .labelCheckbox {
+    width: 2rem;
+  }
+}

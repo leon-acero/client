@@ -1,0 +1,27 @@
+.productInput {
+  margin-bottom: 1.2rem;
+}
+
+.nombreProducto {
+  font-size: 1.4rem;
+  margin-bottom: .5rem;
+}
+
+/* @media (max-width:42.5em) {
+  html {
+    font-size: 50%;
+  }
+}
+
+
+@media (max-width:36.25em) {
+  html {
+    font-size: 40%;
+  }
+}
+
+@media (max-width:30em) {
+  html {
+    font-size: 60%;
+  }
+} */

@@ -1,0 +1,73 @@
+.clientList {
+  flex: 4;
+  height: calc(100vh - 5rem);
+}
+
+.clientListClient {
+  display: flex;
+  align-items: center;
+}
+
+.clientListImg {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.clientListEdit{
+    border: none;
+    border-radius: 1rem;
+    padding: .5rem 1rem;
+    background-color: #3bb077;
+    color: white;
+    cursor: pointer;
+    margin-right: 2rem;
+
+    font-size: 1.4rem;
+}
+
+.clientListDelete{
+    color: red;
+    cursor: pointer;
+    /* font-size: 2.4rem !important; */
+    font-size: 1.9rem;
+}
+
+.clientTitleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+  padding: 1rem 1rem;
+}
+
+.clientTitle {
+  font-size: 2.8rem;
+}
+
+.clientAddButton {
+  width: 8rem;
+  border: none;
+  padding: .5rem;
+  background-color: teal;
+  border-radius: .5rem;
+  cursor: pointer;
+  color: white;
+  font-size: 1.6rem;
+}
+
+.dataGrid {
+  font-size: 1.4rem !important;
+  margin: 1rem 1rem;
+}
+
+.MuiTablePagination-selectLabel,
+.MuiTablePagination-root,
+.MuiTablePagination-displayedRows,
+.MuiInputBase-root
+{
+  font-size: 1.6rem !important;
+}
+

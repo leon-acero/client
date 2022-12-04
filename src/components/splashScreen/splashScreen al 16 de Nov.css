@@ -1,0 +1,30 @@
+.splashScreen {
+  height: calc(100vh - 5rem);
+
+	display: flex;
+	/* padding: 40px; */
+	align-items: center;
+	justify-content: center;
+	
+}
+
+/* 680px */
+@media (max-width:42.5em) {
+  .candyShop-svg {
+		height: 40rem;
+	}
+}
+
+/* 580px */
+@media (max-width:36.25em) {
+  .candyShop-svg {
+		height: 35rem;
+	}
+}
+
+/* 480px */
+@media (max-width:30em) {
+	.candyShop-svg {
+		height: 30rem;
+	}
+}

@@ -1,0 +1,67 @@
+.card {
+  width: 18rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card--image {
+  max-width: 100%;
+
+  scroll-snap-align: center;
+  margin-bottom: 1.4rem;
+  cursor: pointer;
+}
+
+.card--stats {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.card--stats p {
+  font-size: 1.8rem;
+}
+
+.buttonAddProductToBasket {
+  width: 100%;
+  height: auto;
+  font-size: 1.4rem;
+  /* border: none; */
+  padding: 1rem 1rem;
+  /* background-color: teal; */
+  /* background: linear-gradient(to right, #e65c00, #f9d423); */
+  border-radius: 10rem;
+  cursor: pointer;
+  /* color: white; */
+
+  background: #f0c14b;
+  border: 1px solid;
+  border-color: #a88734 #9c7e31 #846a29;
+  color: #111;
+
+}
+
+.card--stats__info {
+  margin-bottom: 1.2rem;
+  padding-left: 1rem;
+}
+/* 
+@media (max-width:42.5em) {
+  html {
+    font-size: 50%;
+  }
+}
+
+
+@media (max-width:36.25em) {
+  html {
+    font-size: 40%;
+  }
+}
+
+@media (max-width:30em) {
+  html {
+    font-size: 35%;
+  }
+} */

@@ -1,0 +1,59 @@
+.newProduct {
+  flex: 4;
+}
+
+.addProductTitle {
+  font-size: 2rem;
+}
+
+.addProductForm {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.addProductItem {
+  width: 25rem;
+  display: flex;
+  flex-direction: column;
+  /* margin-bottom: 1rem; */
+  margin-top: 1rem;
+  margin-right: 2rem;
+}
+
+.addProductItem > label {
+  color: rgb(151, 150, 150);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.addProductItem > input {
+  height: 2.8rem;
+  padding: 1rem 1rem;
+  border: .1rem solid gray;
+  border-radius: .5rem;
+  font-size: 1.4rem;
+}
+
+.addProductItem > select {
+  padding: 1rem;
+}
+
+.addProductButton {
+  width: 20rem;
+  margin-top: 3rem;
+  padding: .7rem 1rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: darkblue;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1.6rem;
+}
+
+.addProductButton:disabled,
+.addProductButton[disabled] {
+  background-color: gray;
+}

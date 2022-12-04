@@ -1,0 +1,26 @@
+.reportWholeBusinessSalesByYear {
+  flex: 4;
+  height: calc(100vh - 5rem);
+
+}
+
+/* 1290px */
+@media (max-width:80.625em) {
+  .reportWholeBusinessSalesByYear {
+   width: 60rem;
+  } 
+ }
+ 
+ /* 680px */
+ @media (max-width:42.5em) {
+   .reportWholeBusinessSalesByYear {
+    width: 50rem;
+   } 
+  }
+ 
+/* 480px */
+  @media (max-width:30em) {
+    .reportWholeBusinessSalesByYear {
+      width: 35rem;
+     }
+  }

@@ -1,0 +1,166 @@
+.splashScreen {
+  height: calc(100vh - 5rem);
+
+	/* display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column; */
+
+  width:100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.grass, .sky, .road{
+  position: relative;
+}
+
+.sky{
+  height: 47%;
+	width: 100%;
+
+  /* background: skyblue; */
+  /* background: url("./img/bg.jpg");
+  background-repeat: no-repeat; 
+  background-size: cover; */
+  /* background: linear-gradient(#2b1055, #7597de); */
+  background:  url("/public/img/website/stars.png"), linear-gradient(#2b1055, #7597de);
+  
+  background-repeat: no-repeat; 
+  background-size: cover;
+}
+
+.grass{
+	width: 100%;
+  height: 37%;
+  background: seagreen;
+}
+
+.road{
+  height: 16%;
+  background: dimgrey;
+  /* box-sizing: border-box; */
+  border-top: 1rem solid grey;
+  border-bottom: 1rem solid grey;
+  width: 100%;
+}
+
+.lines{
+  box-sizing: border-box;
+  height: 0rem;
+  width: 100%;
+  position: absolute;
+  top: 45%;
+}
+
+/*// ELEMENTS TO ANIMATE //*/
+.cloud, .moon {
+  position: absolute;
+}
+
+
+.moon {
+  /* top: 0;
+  right: -40; */
+  /* width: 100%;
+  height: 100%; */
+  width: 50rem;
+  /* height: auto; */
+  z-index: 0;
+  /* object-fit: cover; */
+  mix-blend-mode: screen;
+}
+
+.cloud:nth-child(1) {
+  width: 10rem;
+  top: 12rem;
+  right: 6rem;
+  opacity: 0.5;
+  animation: wind 200s linear infinite reverse;
+}
+
+.cloud:nth-child(2) {
+  width: 15rem;
+  top: 0;
+  opacity: 0.8;
+  /* primero el nombre de la animacion, luego cuanto va a durar
+  luego la timing-function, luego el looping, luego la direccion
+  y puedeo darle un delay tambien, solo recuerda que el delay
+  va despues de la duracion de la animacion */
+  animation: wind2 180s linear infinite reverse;
+}
+
+/*// KEYFRAMES //*/
+@keyframes wind {
+  from {
+    left: -30rem;
+  }
+  to {
+    left: 100%
+  }
+}
+
+@keyframes wind2 {
+  from {
+    left: 15rem;
+  }
+  to {
+    left: 100%
+  }
+}
+
+.casa {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0rem;
+  /* left: 60; */
+  /* height: 100%; */
+  z-index: 999;
+}
+
+.candyShop-svg {
+  height: 35rem;
+}
+
+#luz-derecha, #luz-izquierda {
+  animation: luces 1s infinite linear alternate-reverse;
+}
+
+@keyframes luces {
+	from {
+		fill: #F9C032;
+	}
+	to {
+		fill: #fa0400;
+	}
+}
+
+#letra-c,
+#letra-a,
+#letra-n,
+#letra-d,
+#letra-y,
+#letra-s,
+#letra-h,
+#letra-o,
+#letra-p {
+	animation: lucesLetrero 1s infinite linear alternate-reverse;
+}
+
+@keyframes lucesLetrero {
+	from {
+		fill: #B17EE8;
+	}
+	to {
+		fill: #fbe203;
+	}
+}
+
+/* 480px */
+@media (max-width:30em) {
+	.candyShop-svg {
+		height: 30rem;
+	}
+}

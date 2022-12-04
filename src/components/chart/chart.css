@@ -1,0 +1,28 @@
+.chart {
+  margin: 2rem;
+  padding: 2rem;
+  -webkit-box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+  box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+
+  font-size: 1.6rem;
+}
+
+.chartTitle {
+  margin-bottom: 2rem;
+}
+
+.tooltip {
+  border-radius: 0.25rem;
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+.tooltip .label {
+  color: #000;
+}
+
+.tooltip .payload {
+  color: #5550bd;
+  
+}

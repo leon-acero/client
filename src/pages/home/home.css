@@ -1,0 +1,20 @@
+.home{
+    height: calc(100vh - 5rem);
+    flex: 4;
+}
+
+
+/* 430px */
+/* @media (max-width:26.875em) {
+    .home {
+        height: calc(100vh - 5rem);
+        background: linear-gradient(
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0.5)
+            ),
+            url("/public/img/website/gomitasydulces.jpeg");
+        background-size: cover;
+        overflow-y: hidden;
+    }    
+
+} */

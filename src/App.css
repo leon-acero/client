@@ -1,0 +1,19 @@
+.container{
+    display: flex;
+    margin-top: 1rem;
+}
+
+
+.link{
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* 480px */
+@media (max-width:30em) {
+	.container {
+		align-items: center;
+        justify-content: center;
+	}
+}
