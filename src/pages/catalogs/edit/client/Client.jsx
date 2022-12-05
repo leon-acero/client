@@ -481,7 +481,7 @@ export default function Client() {
               </div>
               
               <div className="clientUpdateItemCheckbox">
-                <label htmlFor="esMayorista" className="labelCheckbox">¿Es Mayorista?</label>
+                <label htmlFor="esMayorista" className="labelCheckboxUpdate">¿Es Mayorista?</label>
                 <input
                     className="inputCheckboxDataType"
                     type="checkbox" 
