@@ -53,8 +53,190 @@ function App() {
   const isDesktopResolution = useMatchMedia("(min-width:53.75em)", true);
 
   return (
-    <div>Hola Sexy Abdel</div>
- 
+    <Router>
+
+      {/* Si no estas loggeado solo puedes ver el Topbar y el Login */}
+      <Topbar />
+      
+      
+      {/* Muestro la SplashScreen si no hay usuario loggeado */}
+      {
+        !currentUser && (
+            <Switch>
+              <Route exact path="/">
+                <SplashScreen />
+              </Route>
+
+              <Route exact path="/login">
+                <Login />
+              </Route>
+            </Switch>
+        ) 
+      }
+
+      {/* Si estas loggeado y tienes rol de Vendedor solo puedes ver esto */}
+      {
+        currentUser?.role === "vendedor" && (
+          <div className="container">
+            <Switch>
+
+              <Route exact path="/">
+                <SplashScreen />
+              </Route>
+
+              {/* HomePage */}
+              <Route exact path="/dashboard">
+                <Home />
+              </Route>
+
+              {/***********************************************************/}
+              {/* Hacer un Nuevo Pedido */}
+              <Route path="/search-client">
+                <SearchClient />
+              </Route>
+
+              {/* <Route path="/new-order/:clientId" component={NewOrder} /> */}
+
+              {/***********************************************************/}
+              {/* Authentication */}
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/logout">
+                <Logout />
+              </Route>
+
+            </Switch>
+          </div>
+        )
+      }
+
+      {/* Si estas loggeado y tienes rol de admin puedes ver esto */}
+      {
+        currentUser?.role === "admin" && (
+          <div className="container">
+
+            {/* {
+              isDesktopResolution && <Sidebar />
+            } */}
+            <Sidebar />
+
+              <Switch>
+
+                <Route exact path="/">
+                  <SplashScreen />
+                </Route>
+                
+                {/* HomePage */}
+                <Route exact path="/dashboard">
+                  <Home />
+                </Route>
+
+                {/***********************************************************/}
+                {/* Catálogo de Clientes */}
+                <Route path="/clients">
+                  <ClientList />
+                </Route>
+
+                <Route path="/client/:clientId">
+                  <Client />
+                </Route>  
+
+                <Route path="/new-client">
+                  <NewClient />
+                </Route>
+
+
+                {/***********************************************************/}
+                {/* Catàlogo de Productos */}
+                <Route path="/products">
+                  <ProductList />
+                </Route>
+
+                <Route path="/product/:productId">
+                  <Product />
+                </Route>
+
+                <Route path="/new-product">
+                  <NewProduct />
+                </Route>
+
+
+                {/***********************************************************/}
+                {/* Hacer un Nuevo Pedido */}
+
+                <Route path="/search-client">
+                  <SearchClient />
+                </Route>  
+
+                {/* Component Props ESTO SI me sirve si quiero pasar
+                    los Props de Route y mis Custom Props
+                */}
+                {/* <Route path="/new-order/:clientId" component={NewOrder} /> */}
+                <Route path="/new-or-update-order/:clientId" component={NewOrUpdateOrder} />
+                <Route path="/update-order/:clientId" component={UpdateOrder} />
+
+
+
+                {/* Render Props ESTO SI me sirve si quiero pasar
+                    los Props de Route y mis Custom Props
+                */}
+                {/* <Route 
+                    exact 
+                    path="/new-order/:clientId" 
+                    render={
+                        ({match, location, history}) => (
+                          <NewOrder match={match} location={location}/>
+                        ) }
+                /> */}
+
+                {/* <Route 
+                    exact 
+                    path="/new-order/:clientId" 
+                    render={
+                        (props) => (
+                          <NewOrder props={props}/>
+                        )}
+                /> */}
+
+                {/* 
+                    Children Props ESTO NO me sirve si quiero pasar 
+                    los Props de Route y mis Custom Props
+                */}
+                {/* <Route path="/new-order/:clientId" >
+                  <NewOrder />
+                </Route> */}
+
+                {/***********************************************************/}
+                {/* Reportes */}
+                <Route path="/sales/whole-year-sales">
+                  <ReportWholeBusinessSalesByYear />
+                </Route>
+
+                <Route path="/sales/monthly-sales">
+                  <ReportMonthlySalesByYear />
+                </Route> 
+
+                <Route path="/sales/weekly-sales">
+                  <ReportWeeklySalesByMonth />
+                </Route>    
+
+                {/***********************************************************/}
+                {/* Authentication */}
+                <Route path="/login">
+                  <Login />
+                </Route>
+
+                <Route path="/logout">
+                  <Logout />
+                </Route>
+
+              </Switch>
+
+          </div>
+        )
+      }
+    </Router>
   );
 }
 
