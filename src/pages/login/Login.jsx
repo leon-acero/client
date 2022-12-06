@@ -37,6 +37,9 @@ export default function Login() {
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+
   const history = useHistory();
 
     /**************************    useRef    **********************************/
@@ -78,6 +81,9 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isLoading)
+      return;
+
     try {
       // console.log("email", data.email)
       // console.log("password", data.password)
@@ -96,6 +102,8 @@ export default function Login() {
       //   }	
       // });
 
+      setIsLoading(true);
+
       const res = await axios.post ('/api/v1/users/login', 
           {    
             email : data.email,
@@ -103,6 +111,7 @@ export default function Login() {
           }	 
       );
 
+      setIsLoading(false);
 
       // console.log("res", res);
       // console.log("res", res.data.data);
@@ -122,6 +131,8 @@ export default function Login() {
     catch(err) {
       
       console.log(err);
+
+      setIsLoading(false);
       // showAlert ('error', err.response.data.message);
       let mensajeSnackBar = ""
 
@@ -255,7 +266,7 @@ export default function Login() {
                 </Link>
               </div>
               <div className="form__group">
-                <button className="btn btn--green">Iniciar mi sesión</button>
+                <button className="btn btn--green" disabled={isLoading}>{isLoading ? 'Entrando a El Juanjo' : 'Iniciar mi sesión'}</button>
               </div>
             </form>
           </div>

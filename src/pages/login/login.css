@@ -198,6 +198,13 @@
   background: #ffd60a;
 }
 
+.btn--green:disabled,
+.btn--green[disabled] {
+  background-color: gray;
+  color: #fff;
+  font-size: 1.3rem;
+}
+
 /* 680px */
 @media (max-width:42.5em) {
   
