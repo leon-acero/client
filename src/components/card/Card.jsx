@@ -1,5 +1,5 @@
 import "./card.css"
-import { BASE_URL } from '../../utils/axios'
+import defaultCameraImage from "../../camera.webp"
 
 export default function Card(
   { 
@@ -14,7 +14,8 @@ export default function Card(
       <img 
         // src={`/img/products/${product.imageCover}`} 
         // src={`http://127.0.0.1:8000/img/products/${product.imageCover}`} 
-        src={`${BASE_URL}/img/products/${product.imageCover}`} 
+        // src={`${BASE_URL}/img/products/${product.imageCover}`} 
+        src={product.imageCover ? `${product.imageCover}` : defaultCameraImage} 
         className="card--image" 
         alt={product.productName} />
 

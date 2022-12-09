@@ -1,9 +1,13 @@
 import "./featuredInfo.css";
-// import ArrowDownward from "@mui/icons-material/ArrowDownward";
-// import ArrowUpward from "@mui/icons-material/ArrowUpward";
-import {FaArrowUp, FaArrowDown} from "react-icons/fa";
 
+/*****************************    React Icons     ***************************/
+import {FaArrowUp, FaArrowDown} from "react-icons/fa";
+/****************************************************************************/
+
+/*******************************    Format     ******************************/
 import { NumericFormat } from 'react-number-format';
+/****************************************************************************/
+
 
 export default function FeaturedInfo() {
   return (

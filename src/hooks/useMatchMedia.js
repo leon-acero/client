@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 
+/*****************************************************************************/
+// Custom Hook que me sirve como MediaQuery y tomar decisiones
+// en base al ancho de la pantalla
+/*****************************************************************************/
+
+
 export const useMatchMedia = (mediaQuery, initialValue) => {
   
   const [isMatching, setIsMatching] = useState(initialValue);
@@ -19,6 +25,7 @@ export const useMatchMedia = (mediaQuery, initialValue) => {
       watcher.addListener(listener);
     }
 
+    // CleanUp-Function
     return () => {
       
       if (watcher.removeEventListener) {

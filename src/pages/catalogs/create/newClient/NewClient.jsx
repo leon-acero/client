@@ -1,6 +1,8 @@
 import "./newClient.css";
+import defaultCameraImage from "../../../../camera.webp"
+
 // import axios from "axios";
-import axios, { BASE_URL } from '../../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
 
 /**************************    React    **********************************/
@@ -25,7 +27,7 @@ const INITIAL_STATE = {
   email: "", 
   esMayorista: false,
   sku: 0,
-  imageCover: "camera.webp"
+  imageCover: ""
 }
 
 export default function NewClient() {
@@ -96,6 +98,10 @@ export default function NewClient() {
       formData.append("esMayorista", itemData.esMayorista);
       formData.append("photo", itemData.imageCover);
 
+      // if (itemData.imageCover !== "")
+      //   formData.append("imageCover", itemData.imageCover);
+
+
       // const res = await axios({
       //   withCredentials: true,
       //   method: 'POST',
@@ -128,48 +134,49 @@ export default function NewClient() {
       setUpdateSuccess(false);
       // setMensajeSnackBar("Hubo un error al grabar el cliente. Revisa que estes en línea.");
 
-      let mensajeSnackBar = "";
+      // let mensajeSnackBar = "";
 
-      if (err.name) 
-        mensajeSnackBar += `Name: ${err.name}. `
+      // if (err.name) 
+      //   mensajeSnackBar += `Name: ${err.name}. `
 
-      if (err.code)
-        mensajeSnackBar += `Code: ${err.code}. `;
+      // if (err.code)
+      //   mensajeSnackBar += `Code: ${err.code}. `;
 
-      if (err.statusCode) 
-        mensajeSnackBar += `Status Code: ${err.statusCode}. `;
+      // if (err.statusCode) 
+      //   mensajeSnackBar += `Status Code: ${err.statusCode}. `;
 
-      if (err.status) 
-        mensajeSnackBar += `Status: ${err.status}. `;
+      // if (err.status) 
+      //   mensajeSnackBar += `Status: ${err.status}. `;
 
-      if (err.message) 
-        mensajeSnackBar += `Mensaje: ${err.message}. `;
+      // if (err.message) 
+      //   mensajeSnackBar += `Mensaje: ${err.message}. `;
 
-      // console.log("mensajeSnackBar", mensajeSnackBar);
+      // // console.log("mensajeSnackBar", mensajeSnackBar);
       
-      // Error de MongoDB dato duplicado
-      /*if (err.response?.data?.error?.code === 11000 || 
-          err.response.data.message.includes('E11000')) {
-            mensajeSnackBar = 'El Sku ya existe, elije otro Sku.';
+      // // Error de MongoDB dato duplicado
+      // /*if (err.response?.data?.error?.code === 11000 || 
+      //     err.response.data.message.includes('E11000')) {
+      //       mensajeSnackBar = 'El Sku ya existe, elije otro Sku.';
       
-            setMensajeSnackBar(mensajeSnackBar);
-      }
-      else */
-      console.log("err.response.data.message", err?.response?.data?.message);
+      //       setMensajeSnackBar(mensajeSnackBar);
+      // }
+      // else */
+      // console.log("err.response.data.message", err?.response?.data?.message);
       
-      if (err?.code === "ECONNABORTED") {
-        setMensajeSnackBar("El tiempo establecido para cargar los datos expiró, checa si estas en un lugar con mala de recepción de red y vuelve a intentar.");
-      }
-      else if (err.response?.data?.message){
-        setMensajeSnackBar(err.response.data.message)
-      }
-      else if (err.code === "ERR_NETWORK")
-        setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
-      else {
-        // setMensajeSnackBar(`Error: ${err}`)      
-        setMensajeSnackBar (mensajeSnackBar);
-      }
+      // if (err?.code === "ECONNABORTED") {
+      //   setMensajeSnackBar("El tiempo establecido para cargar los datos expiró, checa si estas en un lugar con mala de recepción de red y vuelve a intentar.");
+      // }
+      // else if (err?.response?.data?.message){
+      //   setMensajeSnackBar(err.response.data.message)
+      // }
+      // else if (err.code === "ERR_NETWORK")
+      //   setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
+      // else {
+      //   // setMensajeSnackBar(`Error: ${err}`)      
+      //   setMensajeSnackBar (mensajeSnackBar);
+      // }
 
+      setMensajeSnackBar (regresaMensajeDeError(err));
 
       setOpenSnackbar(true);      
     }
@@ -197,16 +204,18 @@ export default function NewClient() {
   /**************************************************************************/
   function handleImageCoverChange (e) {
 
+    if (!e.target.files[0])
+      return;
+    
     setFileBlob(URL.createObjectURL(e.target.files[0]));
 
-    // console.log("fileImageCover", URL.createObjectURL(e.target.files[0]))
-    // Actualizo el imageCover
+    // // Actualizo el imageCover
     setItemData(prevFormData => {
         return {
             ...prevFormData,
             imageCover: e.target.files[0]
         }
-    })
+    })    
   }
 
   /************************     handleCloseSnackbar    **********************/
@@ -388,7 +397,8 @@ export default function NewClient() {
               className="newClientImg"
               src= {
                       // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${itemData.imageCover}`
-                      fileBlob ? fileBlob : `${BASE_URL}/img/clients/${itemData.imageCover}`
+                      // fileBlob ? fileBlob : `${BASE_URL}/img/clients/${itemData.imageCover}`
+                      fileBlob ? fileBlob : defaultCameraImage
                     }
               alt=""
             />                

@@ -1,5 +1,5 @@
 import "./productOrdered.css"
-import { BASE_URL } from '../../utils/axios';
+import defaultCameraImage from "../../camera.webp"
 import { NumericFormat } from 'react-number-format';
 
 export default function ProductOrdered({ 
@@ -39,7 +39,8 @@ export default function ProductOrdered({
         {/* <img src={`/img/products/${product.imageCover}`} className="productOrdered--image" alt={product.productName} /> */}
         <img 
             // src={`http://127.0.0.1:8000/img/products/${product.imageCover}`} 
-            src={`${BASE_URL}/img/products/${product.imageCover}`} 
+            // src={`${BASE_URL}/img/products/${product.imageCover}`} 
+            src={product.imageCover ? `${product.imageCover}` : defaultCameraImage} 
             className="productOrdered--image" 
             alt={product.productName} />
 

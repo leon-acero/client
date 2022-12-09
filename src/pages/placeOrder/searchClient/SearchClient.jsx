@@ -1,21 +1,26 @@
 import "./searchClient.css"
-// import axios from "axios";
+import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+/*******************************    React     *******************************/
 import { useState, useRef, useEffect } from 'react'
+/****************************************************************************/
+
+/***************************    Components     ******************************/
 import Table from '../../../components/table/Table';
+import SkeletonElement from '../../../components/skeletons/SkeletonElement';
 // import ClientFound from '../clientFound/ClientFound';
+/****************************************************************************/
 
 /**************************    Snackbar    **********************************/
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
-// import CloseIcon from '@mui/icons-material/Close';
 import {FaTimes} from "react-icons/fa";
 import { Alert } from '@mui/material';
 /****************************************************************************/
 
+/**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
-import SkeletonElement from '../../../components/skeletons/SkeletonElement';
-import axios from '../../../utils/axios';
+/****************************************************************************/
 
 
 const containerVariants = {
@@ -30,15 +35,21 @@ const containerVariants = {
 
 export default function SearchClient() {
 
+  /**************************    useState    **********************************/
+  // query guarda lo que el usuario capturó para iniciar la busqueda
+  // data es un Array con el resultado de la búsqueda
+  // isSearching es un boolean para saber si se esta realizando una búsqueda
+
   const [query, setQuery] = useState("");
   // const [data, setData] = useState([]);
   const [data, setData] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  /*****************************************************************************/
 
 
-  /**************************    useState    **********************************/
+  /*****************************    useRef    **********************************/
   // inputRef lo uso para que al cargar la pagina ponga el focus en el Buscar
   // el Negocio
 
@@ -53,6 +64,9 @@ export default function SearchClient() {
   /*****************************************************************************/
 
   
+  /***************************     handleSearch    **************************/
+  // Es el handle que se encarga de hacer la búsqueda
+  /**************************************************************************/
   const handleSearch = async (event) => {
     event.preventDefault();
 
@@ -85,6 +99,7 @@ export default function SearchClient() {
 
         setIsSearching(false);
         setData(res.data.data.data);
+        
         if (res.data.data.data.length === 0) {
           setMensajeSnackBar("No se encontró un Negocio con esa búsqueda.")
           setOpenSnackbar(true);
@@ -94,12 +109,14 @@ export default function SearchClient() {
 
     }
     catch (err) {
-      setIsSearching(false);
-      setMensajeSnackBar("Hubo un error al realizar la búsqueda. Vuelva a intentar.")
-      setOpenSnackbar(true);
       console.log("err");
+      setIsSearching(false);
+      // setMensajeSnackBar("Hubo un error al realizar la búsqueda. Vuelva a intentar.")
+      setMensajeSnackBar (regresaMensajeDeError(err));
+      setOpenSnackbar(true);
     }
   }
+
 
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar

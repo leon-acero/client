@@ -1,4 +1,6 @@
 import "./chart.css";
+
+/*******************************    ReCharts     *******************************/
 import {
   LineChart,
   Line,
@@ -8,7 +10,11 @@ import {
   ResponsiveContainer,
   YAxis,
 } from "recharts";
+/****************************************************************************/
+
+/*******************************    Format     *******************************/
 import { NumericFormat } from 'react-number-format';
+/****************************************************************************/
 
 
 export default function Chart({ title, data, dataKey, grid }) {

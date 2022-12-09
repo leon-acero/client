@@ -1,19 +1,24 @@
 import "./login.css"
-// import axios from "axios";
-import axios from "../../utils/axios";
+import axios, { regresaMensajeDeError } from "../../utils/axios";
 
-
+/****************************    React    **********************************/
 import { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+/****************************************************************************/
+
+/****************************    Context API    *****************************/
 import { stateContext } from '../../context/StateProvider';
+/****************************************************************************/
+
 
 /**************************    Snackbar    **********************************/
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
-// import CloseIcon from '@mui/icons-material/Close';
 import {FaTimes} from "react-icons/fa";
 import { Alert } from '@mui/material';
 /****************************************************************************/
+
+/**************************    Framer-Motion    *****************************/
 
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 
@@ -30,43 +35,53 @@ const containerVariants = {
     transition: { duration: .4, ease: 'easeInOut' }
   }
 };
+/****************************************************************************/
+
 
 
 export default function Login() {
 
+  /****************************    useState    ********************************/
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
-
-
-  const history = useHistory();
-
-    /**************************    useRef    **********************************/
-  // inputRef lo uso para que al cargar la pagina ponga el focus en el nombre
-  // del cliente
-
-  const inputRef = useRef(null);
-  /*****************************************************************************/
-
-
-  const { setCurrentUser } = useContext(stateContext);
- 
-  /**************************    useEffect    **********************************/
-  // Al cargar la pagina pone el focus en el nombre del producto
-  useEffect(()=>{
-    inputRef.current.focus();
-  },[])
-  /*****************************************************************************/
-
-
   const [data, setData] = useState(
     {
       email: "",
       password: ""
     }
   )
+  /****************************************************************************/
 
+  /**************************    useHistory    ********************************/
+  const history = useHistory();
+  /****************************************************************************/
+
+
+  /**************************    useRef    **********************************/
+  // inputRef lo uso para que al cargar la pagina ponga el focus en el nombre
+  // del cliente
+
+  const inputRef = useRef(null);
+  /*****************************************************************************/
+
+  /**************************    useContext    *********************************/
+  const { setCurrentUser } = useContext(stateContext);
+  /*****************************************************************************/
+
+
+  /**************************    useEffect    **********************************/
+  // Al cargar la pagina pone el focus en el Username
+  useEffect(()=>{
+    inputRef.current.focus();
+  },[])
+  /*****************************************************************************/
+
+
+ 
+  /***************************     handleChange    **************************/
+  // Es el handle que se encarga de la captura de los inputs
+  /**************************************************************************/
   function handleChange(event) {
     // console.log(event)
     const {name, value, type, checked} = event.target
@@ -78,6 +93,9 @@ export default function Login() {
     })
   }
 
+  /***************************     handleSubmit    **************************/
+  // Es el handle que se encarga de loggear al Usuario
+  /**************************************************************************/
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -128,48 +146,11 @@ export default function Login() {
           history.replace("/dashboard");
       } 
     }
-    catch(err) {
-      
+    catch(err) {      
       console.log(err);
-
       setIsLoading(false);
-      // showAlert ('error', err.response.data.message);
-      let mensajeSnackBar = ""
-
-      if (err.name) 
-        mensajeSnackBar += `Name: ${err.name}. `
-
-      if (err.code)
-        mensajeSnackBar += `Code: ${err.code}. `;
-
-      if (err.statusCode) 
-        mensajeSnackBar += `Status Code: ${err.statusCode}. `;
-
-      if (err.status) 
-        mensajeSnackBar += `Status: ${err.status}. `;
-
-      if (err.message) 
-        mensajeSnackBar += `Mensaje: ${err.message}. `;
-
-        console.log("mensajeSnackBar", mensajeSnackBar);
-      // if (err.code === "ERR_NETWORK") {
-      //   setMensajeDeError ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.")
-      // }
-      // if (mensajeSnackBar !== "") {
-      //   setMensajeDeError (mensajeSnackBar)
-      // }
-      // else {
-      //   setMensajeDeError (`Error al hacer el pedido: ${err}`)
-      // }
-      if (err.response.data.message)
-        setMensajeSnackBar(err.response.data.message)
-      else if (err.code === "ERR_NETWORK")
-        setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
-      else
-        setMensajeSnackBar(`Error: ${err}`)
-
+      setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
-
     }
   }
 

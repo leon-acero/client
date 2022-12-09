@@ -1,8 +1,12 @@
 import "./sidebar.css";
 
-import {FaHome, FaDollarSign, FaStore, FaCandyCane, FaChartLine, FaHandshake} from "react-icons/fa";
-
+/*******************************    React     *******************************/
 import { NavLink } from "react-router-dom";
+/*****************************************************************************/
+
+/*******************************    React Icons     **************************/
+import {FaHome, FaDollarSign, FaStore, FaCandyCane, FaChartLine, FaHandshake} from "react-icons/fa";
+/*****************************************************************************/
 
 export default function Sidebar() {
   return (

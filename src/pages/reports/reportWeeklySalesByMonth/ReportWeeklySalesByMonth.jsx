@@ -1,15 +1,36 @@
 import "./reportWeeklySalesByMonth.css"
-import "react-datepicker/dist/react-datepicker.css"
-import axios from '../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
-import { FaRegCalendarAlt } from "react-icons/fa";
-
+/*******************************    React     *******************************/
 import React, { useEffect, useRef, useState } from 'react'
+/****************************************************************************/
+
+/**************************    Date Picker     ******************************/
+import "react-datepicker/dist/react-datepicker.css"
 import DatePicker from "react-datepicker"
+/****************************************************************************/
+
+/*****************************    React Icons     ***************************/
+import { FaRegCalendarAlt } from "react-icons/fa";
+/****************************************************************************/
+
+/***************************    Components     ******************************/
 import Chart from '../../../components/chart/Chart';
+import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+/****************************************************************************/
+
+/*******************************    Format     ******************************/
 import { format } from 'date-fns'
 import { NumericFormat } from 'react-number-format';
-import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+/****************************************************************************/
+
+/**************************    Snackbar    **********************************/
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import {FaTimes} from "react-icons/fa";
+import { Alert } from '@mui/material';
+/****************************************************************************/
+
 
 
 export default function ReportWeeklySalesByMonth() {
@@ -33,6 +54,9 @@ export default function ReportWeeklySalesByMonth() {
   // startDate es la fecha de comienzo de busqueda
   // endDate es la fecha de término de búsqueda
 
+  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const [chartData, setChartData] = useState (null);
   const [totalAcumulado, setTotalAcumulado] = useState (0);
   const [dateRange, setDateRange] = useState([null, null]);
@@ -41,12 +65,11 @@ export default function ReportWeeklySalesByMonth() {
   /************************     useState    *********************************/ 
 
 
-  /************************     useEffect    *********************************/
-  // 
+  /************************     useEffect    *********************************/ 
   // fetchVentasDelNegocio carga la informacion que se mostrará en el Chart,
-  // el total de Ventas del Año, el año más actual con Ventas
+  // El cliente selecciona un Rango de Fechas, generalmente semanal
+  // y asi se calcula la Venta
   /**************************    useEffect    ******************************* */
-
   useEffect (() => {
 
     const fetchVentasDelNegocio = async () => {
@@ -87,22 +110,66 @@ export default function ReportWeeklySalesByMonth() {
 
       }
       catch (err) {
+        console.log("Error", err);
         setIsLoading (false);
+        setMensajeSnackBar (regresaMensajeDeError(err));      
+        setOpenSnackbar(true);
       }
     }
     fetchVentasDelNegocio();
   }, [startDate, endDate]);
-  /////////////////////////////////////////////////////////////////////////////
   
 
+  /***********************    handleChangeDatePicker    ***********************/
+  // Actualiza el cambio del Fechas del Calendario
+  /****************************************************************************/ 
   const handleChangeDatePicker = (update) => {
     setDateRange(update)
     avoidRerenderFetchVentasDelNegocio.current = false;
   }
 
+  /************************     handleCloseSnackbar    **********************/
+  // Es el handle que se encarga cerrar el Snackbar
+  /**************************************************************************/
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
+  /*****************************     action    ******************************/
+  // Se encarga agregar un icono de X al SnackBar
+  /**************************************************************************/  
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackbar}
+      >
+        <FaTimes />
+      </IconButton>
+    </>
+  );  
 
   return (
     <div className="reportWeeklySalesByMonth">
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert 
+            severity= {"success"} 
+            action={action}
+            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+        >{mensajeSnackBar}
+        </Alert>
+      </Snackbar>  
+            
       <div className="reportWeeklySalesByMonth__container">
         <div className='reportWeeklySalesByMonth__selectorDeFecha'>
           <p 

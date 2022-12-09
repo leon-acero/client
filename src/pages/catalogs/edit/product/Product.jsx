@@ -1,6 +1,8 @@
 import "./product.css";
+import defaultCameraImage from "../../../../camera.webp"
+
 // import axios from "axios";
-import axios, { BASE_URL } from '../../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
@@ -75,7 +77,7 @@ export default function Product() {
       priceMayoreo: 0,
       costo: 0,
       sku: 0,
-      imageCover: "camera.webp"
+      imageCover: ""
     }
   )
   /*****************************************************************************/
@@ -113,6 +115,8 @@ export default function Product() {
         formData.append("priceMenudeo", productData.priceMenudeo);
         formData.append("priceMayoreo", productData.priceMayoreo === null || productData.priceMayoreo === "" || productData.priceMayoreo === undefined ? 0 : productData.priceMayoreo);
         formData.append("costo", productData.costo);
+
+        // console.log("fileBlob", fileBlob)
         // formData.append("photo", fileBlob);
         // console.log("productData.imageCover", productData.imageCover);
 
@@ -148,50 +152,12 @@ export default function Product() {
         } 
     }
     catch(err) {
+      console.log("err", err);
       setIsSaving(false);
       setUpdateSuccess(false);
-      // setMensajeSnackBar("Hubo un error al grabar el producto. Revisa que estes en línea.");
-
-      let mensajeSnackBar = "";
-
-      if (err.name) 
-        mensajeSnackBar += `Name: ${err.name}. `
-
-      if (err.code)
-        mensajeSnackBar += `Code: ${err.code}. `;
-
-      if (err.statusCode) 
-        mensajeSnackBar += `Status Code: ${err.statusCode}. `;
-
-      if (err.status) 
-        mensajeSnackBar += `Status: ${err.status}. `;
-
-      if (err.message) 
-        mensajeSnackBar += `Mensaje: ${err.message}. `;
-
-      // console.log("mensajeSnackBar", mensajeSnackBar);
-      
-      // Error de MongoDB dato duplicado
-      /*if (err.response?.data?.error?.code === 11000 || 
-          err.response.data.message.includes('E11000')) {
-            mensajeSnackBar = 'El Sku ya existe, elije otro Sku.';
-      
-            setMensajeSnackBar(mensajeSnackBar);
-      }
-      else */
-      if (err.response.data.message){
-        setMensajeSnackBar(err.response.data.message)
-      }
-      else if (err.code === "ERR_NETWORK")
-        setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
-      else {
-        // setMensajeSnackBar(`Error: ${err}`)      
-        setMensajeSnackBar (mensajeSnackBar);
-      }
-
-
+ 
+      setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
-      console.log(err);
     }
   }
 
@@ -211,19 +177,26 @@ export default function Product() {
       // solo debe de cargar datos una vez, osea al cargar la pagina
       avoidRerenderFetchProduct.current = true;
 
-      // console.log("carga de producto")
-
-      // const res = await axios ({
-      //   withCredentials: true,
-      //   method: 'GET',
-      //   url: `http://127.0.0.1:8000/api/v1/products/${productId}`
-      //   // url: `https://eljuanjo-dulces.herokuapp.com/api/v1/products/${productId}`
-      // });
-
-      const res = await axios.get (`/api/v1/products/${productId}`);
-
-      // console.log(res.data.data.data);
-      setProductData(res.data.data.data);
+      try {
+        // console.log("carga de producto")
+  
+        // const res = await axios ({
+        //   withCredentials: true,
+        //   method: 'GET',
+        //   url: `http://127.0.0.1:8000/api/v1/products/${productId}`
+        //   // url: `https://eljuanjo-dulces.herokuapp.com/api/v1/products/${productId}`
+        // });
+  
+        const res = await axios.get (`/api/v1/products/${productId}`);
+  
+        // console.log(res.data.data.data);
+        setProductData(res.data.data.data);
+      }
+      catch (err) {
+        console.log(err);    
+        setMensajeSnackBar (regresaMensajeDeError(err));
+        setOpenSnackbar(true);
+      }
 
     }
 
@@ -237,6 +210,9 @@ export default function Product() {
   // que se muestre en pantalla
   /**************************************************************************/
   function handleImageCoverChange (e) {
+
+    if (!e.target.files[0])
+      return;
 
     setFileBlob(URL.createObjectURL(e.target.files[0]));
 
@@ -333,7 +309,9 @@ export default function Product() {
               className="productShowImg"
               src= {
                       // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
-                      fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
+                      // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
+                      fileBlob ? fileBlob : productData.imageCover ?
+                      `${productData.imageCover}` : defaultCameraImage
                     }
               alt=""
             />            
@@ -390,7 +368,7 @@ export default function Product() {
                   onInput={e=> e.target.setCustomValidity('')} 
                   minLength="1"
                   maxLength="5"
-                  autocomplete="off"
+                  autoComplete="off"
                 />
               </div>              
               <div className="productUpdateItem">
@@ -407,7 +385,7 @@ export default function Product() {
                   onInput={e=> e.target.setCustomValidity('')} 
                   minLength="5"
                   maxLength="40"
-                  autocomplete="off"
+                  autoComplete="off"
                 />
               </div>
               <div className="productUpdateItem">
@@ -427,7 +405,7 @@ export default function Product() {
                   required
                   onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual')} 
                   onInput={e=> e.target.setCustomValidity('')}
-                  autocomplete="off" 
+                  autoComplete="off" 
                 />
               </div>
               <div className="productUpdateItem">
@@ -447,7 +425,7 @@ export default function Product() {
                   required         
                   onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo')} 
                   onInput={e=> e.target.setCustomValidity('')}
-                  autocomplete="off"                 
+                  autoComplete="off"                 
                 />
               </div>
               <div className="productUpdateItem">
@@ -467,7 +445,7 @@ export default function Product() {
                   required 
                   onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo')} 
                   onInput={e=> e.target.setCustomValidity('')}
-                  autocomplete="off"                
+                  autoComplete="off"                
                 />
               </div>
               <div className="productUpdateItem">
@@ -484,7 +462,7 @@ export default function Product() {
                   onKeyPress={(e)=>handleNumbers(e)}
                   name="priceMayoreo"
                   value={productData.priceMayoreo || ''}
-                  autocomplete="off"                  
+                  autoComplete="off"                  
                 />
               </div>              
               <div className="productUpdateItem">
@@ -504,7 +482,7 @@ export default function Product() {
                   required 
                   onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto')} 
                   onInput={e=> e.target.setCustomValidity('')}
-                  autocomplete="off"                 
+                  autoComplete="off"                 
                 />
               </div>
             </div>
@@ -515,7 +493,9 @@ export default function Product() {
                   className="productUpdateImg"
                   src= {
                           // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
-                          fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
+                          // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
+                          fileBlob ? fileBlob : productData.imageCover ?
+                          `${productData.imageCover}` : defaultCameraImage
                        }
                   alt=""
                 />                

@@ -1,5 +1,5 @@
-import React from 'react'
 import "./skeleton.css"
+import React from 'react'
 import { domAnimation, LazyMotion, m, useCycle } from 'framer-motion';
 
 

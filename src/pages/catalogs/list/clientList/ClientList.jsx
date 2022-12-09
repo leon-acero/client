@@ -1,6 +1,7 @@
 import "./clientList.css";
-import axios, { BASE_URL } from '../../../../utils/axios';
-// import axios from "axios";
+import defaultCameraImage from "../../../../camera.webp"
+
+import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
 /*******************************    React     *******************************/
 import { useEffect, useRef, useState } from "react";
@@ -103,7 +104,8 @@ export default function ClientList() {
     catch(err) {
       console.log(err);
       setUpdateSuccess(false);
-      setMensajeSnackBar("Hubo un error al borrar el cliente. Revisa que estes en línea.");
+      // setMensajeSnackBar("Hubo un error al borrar el cliente. Revisa que estes en línea.");
+      setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
   }
@@ -115,10 +117,12 @@ export default function ClientList() {
   /****************************************************************************/
   useEffect (() => {
 
+    // 1er Validacion: Que useEffect NO repinte dos veces
     if (avoidRerenderFetchClient.current) {
       return;
     }
 
+    // 2da Validacion: Cuando este cargando los datos que muestre el Skeleton
     if (isLoading)
       return;
 
@@ -155,39 +159,7 @@ export default function ClientList() {
       catch(err) {
         console.log("err", err);
         setIsLoading(false);
-
-        let mensajeSnackBar = "";
-
-        if (err.name) 
-          mensajeSnackBar += `Name: ${err.name}. `
-  
-        if (err.code)
-          mensajeSnackBar += `Code: ${err.code}. `;
-  
-        if (err.statusCode) 
-          mensajeSnackBar += `Status Code: ${err.statusCode}. `;
-  
-        if (err.status) 
-          mensajeSnackBar += `Status: ${err.status}. `;
-  
-        if (err.message) 
-          mensajeSnackBar += `Mensaje: ${err.message}. `;
-  
-        // console.log("mensajeSnackBar", mensajeSnackBar);
-        
-        console.log("err.response.data.message", err.response.data.message);
-        
-        if (err.response.data.message){
-          setMensajeSnackBar(err.response.data.message)
-        }
-        else if (err.code === "ERR_NETWORK")
-          setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
-        else {
-          // setMensajeSnackBar(`Error: ${err}`)      
-          setMensajeSnackBar (mensajeSnackBar);
-        }
-  
-  
+        setMensajeSnackBar (regresaMensajeDeError(err));       
         setOpenSnackbar(true);
       }
     }
@@ -278,13 +250,19 @@ export default function ClientList() {
       renderCell: (params) => {
         return (
           <div className="clientListClient">
-            {
-              params?.row?.imageCover &&
+            {             
+              params?.row?.imageCover ?
               (<img className="clientListImg" 
                   // src={`http://127.0.0.1:8000/img/clients/${params.row.imageCover}`} 
-                  src={`${BASE_URL}/img/clients/${params.row.imageCover}`} 
+                  // src={`${BASE_URL}/img/clients/${params.row.imageCover}`} 
+                  // src={`${params.row.imageCover}`} 
+                  
+                  src={`${params.row.imageCover}` } 
                   alt="" 
               />)
+              : (
+                <img className="clientListImg" src={defaultCameraImage} alt =""/>
+              )
             }
             {params.row.businessName}
           </div>

@@ -1,5 +1,7 @@
 import "./productList.css";
-import axios, { BASE_URL } from '../../../../utils/axios';
+import defaultCameraImage from "../../../../camera.webp"
+
+import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 // import axios from "axios";
 
 /*******************************    React     *******************************/
@@ -24,11 +26,14 @@ import { DataGrid } from "@mui/x-data-grid";
 /**************************    Components    ********************************/
 import BasicDialog from '../../../../components/basicDialog/BasicDialog';
 import SkeletonElement from '../../../../components/skeletons/SkeletonElement';
+import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 /****************************************************************************/
 
 
 
 export default function ProductList() {
+
+  const isOnline = useNavigatorOnLine();
 
   /**************************    useRef    **********************************/
   // avoidRerenderFetchProduct evita que se mande llamar dos veces al
@@ -99,7 +104,8 @@ export default function ProductList() {
     catch(err) {
       console.log(err);
       setUpdateSuccess(false);
-      setMensajeSnackBar("Hubo un error al borrar el producto. Revisa que estes en línea.");
+      // setMensajeSnackBar("Hubo un error al borrar el producto. Revisa que estes en línea.");
+      setMensajeSnackBar (regresaMensajeDeError (err));
       setOpenSnackbar(true);
     }
   }
@@ -111,10 +117,12 @@ export default function ProductList() {
   /****************************************************************************/
   useEffect (() => {
 
+    // 1er Validacion: Que useEffect NO repinte dos veces    
     if (avoidRerenderFetchProduct.current) {
       return;
     }
 
+    // 2da Validacion: Cuando este cargando los datos que muestre el Skeleton
     if (isLoading)
       return;
 
@@ -137,7 +145,6 @@ export default function ProductList() {
 
         const res = await axios.get (`/api/v1/products`);
 
-
         setIsLoading(false);
 
 
@@ -151,6 +158,8 @@ export default function ProductList() {
       catch (err) {
         console.log("err", err);
         setIsLoading(false);
+        setMensajeSnackBar (regresaMensajeDeError (err));
+        setOpenSnackbar(true);
       }
 
     }
@@ -254,16 +263,18 @@ export default function ProductList() {
       renderCell: (params) => {
         return (
           <div className="productListItem">
-            {
-              params?.row?.imageCover &&
-              // (<img className="productListImg" 
-              //     src={`http://127.0.0.1:8000/img/products/${params.row.imageCover}`} 
-              //     alt="" 
-              // />)
-              (<img className="productListImg" 
-                  src={`${BASE_URL}/img/products/${params.row.imageCover}`} 
-                  alt="" 
-              />)
+            {             
+              params?.row?.imageCover 
+              ?
+              (
+                <img className="productListImg" 
+                  src={`${params.row.imageCover}` } 
+                  alt="" />
+              )
+              : 
+              (
+                <img className="productListImg" src={defaultCameraImage} alt =""/>
+              )
             }
             {params.row.productName}
           </div>
@@ -324,7 +335,9 @@ export default function ProductList() {
 
   return (
     <div className="productList">
- 
+      {/* {
+        !isOnline && <p>NO Estas en linea</p>
+      } */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={5000}

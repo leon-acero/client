@@ -1,15 +1,29 @@
 import "./newOrUpdateOrder.css"
-import axios from '../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+/*******************************    React     *******************************/
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
+/****************************************************************************/
 
-// import axios from "axios";
-// import { Skeleton } from '@mui/material';
+/**************************    Snackbar    **********************************/
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import {FaTimes} from "react-icons/fa";
+import { Alert } from '@mui/material';
+/****************************************************************************/
 
-import { domAnimation, LazyMotion, m } from 'framer-motion';
+/***************************    Components     ******************************/
 import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+/****************************************************************************/
+
+/**************************    Framer-Motion    *****************************/
+import { domAnimation, LazyMotion, m } from 'framer-motion';
+/****************************************************************************/
+
+/*******************************    React Icons    *************************/
 import { FaArrowLeft } from 'react-icons/fa';
+/****************************************************************************/
 
 
 const containerVariants = {
@@ -29,10 +43,21 @@ const containerVariants = {
 
 export default function NewOrUpdateOrder() {
 
+  /**************************    useHistory    ********************************/
   const history = useHistory();
-  
+  /*****************************************************************************/
+
+  /**************************    useRef    **********************************/
+  // ultimosCincoPedidos es un Array que contiene las Fechas de los ultimos 5 pedidos
+
   // const [ultimosCincoPedidos, setUltimosCincoPedidos] = useState([]);
   const [ultimosCincoPedidos, setUltimosCincoPedidos] = useState(null);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
+  /*****************************************************************************/
+
+
   /**************************    useRef    **********************************/
   // avoidRerenderFetchClient evita que se mande llamar dos veces al
   // cliente y por lo mismo que se pinte dos veces
@@ -47,6 +72,11 @@ export default function NewOrUpdateOrder() {
   const {clientId, businessName, cellPhone, esMayorista, businessImageCover} = useLocation().state;
   /****************************************************************************/
 
+
+  /****************************    useEffect    *******************************/
+  // fetchUltimosCincoPedidosPorEntregar carga los ultimos 5 pedidos por Entregar
+  // de un cliente
+   
   useEffect (()=>{
 
     if (avoidRerenderFetchClient.current) {
@@ -76,18 +106,50 @@ export default function NewOrUpdateOrder() {
       }
       catch (err) {
         console.log(err);
-
+        setMensajeSnackBar (regresaMensajeDeError(err));
+        setOpenSnackbar(true);
       }
     }
 
     fetchUltimosCincoPedidosPorEntregar ();
   }, [clientId])
+  /****************************************************************************/
 
+  /**********************    handleGoBackOnePage    *************************/
+  // Me regreso en la Historia una pagina
   const handleGoBackOnePage = () => {
-
     // history.go(-1);
     history.goBack();
   }
+  /**************************************************************************/
+
+  
+  /************************     handleCloseSnackbar    **********************/
+  // Es el handle que se encarga cerrar el Snackbar
+  /**************************************************************************/
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
+  /*****************************     action    ******************************/
+  // Se encarga agregar un icono de X al SnackBar
+  /**************************************************************************/
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackbar}
+      >
+        <FaTimes />
+      </IconButton>
+  </>
+  );
 
   return (
     <LazyMotion features={domAnimation} >
@@ -96,6 +158,19 @@ export default function NewOrUpdateOrder() {
         initial="hidden"
         animate="visible"
       >
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={5000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert 
+              severity= {"error"} 
+              action={action}
+              sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+          >{mensajeSnackBar}
+          </Alert>
+        </Snackbar>
+
         <div className="regresarAPaginaAnterior">
           <FaArrowLeft onClick={handleGoBackOnePage} className="arrowLeftGoBack" />
         </div>

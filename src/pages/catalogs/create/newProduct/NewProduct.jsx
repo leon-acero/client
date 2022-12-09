@@ -1,5 +1,7 @@
 import "./newProduct.css";
-import axios, { BASE_URL } from '../../../../utils/axios';
+import defaultCameraImage from "../../../../camera.webp"
+
+import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 // import axios from "axios";
 
 /**************************    React    **********************************/
@@ -9,7 +11,6 @@ import { useEffect, useRef, useState } from 'react';
 /**************************    Snackbar    **********************************/
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
-// import CloseIcon from '@mui/icons-material/Close';
 import {FaCloudUploadAlt, FaTimes} from "react-icons/fa";
 import { Alert } from '@mui/material';
 /****************************************************************************/
@@ -23,7 +24,7 @@ const INITIAL_STATE = {
   priceMayoreo: 0,
   costo: 0,
   sku: 0,
-  imageCover: "camera.webp"
+  imageCover: ""
 }
 
 export default function NewProduct() {
@@ -105,6 +106,9 @@ export default function NewProduct() {
       // el field final, se tiene que hacer todo el proceso anterior
       formData.append("photo", itemData.imageCover);
 
+      // if (itemData.imageCover !== "")
+      //   formData.append("imageCover", itemData.imageCover);
+
       // const res = await axios({
       //   withCredentials: true,
       //   method: 'POST',
@@ -113,7 +117,7 @@ export default function NewProduct() {
       //   data: formData
       // })
 
-      console.log("formData", formData);
+      // console.log("formData", formData);
 
 
       const res = await axios.post ('/api/v1/products/', formData );
@@ -139,43 +143,7 @@ export default function NewProduct() {
 
       setIsSaving(false);
       setUpdateSuccess(false);
-      // setMensajeSnackBar("Hubo un error al grabar el producto. Revisa que estes en línea.");
-
-      let mensajeSnackBar = "";
-
-      if (err.name) 
-        mensajeSnackBar += `Name: ${err.name}. `
-
-      if (err.code)
-        mensajeSnackBar += `Code: ${err.code}. `;
-
-      if (err.statusCode) 
-        mensajeSnackBar += `Status Code: ${err.statusCode}. `;
-
-      if (err.status) 
-        mensajeSnackBar += `Status: ${err.status}. `;
-
-      if (err.message) 
-        mensajeSnackBar += `Mensaje: ${err.message}. `;
-
-      // console.log("mensajeSnackBar", mensajeSnackBar);
-      
-      // Error de MongoDB dato duplicado
-      /*if (err.response?.data?.error?.code === 11000 || 
-          err.response.data.message.includes('E11000')) {
-            mensajeSnackBar = 'El Sku ya existe, elije otro Sku.';
-      
-            setMensajeSnackBar(mensajeSnackBar);
-      }
-      else */
-      if (err.response.data.message){
-        setMensajeSnackBar(err.response.data.message)
-      }
-      else if (err.code === "ERR_NETWORK")
-        setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
-      else
-        setMensajeSnackBar(`Error: ${err}`)      
-
+      setMensajeSnackBar (regresaMensajeDeError(err));
 
       setOpenSnackbar(true);
     }
@@ -203,6 +171,9 @@ export default function NewProduct() {
   /**************************************************************************/
   function handleImageCoverChange (e) {
 
+    if (!e.target.files[0])
+      return;
+
     setFileBlob(URL.createObjectURL(e.target.files[0]));
 
     // console.log("fileImageCover", URL.createObjectURL(e.target.files[0]))
@@ -213,6 +184,7 @@ export default function NewProduct() {
             imageCover: e.target.files[0]
         }
     })
+
   }
 
   /************************     handleCloseSnackbar    **********************/
@@ -278,7 +250,7 @@ export default function NewProduct() {
                 onInput={e=> e.target.setCustomValidity('')} 
                 minLength="1"
                 maxLength="5"
-                autocomplete="off"
+                autoComplete="off"
             />
           </div>        
           <div className="addProductItem">
@@ -294,7 +266,7 @@ export default function NewProduct() {
                 onInput={e=> e.target.setCustomValidity('')} 
                 minLength="5"
                 maxLength="40"
-                autocomplete="off"
+                autoComplete="off"
             />
           </div>
           <div className="addProductItem">
@@ -312,7 +284,7 @@ export default function NewProduct() {
                 required
                 onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual')} 
                 onInput={e=> e.target.setCustomValidity('')}
-                autocomplete="off" 
+                autoComplete="off" 
             />
           </div>
           <div className="addProductItem">
@@ -330,7 +302,7 @@ export default function NewProduct() {
                 required         
                 onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo')} 
                 onInput={e=> e.target.setCustomValidity('')}
-                autocomplete="off"      
+                autoComplete="off"      
             />
           </div>       
           <div className="addProductItem">
@@ -348,7 +320,7 @@ export default function NewProduct() {
                 required 
                 onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo')} 
                 onInput={e=> e.target.setCustomValidity('')}
-                autocomplete="off" 
+                autoComplete="off" 
             />
           </div>
           <div className="addProductItem">
@@ -363,7 +335,7 @@ export default function NewProduct() {
                 onChange={handleChange}
                 name="priceMayoreo"
                 value={itemData.priceMayoreo || ''}
-                autocomplete="off"                            
+                autoComplete="off"                            
             />
           </div>      
           <div className="addProductItem">
@@ -381,7 +353,7 @@ export default function NewProduct() {
                 required 
                 onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto')} 
                 onInput={e=> e.target.setCustomValidity('')}
-                autocomplete="off" 
+                autoComplete="off" 
             />
           </div>  
         </div>
@@ -392,7 +364,8 @@ export default function NewProduct() {
               className="productUpdateImg"
               src= {
                       // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${itemData.imageCover}`
-                      fileBlob ? fileBlob : `${BASE_URL}/img/products/${itemData.imageCover}`
+                      // fileBlob ? fileBlob : `${BASE_URL}/img/products/${itemData.imageCover}`
+                      fileBlob ? fileBlob : defaultCameraImage
                     }
               alt=""
             />                

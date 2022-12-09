@@ -44,6 +44,7 @@ import ReportWholeBusinessSalesByYear from './pages/reports/reportWholeYearSales
 
 import { useMatchMedia } from "./hooks/useMatchMedia";
 import SplashScreen from './components/splashScreen/SplashScreen';
+// import NoMatch from './components/noMatch/NoMatch';
 
 
 function App() {
@@ -70,6 +71,10 @@ function App() {
               <Route exact path="/login">
                 <Login />
               </Route>
+
+              {/* <Route exact path="*">
+                <NoMatch />
+              </Route> */}
             </Switch>
         ) 
       }
@@ -105,6 +110,10 @@ function App() {
               <Route path="/logout">
                 <Logout />
               </Route>
+
+              {/* <Route exact path="*">
+                <NoMatch />
+              </Route> */}
 
             </Switch>
           </div>
@@ -230,6 +239,10 @@ function App() {
                 <Route path="/logout">
                   <Logout />
                 </Route>
+
+                {/* <Route exact path="*">
+                  <NoMatch />
+                </Route> */}
 
               </Switch>
 

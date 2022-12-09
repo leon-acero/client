@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
 
+/*****************************************************************************/
+// Custom Hook que me dice si la App esta en linea o no
+/*****************************************************************************/
+
+
 const getOnLineStatus = () =>
   typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean'
     ? navigator.onLine

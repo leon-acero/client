@@ -1,11 +1,22 @@
 import "./reportWholeBusinessSalesByYear.css"
-import axios from '../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+/*******************************    React     *******************************/
 import React, { useEffect, useRef, useState } from 'react'
-// import axios from "axios"
+/****************************************************************************/
+
+/***************************    Components     ******************************/
 import Chart from '../../../components/chart/Chart';
 import { NumericFormat } from 'react-number-format';
 import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+/****************************************************************************/
+
+/**************************    Snackbar    **********************************/
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import {FaTimes} from "react-icons/fa";
+import { Alert } from '@mui/material';
+/****************************************************************************/
 
 
 export default function ReportWholeBusinessSalesByYear() {
@@ -31,6 +42,9 @@ export default function ReportWholeBusinessSalesByYear() {
   // granTotal es el Total de Ventas en toda la existencia de la Empresa
   ************************     useState    *********************************/ 
 
+  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const [chartData, setChartData] = useState ([]);
   const [granTotal, setGranTotal] = useState (0);
   const [isLoading, setIsLoading] = useState (false);
@@ -41,8 +55,6 @@ export default function ReportWholeBusinessSalesByYear() {
   // fetchVentasDelNegocio carga la informacion que se mostrará en el Chart,
   // el total de Ventas del Año, el año más actual con Ventas
   **************************    useEffect    ******************************* */
-
-
   useEffect (() => {
 
     const fetchVentasDelNegocio = async () => {
@@ -68,18 +80,58 @@ export default function ReportWholeBusinessSalesByYear() {
       catch (err) {
         console.log(err);
         setIsLoading (false);
+        setMensajeSnackBar (regresaMensajeDeError(err));      
+        setOpenSnackbar(true);
       }
       
     }
     fetchVentasDelNegocio();
   },[]);
-  /////////////////////////////////////////////////////////////////////////////
 
+  
+  /************************     handleCloseSnackbar    **********************/
+  // Es el handle que se encarga cerrar el Snackbar
+  /**************************************************************************/
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
+  /*****************************     action    ******************************/
+  // Se encarga agregar un icono de X al SnackBar
+  /**************************************************************************/  
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackbar}
+      >
+        <FaTimes />
+      </IconButton>
+    </>
+  );
 
   // console.log("ReportWholeBusinessSalesByYear render")
 
   const out = (
     <div className='reportWholeBusinessSalesByYear'>  
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert 
+            severity= {"success"} 
+            action={action}
+            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+        >{mensajeSnackBar}
+        </Alert>
+      </Snackbar>     
       {
         isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
       }

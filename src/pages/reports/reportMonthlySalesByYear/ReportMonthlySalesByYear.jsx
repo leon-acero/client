@@ -1,17 +1,33 @@
 import "./reportMonthlySalesByYear.css"
-import React, { useEffect, useRef, useState } from 'react'
-import axios from '../../../utils/axios';
-// import axios from "axios"
-import Chart from '../../../components/chart/Chart';
-import { NumericFormat } from 'react-number-format';
+import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+/*******************************    React     *******************************/
+import React, { useEffect, useRef, useState } from 'react'
+/****************************************************************************/
+
+/***************************    Components     ******************************/
+import Chart from '../../../components/chart/Chart';
 import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+/****************************************************************************/
+
+/*******************************    Format     ******************************/
+import { NumericFormat } from 'react-number-format';
+/****************************************************************************/
+
+/*******************************    Material UI     *************************/
 import { Skeleton } from '@mui/material';
+/****************************************************************************/
+
+/**************************    Snackbar    **********************************/
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import {FaTimes} from "react-icons/fa";
+import { Alert } from '@mui/material';
+/****************************************************************************/
+
 
 export default function ReportMonthlySalesByYear() {
   // console.log("ReportMonthlySalesByYear started")
-
-  
 
   /************************    useRef    ********************************* 
   // Agregué estos dos useRefs porque en React18 se hace un re-render
@@ -34,6 +50,9 @@ export default function ReportMonthlySalesByYear() {
   // year es el año seleccionado en el select
   ************************     useState    *********************************/ 
 
+  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   // const [chartData, setChartData] = useState ([]);
   // lo puse null para usar MUI Skeleton
   const [chartData, setChartData] = useState (null);
@@ -45,7 +64,6 @@ export default function ReportMonthlySalesByYear() {
 
   // const [year, setYear] = useState(new Date().getFullYear());
   const [year, setYear] = useState(undefined);
-  /////////////////////////////////////////////////////////////////////////////
 
 
   /************************     useEffect    ********************************* 
@@ -66,28 +84,35 @@ export default function ReportMonthlySalesByYear() {
       // solo debe de cargar datos una vez, osea al cargar la pagina
       avoidRerenderFetchYearsSales.current = true;
 
-      // console.log("axios carga de años");
+      try {
+        // console.log("axios carga de años");
+  
+        // const res = await axios ({
+        //   withCredentials: true,
+        //   method: 'GET',
+        //   url: 'http://127.0.0.1:8000/api/v1/sales/list-of-years-sales'
+        //   // url: 'https://eljuanjo-dulces.herokuapp.com/api/v1/sales/list-of-years-sales'
+        // });
+  
+        const res = await axios.get ('/api/v1/sales/list-of-years-sales');
+  
+     
+        // console.log("resultado carga de años",res)
+        // console.log("res: ",res.data.data.listOfYearsSales);
+     
+        // console.log("carga años de ventas", res)
+        // setAnios(aniosNew)
+        setAnios(res.data.data.listOfYearsSales);
+        setYear(res.data.currentYear);
+        // console.log("aniosNew", aniosNew)
+        // console.log("request finished de carga años de ventas")
 
-      // const res = await axios ({
-      //   withCredentials: true,
-      //   method: 'GET',
-      //   url: 'http://127.0.0.1:8000/api/v1/sales/list-of-years-sales'
-      //   // url: 'https://eljuanjo-dulces.herokuapp.com/api/v1/sales/list-of-years-sales'
-      // });
-
-      const res = await axios.get ('/api/v1/sales/list-of-years-sales');
-
-   
-      // console.log("resultado carga de años",res)
-      // console.log("res: ",res.data.data.listOfYearsSales);
-   
-      // console.log("carga años de ventas", res)
-      // setAnios(aniosNew)
-      setAnios(res.data.data.listOfYearsSales);
-      setYear(res.data.currentYear);
-      // console.log("aniosNew", aniosNew)
-      // console.log("request finished de carga años de ventas")
-      
+      }
+      catch (err) {
+        console.log(err);
+        setMensajeSnackBar (regresaMensajeDeError(err));      
+        setOpenSnackbar(true);
+      }      
     }
     
     fetchYearsSales();
@@ -95,6 +120,10 @@ export default function ReportMonthlySalesByYear() {
   }, []);
 
 
+  /*****************************    useEffect    ******************************/
+  // fetchVentasDelNegocio carga las Ventas Mensuales de la Dulceria de un Año
+  // en particular
+  /****************************************************************************/
   useEffect (() => {
 
     const fetchVentasDelNegocio = async () => {
@@ -136,36 +165,79 @@ export default function ReportMonthlySalesByYear() {
         catch (err)
         {
           console.log("Error", err)
-          // if (err.status === 429 ) {
-          //   console.log("Demasiados requests vuelva a intentar despues")
-          // }
+          setMensajeSnackBar (regresaMensajeDeError(err));      
+          setOpenSnackbar(true);
         }
 
       }
     }
     fetchVentasDelNegocio();
   }, [year]);
-  /////////////////////////////////////////////////////////////////////////////
 
 
-  const getAnios = () => {
+  /*****************************    getAnios    ******************************/
+  // Llena el select con la lista de Años con ventas
+  /****************************************************************************/  const getAnios = () => {
     return anios.map((current) => {
       return <option key={current.anio} value={current.anio}>{current.anio} 
               </option>;
     });
   }
 
+
+  /*****************************    handleChange    ***************************/
+  // Actualiza el cambio del año del select
+  /****************************************************************************/ 
   const handleChange = (e) => {
     setYear( e.target.value );
     avoidRerenderFetchVentasDelNegocio.current = false;
   }
+
+  /************************     handleCloseSnackbar    **********************/
+  // Es el handle que se encarga cerrar el Snackbar
+  /**************************************************************************/
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
+  /*****************************     action    ******************************/
+  // Se encarga agregar un icono de X al SnackBar
+  /**************************************************************************/  
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackbar}
+      >
+        <FaTimes />
+      </IconButton>
+    </>
+  );
 
   // console.log("ReportMonthlySalesByYear render")
 
 
   const out = (
     <div className="reportMonthlySalesByYear">
-     
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert 
+            severity= {"success"} 
+            action={action}
+            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+        >{mensajeSnackBar}
+        </Alert>
+      </Snackbar>     
       {
         anios && (
                 <select className="yearsList"

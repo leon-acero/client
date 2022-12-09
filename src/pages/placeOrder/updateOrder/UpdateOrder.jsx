@@ -30,7 +30,7 @@ import {FaShoppingCart, FaSearch} from "react-icons/fa";
 
 /**************************    Framer-Motion    **********************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
-import axios from '../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../../utils/axios';
 import { NumericFormat } from 'react-number-format';
 
 const containerVariants = {
@@ -207,39 +207,46 @@ export default function UpdateOrder() {
       // solo debe de cargar datos una vez, osea al cargar la pagina
       avoidRerenderFetchClient.current = true;
 
-      console.log("cargar Pedido del Server");
-
-      // const res = await axios ({
-      //   withCredentials: true,
-      //   method: 'GET',
-      //   url: `http://127.0.0.1:8000/api/v1/sales/update-order/client/${clientId}/fecha/${fecha}`
-      //   // url: `https://eljuanjo-dulces.herokuapp.com/api/v1/sales/update-order/client/${clientId}/fecha/${fecha}`
-      // });
-
-      const res = await axios.get (`/api/v1/sales/update-order/client/${clientId}/fecha/${fecha}`);
-
-      // console.log("res", res);
-      console.log("res.data.data.updateOrder", res.data.data.updateOrder);
-
-      const updateOrder = res.data.data.updateOrder;
-
-      setTheBasket (
-        { ...theBasket,
-          id:             updateOrder._id,
-          createdAt:      updateOrder.createdAt,
-          user:           updateOrder.user,
-          userName:       updateOrder.userName, 
-          clientId:       updateOrder.client,
-          businessName:   updateOrder.businessName,
-          estatusPedido:  updateOrder.estatusPedido,
-          esMayorista:    updateOrder.esMayorista,
-          seAplicaDescuento: updateOrder.seAplicaDescuento,
-          businessImageCover: updateOrder.businessImageCover,
-          productOrdered: updateOrder.productOrdered,
-        }
-      );
-
-      // setSeAplicaDescuento (updateOrder.seAplicaDescuento);
+      try {
+        console.log("cargar Pedido del Server");
+  
+        // const res = await axios ({
+        //   withCredentials: true,
+        //   method: 'GET',
+        //   url: `http://127.0.0.1:8000/api/v1/sales/update-order/client/${clientId}/fecha/${fecha}`
+        //   // url: `https://eljuanjo-dulces.herokuapp.com/api/v1/sales/update-order/client/${clientId}/fecha/${fecha}`
+        // });
+  
+        const res = await axios.get (`/api/v1/sales/update-order/client/${clientId}/fecha/${fecha}`);
+  
+        // console.log("res", res);
+        console.log("res.data.data.updateOrder", res.data.data.updateOrder);
+  
+        const updateOrder = res.data.data.updateOrder;
+  
+        setTheBasket (
+          { ...theBasket,
+            id:             updateOrder._id,
+            createdAt:      updateOrder.createdAt,
+            user:           updateOrder.user,
+            userName:       updateOrder.userName, 
+            clientId:       updateOrder.client,
+            businessName:   updateOrder.businessName,
+            estatusPedido:  updateOrder.estatusPedido,
+            esMayorista:    updateOrder.esMayorista,
+            seAplicaDescuento: updateOrder.seAplicaDescuento,
+            businessImageCover: updateOrder.businessImageCover,
+            productOrdered: updateOrder.productOrdered,
+          }
+        );
+  
+        // setSeAplicaDescuento (updateOrder.seAplicaDescuento);
+      }
+      catch(err) {
+        console.log("err");
+        setMensajeSnackBar (regresaMensajeDeError(err));
+        setOpenSnackbar(true);
+      }
     }
 
     if (usarComponenteComo === "actualizarPedido") {
@@ -571,47 +578,12 @@ export default function UpdateOrder() {
         } 
     }
     catch(err) {
-        setIsSaving(false);
+      console.log(err);
+      setIsSaving(false);
+      setUpdateSuccess(false);
 
-        console.log(err);
-        setUpdateSuccess(false);
-        // setMensajeSnackBar("Hubo un error al realizar el pedido. Intente más tarde.")
-        let mensajeSnackBar = ""
-
-        if (err.name) 
-          mensajeSnackBar += `Name: ${err.name}. `
-  
-        if (err.code)
-          mensajeSnackBar += `Code: ${err.code}. `;
-  
-        if (err.statusCode) 
-          mensajeSnackBar += `Status Code: ${err.statusCode}. `;
-  
-        if (err.status) 
-          mensajeSnackBar += `Status: ${err.status}. `;
-  
-        if (err.message) 
-          mensajeSnackBar += `Mensaje: ${err.message}. `;
-  
-          console.log("mensajeSnackBar", mensajeSnackBar);
-        // if (err.code === "ERR_NETWORK") {
-        //   setMensajeDeError ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.")
-        // }
-        // if (mensajeSnackBar !== "") {
-        //   setMensajeDeError (mensajeSnackBar)
-        // }
-        // else {
-        //   setMensajeDeError (`Error al hacer el pedido: ${err}`)
-        // }
-        if (err.response.data.message)
-          setMensajeSnackBar(err.response.data.message)
-        else if (err.code === "ERR_NETWORK")
-          setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
-        else
-          setMensajeSnackBar(`Error: ${err}`)
-        
-
-        setOpenSnackbar(true);
+      setMensajeSnackBar (regresaMensajeDeError(err));      
+      setOpenSnackbar(true);
     }
   }
   /****************************************************************************/
@@ -701,6 +673,8 @@ export default function UpdateOrder() {
       catch (err) {
         console.log("error", err);
         setIsLoading(false);
+        setMensajeSnackBar (regresaMensajeDeError(err));      
+        setOpenSnackbar(true);
       }
     }
     fetchPosts();
@@ -808,11 +782,12 @@ export default function UpdateOrder() {
         } 
     }
     catch(err) {
+      console.log(err);
       setIsDeleting(false);
 
-      console.log(err);
       setUpdateSuccess(false);
-      setMensajeSnackBar("Hubo un error al borrar el pedido. Intente más tarde.")
+      // setMensajeSnackBar("Hubo un error al borrar el pedido. Intente más tarde.")
+      setMensajeSnackBar (regresaMensajeDeError(err));      
       setOpenSnackbar(true);
     }
   }

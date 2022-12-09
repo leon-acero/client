@@ -1,9 +1,12 @@
 import React from 'react'
+
+/***************************    Material UI     *****************************/
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
+/****************************************************************************/
 
 
 export default function BasicDialog({ open, onClose, message, onSubmit, captionAceptar, captionCancelar }) {

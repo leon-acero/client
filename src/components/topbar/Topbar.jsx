@@ -1,4 +1,6 @@
 import "./topbar.css";
+import defaultCameraImage from "../../camera.webp";
+
 import React, { useContext, useState } from "react";
 import { Link } from 'react-router-dom';
 
@@ -7,7 +9,6 @@ import { ListItemIcon, Menu, MenuItem } from '@mui/material';
 import {FaHandshake, FaSignOutAlt, FaStore } from "react-icons/fa";
 
 import { domAnimation, LazyMotion, m } from 'framer-motion';
-import { BASE_URL } from '../../utils/axios';
 
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine'
 
@@ -68,7 +69,9 @@ export default function Topbar() {
                 animate="visible"
               >
                 <img 
-                    src={`${BASE_URL}/img/users/${currentUser.photo}`} 
+                    // src={`${BASE_URL}/img/users/${currentUser.photo}`} 
+                    src={currentUser.photo ?
+                      `${currentUser.photo}` : defaultCameraImage} 
                     alt="{currentUser.name}" 
                     className="topAvatar"  
                     // onClick={(e)=>setOpen(true)}

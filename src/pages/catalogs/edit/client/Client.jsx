@@ -1,4 +1,5 @@
 import "./client.css";
+import defaultCameraImage from "../../../../camera.webp"
 // import axios from "axios";
 
 /**************************    React    **********************************/
@@ -15,13 +16,15 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import {FaTimes} from "react-icons/fa";
 import { Alert } from '@mui/material';
-import axios, { BASE_URL } from '../../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../../../utils/axios';
+import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 /****************************************************************************/
 
 
 
 export default function Client() {
 
+  const isOnline = useNavigatorOnLine();
 
   /**************************    useRef    **********************************/
   // avoidRerenderFetchClient evita que se mande llamar dos veces al
@@ -77,7 +80,7 @@ export default function Client() {
       fixedPhone: "",
       email: "", 
       esMayorista: false,
-      imageCover: "camera.webp"
+      imageCover: ""
     }
   )
   /*****************************************************************************/
@@ -98,6 +101,13 @@ export default function Client() {
 
     if (isSaving)
       return;
+
+    if (!isOnline) {
+      setUpdateSuccess(false);
+      setMensajeSnackBar("No estas en línea, checa tu conexión a Internet.")
+      setOpenSnackbar(true);
+      return;
+    }
 
     try {
         // console.log("imageCover", file)
@@ -127,6 +137,9 @@ export default function Client() {
         // el field final, se tiene que hacer todo el proceso anterior
         formData.append("photo", clientData.imageCover);
 
+        // if (clientData.imageCover !== "")
+        //   formData.append("imageCover", clientData.imageCover);
+
         // const res = await axios({
         //   withCredentials: true,
         //   method: 'PATCH',
@@ -136,8 +149,6 @@ export default function Client() {
         // })
 
         const res = await axios.patch (`/api/v1/clients/${clientId}`, formData );
-
-
 
         setIsSaving(false);
 
@@ -152,44 +163,7 @@ export default function Client() {
       catch(err) {
         setIsSaving(false);
         setUpdateSuccess(false);
-        // setMensajeSnackBar("Hubo un error al grabar el cliente. Revisa que estes en línea.");
-
-        let mensajeSnackBar = "";
-
-        if (err.name) 
-          mensajeSnackBar += `Name: ${err.name}. `
-
-        if (err.code)
-          mensajeSnackBar += `Code: ${err.code}. `;
-
-        if (err.statusCode) 
-          mensajeSnackBar += `Status Code: ${err.statusCode}. `;
-
-        if (err.status) 
-          mensajeSnackBar += `Status: ${err.status}. `;
-
-        if (err.message) 
-          mensajeSnackBar += `Mensaje: ${err.message}. `;
-
-        // console.log("mensajeSnackBar", mensajeSnackBar);
-        
-        // Error de MongoDB dato duplicado
-        /*if (err.response?.data?.error?.code === 11000 || 
-            err.response.data.message.includes('E11000')) {
-              mensajeSnackBar = 'El Sku ya existe, elije otro Sku.';
-        
-              setMensajeSnackBar(mensajeSnackBar);
-        }
-        else */
-        if (err.response.data.message){
-          setMensajeSnackBar(err.response.data.message)
-        }
-        else if (err.code === "ERR_NETWORK")
-          setMensajeSnackBar ("Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.");
-        else {
-          // setMensajeSnackBar(`Error: ${err}`)      
-          setMensajeSnackBar (mensajeSnackBar);
-        }
+        setMensajeSnackBar (regresaMensajeDeError(err));
 
         setOpenSnackbar(true);
         console.log(err);
@@ -213,19 +187,28 @@ export default function Client() {
       // solo debe de cargar datos una vez, osea al cargar la pagina
       avoidRerenderFetchClient.current = true;
 
-      // console.log("cargar cliente")
-      // const res = await axios ({
-      //   withCredentials: true,
-      //   method: 'GET',
-      //   url: `http://127.0.0.1:8000/api/v1/clients/${clientId}`
-      //   // url: `https://eljuanjo-dulces.herokuapp.com/api/v1/clients/${clientId}`
-      // });
+      
 
-      const res = await axios.get (`/api/v1/clients/${clientId}`);
-
-
-      // console.log(res.data.data.data);
-      setClientData(res.data.data.data)
+      try {
+        // console.log("cargar cliente")
+        // const res = await axios ({
+        //   withCredentials: true,
+        //   method: 'GET',
+        //   url: `http://127.0.0.1:8000/api/v1/clients/${clientId}`
+        //   // url: `https://eljuanjo-dulces.herokuapp.com/api/v1/clients/${clientId}`
+        // });
+  
+        const res = await axios.get (`/api/v1/clients/${clientId}`);
+  
+  
+        // console.log(res.data.data.data);
+        setClientData(res.data.data.data)
+      }
+      catch (err) {
+        console.log(err);    
+        setMensajeSnackBar (regresaMensajeDeError(err));
+        setOpenSnackbar(true);
+      }
     }
 
     fetchClient();
@@ -239,6 +222,9 @@ export default function Client() {
   /**************************************************************************/
   function handleImageCoverChange (e) {
 
+    if (!e.target.files[0])
+      return;
+    
     setFileBlob(URL.createObjectURL(e.target.files[0]));
 
     // console.log("fileImageCover", URL.createObjectURL(e.target.files[0]))
@@ -249,6 +235,7 @@ export default function Client() {
             imageCover: e.target.files[0]
         }
     })
+
   }
 
   /************************     handleChange    *****************************/
@@ -322,7 +309,9 @@ export default function Client() {
               className="clientShowImg"
               src= {
                       // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
-                      fileBlob ? fileBlob : `${BASE_URL}/img/clients/${clientData.imageCover}`
+                      // fileBlob ? fileBlob : `${clientData.imageCover}`
+                      fileBlob ? fileBlob : clientData.imageCover ?
+                      `${clientData.imageCover}` : defaultCameraImage
                    }
               alt=""
             /> 
@@ -383,7 +372,7 @@ export default function Client() {
                   required
                   onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
                   onInput={e=> e.target.setCustomValidity('')} 
-                  autocomplete="off"
+                  autoComplete="off"
                   minLength="1"
                   maxLength="25"
                 />
@@ -402,7 +391,7 @@ export default function Client() {
                   onInput={e=> e.target.setCustomValidity('')} 
                   minLength="5"
                   maxLength="80"
-                  autocomplete="off"
+                  autoComplete="off"
                 />
               </div>
               <div className="clientUpdateItem">
@@ -419,7 +408,7 @@ export default function Client() {
                   onInput={e=> e.target.setCustomValidity('')} 
                   minLength="5"
                   maxLength="80"
-                  autocomplete="off"
+                  autoComplete="off"
                 />
               </div>
               <div className="clientUpdateItem">
@@ -431,7 +420,7 @@ export default function Client() {
                   onChange={handleChange}
                   name="email"
                   value={clientData.email || ''}  
-                  autocomplete="off"                
+                  autoComplete="off"                
                 />
               </div>
               <div className="clientUpdateItem">
@@ -446,7 +435,7 @@ export default function Client() {
                   onInvalid={e=> e.target.setCustomValidity('El Número de Celular debe ser menor a 20 caracteres')} 
                   onInput={e=> e.target.setCustomValidity('')} 
                   maxLength="20"
-                  autocomplete="off"     
+                  autoComplete="off"     
                 />
               </div>
               <div className="clientUpdateItem">
@@ -461,7 +450,7 @@ export default function Client() {
                   onInvalid={e=> e.target.setCustomValidity('El Número de Teléfono debe ser menor a 20 caracteres')} 
                   onInput={e=> e.target.setCustomValidity('')} 
                   maxLength="20"
-                  autocomplete="off"                                   
+                  autoComplete="off"                                   
                 />
               </div>              
               <div className="clientUpdateItem">
@@ -476,7 +465,7 @@ export default function Client() {
                   onInvalid={e=> e.target.setCustomValidity('La Dirección debe tener menos de 100 caracteres')} 
                   onInput={e=> e.target.setCustomValidity('')} 
                   maxLength="100"
-                  autocomplete="off"               
+                  autoComplete="off"               
                 />
               </div>
               
@@ -514,7 +503,8 @@ export default function Client() {
                   className="clientUpdateImg"
                   src= {
                           // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
-                          fileBlob ? fileBlob : `${BASE_URL}/img/clients/${clientData.imageCover}`
+                          fileBlob ? fileBlob : clientData.imageCover ?
+                          `${clientData.imageCover}` : defaultCameraImage
                        }
                   alt=""
                 /> 
