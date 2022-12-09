@@ -36,9 +36,9 @@ import axios from "axios";
     if (err?.code === "ECONNABORTED") {
       mensajeSnackBar = "El tiempo establecido para cargar los datos expiró, checa si estas en un lugar con mala de recepción de red y vuelve a intentar.";
     }
-    else if (err?.code === 'ERR_BAD_REQUEST') { 
-      mensajeSnackBar = "Has sobrepasado el número máximo de solicitudes, espera una hora y vuelve a intentar.";
-    }
+    // else if (err?.code === 'ERR_BAD_REQUEST') { 
+    //   mensajeSnackBar = "Has sobrepasado el número máximo de solicitudes, espera una hora y vuelve a intentar.";
+    // }
     else if (err?.code === "ERR_NETWORK") {
       mensajeSnackBar = "Error al conectarse a la Red. Si estas usando Wi-Fi checa tu conexión. Si estas usando datos checa si tienes saldo. O bien checa si estas en un lugar con mala recepción de red y vuelve a intentar.";
     }
