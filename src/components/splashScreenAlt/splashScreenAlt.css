@@ -7,7 +7,8 @@
   height: calc(100vh - 5rem);
   width:100%;
 	overflow: hidden;
-  background-image: linear-gradient(45deg,#d74838 30%, #eb9b2a);
+  /* background-image: linear-gradient(45deg,#d74838 30%, #eb9b2a); */
+  background-color: #bae7ee;
   color: #071b2e;
 }
 
@@ -15,14 +16,6 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-}
-
-.laptops {
-  display: block;
-}
-
-.tablets {
-  display: none;
 }
 
 .container_titulo {
@@ -94,10 +87,6 @@
 
 /* 880px */
 @media (max-width:55em) {
-
-  .laptops {
-    padding-left: 3rem;
-  }
 
   .splashScreenAlt__subTitulo {
     font-size: 1rem;
