@@ -267,5 +267,10 @@
     /* font-size: 1.1rem; */
     /* font-weight: 600; */
   }
+
+  .loginButton {
+    width: 11rem;
+    font-size: 1.2rem;
+  }
 }
 

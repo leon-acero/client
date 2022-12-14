@@ -215,16 +215,22 @@
   
   .splashScreenAlt__leftPanel {
     padding-left: 0;
-    margin-top: 3rem;
+    margin-top: 6rem; 
     margin-bottom: 2rem;
+    margin-left: 1.4rem;
+    margin-right: 1.4rem;
   }
 
-  .laptops {
-    padding-left: 0;
-  }
+  /* .laptops {
+    margin-top: 2rem;
+  } */
 
   .splashScreenAlt__mujer-modelo {
     align-self: flex-end;
   }  
+
+  .container_slogan {
+    margin-bottom: 1rem;
+  }
 
 }
