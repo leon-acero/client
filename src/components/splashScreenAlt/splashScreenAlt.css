@@ -15,7 +15,6 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  /* padding-left: 10rem; */
 }
 
 .laptops {
@@ -79,18 +78,6 @@
   align-self: center;
 }
 
-
-/* 1100px */
-/* @media (max-width:68.75em) {
-  .splashScreenAlt__mujer-modelo {
-    right: 8rem;
-  }
-
-  .splashScreenAlt__leftPanel {
-    padding-left: 8rem;
-  }
-} */
-
 /* 980px */
 @media (max-width:61.25em) {
 
@@ -103,36 +90,10 @@
   .laptops {
     padding-left: 3rem;
   }
-
-  /* .splashScreenAlt__mujer-modelo {
-    right: 5rem;
-  }
-
-  .splashScreenAlt__leftPanel {
-    padding-left: 5rem;
-  } */
 }
 
 /* 880px */
 @media (max-width:55em) {
-
-  /* .laptops {
-    display: none;
-  }
-
-  .tablets {
-    display: block;
-  } */
-
-
-  /* .splashScreenAlt__mujer-modelo {
-    right: 5rem;
-    height: 57rem;
-  }
-
-  .splashScreenAlt__leftPanel {
-    padding-left: 5rem;
-  } */
 
   .laptops {
     padding-left: 3rem;
@@ -164,19 +125,6 @@
   .splashScreenAlt__leftPanel {
     padding-left: 5rem;
   }
-
-  /* .splashScreenAlt__subTitulo {
-    font-size: .7rem;
-  }
-  
-  .splashScreenAlt__titulo {
-    font-size: 2.4rem;
-  }
-  
-  .slogan {
-    font-size: 1.2rem;
-  } */
-  
 }
 
 /* 580px */
@@ -189,18 +137,10 @@
   .splashScreenAlt__leftPanel {
     padding-left: 9rem;
   }
-
-  /* .splashScreenAlt__subTitulo {
-    font-size: .8rem;
-  } */
   
   .splashScreenAlt__titulo {
     font-size: 3rem;
   }
-  
-  /* .slogan {
-    font-size: 1.4rem;
-  } */
 }
 
 
