@@ -56,7 +56,7 @@
   y se ve mejor con center, en todo lo demas el flex-end se ve mejor */
   /* align-self: center; */
   align-self: flex-end;
-  
+  pointer-events: none;
 }
 
 .hero__loginButton {
