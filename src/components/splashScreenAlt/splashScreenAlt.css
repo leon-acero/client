@@ -190,9 +190,9 @@
     padding-left: 9rem;
   }
 
-  .splashScreenAlt__subTitulo {
+  /* .splashScreenAlt__subTitulo {
     font-size: .8rem;
-  }
+  } */
   
   .splashScreenAlt__titulo {
     font-size: 3rem;
@@ -217,7 +217,7 @@
   .splashScreenAlt__leftPanel {
     padding-left: 0;
     /* margin-top: 6rem;  */
-    padding-top: 1.6rem;
+    padding-top: 1.8rem;
     margin-bottom: 2rem;
     margin-left: 1.4rem;
     margin-right: 1.4rem;
