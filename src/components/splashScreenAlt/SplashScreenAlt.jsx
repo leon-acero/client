@@ -32,7 +32,7 @@ function SplashScreenAlt() {
               <h1 className='splashScreenAlt__titulo'>por los dulces</h1>
             </div>
             <div className='container_slogan'>
-              <p className='slogan'>Llevamos los dulces más deliciosos a tiendas y negocios.</p>
+              <p className='slogan'>Llevamos dulces a tiendas y negocios en el área Metropolitana de Monterrey.</p>
             </div>
           </div>
           <Link className='hero__loginButton' to="/login">Iniciar sesión</Link>
