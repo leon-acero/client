@@ -217,14 +217,16 @@
   .splashScreenAlt__leftPanel {
     padding-left: 0;
     /* margin-top: 6rem;  */
+    padding-top: 1.6rem;
     margin-bottom: 2rem;
     margin-left: 1.4rem;
     margin-right: 1.4rem;
   }
 
-  /* .laptops {
-    margin-top: 2rem;
-  } */
+  .laptops {
+    padding-left: 0rem;
+  } 
+  
   .hero__loginButton {
     display: none;
   }
