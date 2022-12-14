@@ -189,13 +189,17 @@
   /* background-color: #55c57a;
   color: #fff; */
 
-  background: #ffd60a; 
+  /* background: #ffd60a;  */
+  background-color: #faba09; 
+  color: #071b2e;
+
   border: 1px solid;
   border-color:  #838d12;
 }
+
 .btn--green::after {
-  /* background-color: #55c57a; */
-  background: #ffd60a;
+  /* background: #ffd60a; */
+  background: #faba09;
 }
 
 .btn--green:disabled,

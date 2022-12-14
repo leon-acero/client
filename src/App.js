@@ -44,6 +44,7 @@ import ReportWholeBusinessSalesByYear from './pages/reports/reportWholeYearSales
 
 import { useMatchMedia } from "./hooks/useMatchMedia";
 import SplashScreen from './components/splashScreen/SplashScreen';
+import SplashScreenAlt from './components/splashScreenAlt/SplashScreenAlt';
 // import NoMatch from './components/noMatch/NoMatch';
 
 
@@ -65,7 +66,8 @@ function App() {
         !currentUser && (
             <Switch>
               <Route exact path="/">
-                <SplashScreen />
+                {/* <SplashScreen /> */}
+                <SplashScreenAlt />
               </Route>
 
               <Route exact path="/login">

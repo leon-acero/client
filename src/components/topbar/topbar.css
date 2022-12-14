@@ -106,20 +106,9 @@
 }
 
 .loginButton {
-  /* background-image: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    from(#f12711),
-    to(#f5af19)
-    ); */
-    /* background: linear-gradient(to right, #f12711, #f5af19); */
-    /* background: linear-gradient(to right, #8e2de2, #4a00e0); */
-    /* background: linear-gradient(to right, #0575e6, #021b79); */
-    /* background: linear-gradient(to right, #000428, #004e92); */
-
-  /* background: linear-gradient(to right, #6190e8, #a7bfe8); */
-  background: linear-gradient(to right, #4776e6, #8e54e9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
+  /* background: linear-gradient(to right, #4776e6, #8e54e9);  */
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   cursor: pointer;
   border: none;
@@ -136,6 +125,14 @@
   overflow: hidden;
 
   position: relative;
+
+  background-color: #faba09; 
+  color: #071b2e;
+  font-size: 1.4rem;
+  font-weight: 400;
+  width: 12rem;
+  text-align: center;
+
   /*background-color: #04AA6D;
   border: none;
   font-size: 28px;
