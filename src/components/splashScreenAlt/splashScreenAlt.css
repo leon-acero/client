@@ -217,7 +217,7 @@
   .splashScreenAlt__leftPanel {
     padding-left: 0;
     margin-top: 1.2rem; 
-    padding-top: 1.8rem;
+    /* padding-top: 1.8rem; */
     margin-bottom: 2rem;
     margin-left: 1.4rem;
     margin-right: 1.4rem;
@@ -237,6 +237,10 @@
 
   .container_slogan {
     margin-bottom: 1rem;
+  }
+
+  .splashScreenAlt__subTitulo {
+    display: none;
   }
 
 }
