@@ -224,6 +224,9 @@
   /* .laptops {
     margin-top: 2rem;
   } */
+  .hero__loginButton {
+    display: none;
+  }
 
   .splashScreenAlt__mujer-modelo {
     align-self: flex-end;
