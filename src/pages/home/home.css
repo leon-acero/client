@@ -1,6 +1,7 @@
 .home{
     height: calc(100vh - 5rem);
     flex: 4;
+    overflow-y: hidden;
 }
 
 

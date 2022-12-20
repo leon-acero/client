@@ -1,15 +1,10 @@
-import "./searchClient.css"
-import axios, { regresaMensajeDeError } from '../../../utils/axios';
+import "./forgotPassword.css";
+// import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
 /*******************************    React     *******************************/
 import { useState, useRef, useEffect } from 'react'
 /****************************************************************************/
 
-/***************************    Components     ******************************/
-import Table from '../../../components/table/Table';
-import SkeletonElement from '../../../components/skeletons/SkeletonElement';
-// import ClientFound from '../clientFound/ClientFound';
-/****************************************************************************/
 
 /**************************    Snackbar    **********************************/
 import Snackbar from '@mui/material/Snackbar';
@@ -20,6 +15,7 @@ import { Alert } from '@mui/material';
 
 /**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
+import axios, { FRONT_END_URL, regresaMensajeDeError } from '../../utils/axios';
 
 
 const containerVariants = {
@@ -34,21 +30,20 @@ const containerVariants = {
 /****************************************************************************/
 
 
-export default function SearchClient() {
+function ForgotPassword() {
 
   /**************************    useState    **********************************/
-  // query guarda lo que el usuario capturó para iniciar la busqueda
+  // email guarda lo que el usuario capturó para iniciar la busqueda
   // data es un Array con el resultado de la búsqueda
   // isSearching es un boolean para saber si se esta realizando una búsqueda
 
-  const [query, setQuery] = useState("");
+  const [email, setEmail] = useState("");
   // const [data, setData] = useState([]);
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   /*****************************************************************************/
-
 
   /*****************************    useRef    **********************************/
   // inputRef lo uso para que al cargar la pagina ponga el focus en el Buscar
@@ -64,60 +59,73 @@ export default function SearchClient() {
   },[])
   /*****************************************************************************/
 
-  
+
   /***************************     handleSearch    **************************/
   // Es el handle que se encarga de hacer la búsqueda
   /**************************************************************************/
-  const handleSearch = async (event) => {
+  const handleForgotPassword = async (event) => {
     event.preventDefault();
 
     if (isSearching)
       return;
 
-    // console.log("query", query);
-    // const regExOptions = `businessName[regex]=(?i)${query}&sort=businessName`;
+    console.log("email", email);
+    // const regExOptions = `businessName[regex]=(?i)${email}&sort=businessName`;
 
     try {
-      if (query.length > 2) {
+      if (email.length > 2) {
         setIsSearching(true);
   
-        setData(null);
+        // setData(null);
         
-        // const res = await axios ({
-        //   withCredentials: true,
-        //   method: 'GET',
-        //   // url: `http://127.0.0.1:8000/api/v1/clients?q=${query}`
-        //   // url: `http://127.0.0.1:8000/api/v1/clients?${regExOptions}`
-
-        //   url: `http://127.0.0.1:8000/api/v1/clients/search-client/${query}`
-        //   // url: `https://eljuanjo-dulces.herokuapp.com/api/v1/clients/search-client/${query}`
-  
-        // });
-
-        const res = await axios.get (`/api/v1/clients/search-client/${query}`);
+        const res = await axios.post('/api/v1/users/forgotPassword', {
+          email: email,
+          urlEncoded: FRONT_END_URL
+        });
         
-        // console.log(res.data.data.data);
+        console.log("response", res);
+        console.log("respuesta", res.data);
+
+        if (res.data.status === 'success') {
+          // let timeout = 1500;
+          if (!res.data.problemWithEmail) {
+            console.log("The Email was sent succesfully!");
+
+            setMensajeSnackBar("El correo fue enviado. Favor de revisar tu correo y sigue las instrucciones para cambiar tu password. Si no ves el correo checa tu bandeja de Spam o Junk.")
+            setOpenSnackbar(true);
+          }
+          else
+          {
+            console.log("There was an error sending the email. Please try again later.");
+            setMensajeSnackBar("Hubo un error al enviar el correo. Vuelve a intentarlo.")
+            setOpenSnackbar(true);
+            // timeout = 7000;
+          }
+          // window.setTimeout ( () =>{
+          // 	location.assign('/');
+          // }, timeout);
+        }  
 
         setIsSearching(false);
-        setData(res.data.data.data);
+        // setData(res.data.data.data);
         
-        if (res.data.data.data.length === 0) {
-          setMensajeSnackBar("No se encontró un Negocio con esa búsqueda.")
-          setOpenSnackbar(true);
-        }
+        // if (res.data.data.data.length === 0) {
+        //   setMensajeSnackBar("No se encontró un Negocio con esa búsqueda.")
+        //   setOpenSnackbar(true);
+        // }
         inputRef.current.focus();
       }
 
     }
     catch (err) {
-      console.log("err");
+      console.log("err", err);
+      console.log("Hubo un error al mandar el correo electrónico");
+
       setIsSearching(false);
-      // setMensajeSnackBar("Hubo un error al realizar la búsqueda. Vuelva a intentar.")
       setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
   }
-
 
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
@@ -148,7 +156,7 @@ export default function SearchClient() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <m.div className='searchClient'
+      <m.div className='forgotPassword'
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -166,55 +174,33 @@ export default function SearchClient() {
           </Alert>
         </Snackbar>
 
-        {/* <h2><span>PASO 1: </span>BUSCAR Y ELEGIR UN NEGOCIO</h2> */}
-        <form className='searchClientInput' onSubmit={handleSearch}>
-          {/* <label>Buscar Cliente</label> */}
+        <h2 className='forgotPassword__title'>Olvidaste tu Password</h2>
+        <form className='formForgotPassword' onSubmit={handleForgotPassword}>
+          <label className='labelCorreoElectronico' htmlFor="email">Correo Electrónico:</label>
           <input
+            className="inputUserForgotPassword"                  
             ref={inputRef}
-            type="text"
-            placeholder="Buscar Negocio, ejemplo: Abarrotes El Puerto"
-            className="clientSearchInput"                  
-            onChange={(e) => setQuery(e.target.value.toLowerCase())}
+            type="email"
+            value={email || ''}
+            name="email"
+            id="email"
+            placeholder="eljuanjo@ejemplo.com"
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
             required
-            onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 3 y 80 caracteres')} 
+            onInvalid={e=> e.target.setCustomValidity('El Correo Electrónico es inválido, debe tener entre 3 y 80 caracteres')} 
             onInput={e=> e.target.setCustomValidity('')} 
             minLength="3"
             maxLength="80"
+            autoComplete="off" 
           />
-          <button className="btnSearchClient" disabled={isSearching}>
-            {isSearching ? 'Buscando...' : 'Buscar'}
+          <button className="btnForgotPassword" disabled={isSearching}>
+            {isSearching ? 'Enviando...' : 'Enviar'}
           </button>
         </form>
-        
-        {
-          data && <Table data={data} />
-        }
-
-        {
-          isSearching && <SkeletonElement 
-                            type="rectangular" 
-                            width="100%" height="5.6rem" 
-                          />
-        }
-        {/* <p>{data.id} {data.businessName} {data.cellPhone}</p> */}
-
-        {/* <div className="container__ClientsFound">
-          {
-            data.map(client=> 
-              (
-                <ClientFound 
-                      key={client.id} 
-                      id={client.id} 
-                      businessName={client.businessName} 
-                      cellPhone={client.cellPhone} 
-                      esMayorista={client.esMayorista} />
-              ) 
-            )
-          }
-        </div> */}
       </m.div>
 
-    </LazyMotion>
+    </LazyMotion>  
   )
 }
 
+export default ForgotPassword

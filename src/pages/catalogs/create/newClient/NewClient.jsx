@@ -339,7 +339,7 @@ export default function NewClient() {
             <input 
                 className="inputGeneralDataType"
                 type="text" 
-                placeholder="81 80 118990" 
+                placeholder="81 8011 8990" 
                 onChange={handleChange}
                 name="cellPhone"
                 value={itemData.cellPhone || ''}  
@@ -354,7 +354,7 @@ export default function NewClient() {
             <input 
                 className="inputGeneralDataType"
                 type="text" 
-                placeholder="81 12 345678" 
+                placeholder="81 1234 5678" 
                 onChange={handleChange}
                 name="fixedPhone"
                 value={itemData.fixedPhone || ''}   

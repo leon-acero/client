@@ -45,7 +45,9 @@ import ReportWholeBusinessSalesByYear from './pages/reports/reportWholeYearSales
 import { useMatchMedia } from "./hooks/useMatchMedia";
 import SplashScreen from './components/splashScreen/SplashScreen';
 import SplashScreenAlt from './components/splashScreenAlt/SplashScreenAlt';
-// import NoMatch from './components/noMatch/NoMatch';
+import ForgotPassword from './pages/forgotPassword/ForgotPassword';
+import ResetPassword from './pages/resetPassword/ResetPassword';
+import NoMatch from './components/noMatch/NoMatch';
 
 
 function App() {
@@ -74,9 +76,17 @@ function App() {
                 <Login />
               </Route>
 
-              {/* <Route exact path="*">
+              <Route exact path="/forgot-password">
+                <ForgotPassword />
+              </Route>
+
+              <Route exact path="/reset-password/:resetToken">
+                <ResetPassword />
+              </Route>
+
+              <Route path="*">
                 <NoMatch />
-              </Route> */}
+              </Route>
             </Switch>
         ) 
       }
@@ -113,9 +123,9 @@ function App() {
                 <Logout />
               </Route>
 
-              {/* <Route exact path="*">
+              <Route path="*">
                 <NoMatch />
-              </Route> */}
+              </Route>
 
             </Switch>
           </div>
@@ -242,9 +252,9 @@ function App() {
                   <Logout />
                 </Route>
 
-                {/* <Route exact path="*">
+                <Route path="*">
                   <NoMatch />
-                </Route> */}
+                </Route>
 
               </Switch>
 

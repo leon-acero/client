@@ -1,6 +1,8 @@
 import "./client.css";
 import defaultCameraImage from "../../../../camera.webp"
-// import axios from "axios";
+import axios, { regresaMensajeDeError } from '../../../../utils/axios';
+
+import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
@@ -16,8 +18,6 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import {FaTimes} from "react-icons/fa";
 import { Alert } from '@mui/material';
-import axios, { regresaMensajeDeError } from '../../../../utils/axios';
-import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 /****************************************************************************/
 
 

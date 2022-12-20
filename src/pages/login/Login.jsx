@@ -213,37 +213,39 @@ export default function Login() {
               <div className="form__group">
                 <label htmlFor="email" className="form__label" >Correo Electrónico</label>
                 <input 
-                      ref={inputRef}
-                      type="email" 
-                      id="email" 
-                      className="form__input" 
-                      placeholder='micorreo@ejemplo.com' 
-                      required 
-                      onChange={handleChange}
-                      name="email"
-                      value={data.email || ''}
-                      onInvalid={e=> e.target.setCustomValidity('El Email debe tener entre 5 y 20 caracteres')} 
-                      onInput={e=> e.target.setCustomValidity('')} 
-                      minLength="5"
-                      maxLength="20"
+                  ref={inputRef}
+                  type="email" 
+                  id="email" 
+                  className="form__input" 
+                  placeholder='micorreo@ejemplo.com' 
+                  required 
+                  onChange={handleChange}
+                  name="email"
+                  value={data.email || ''}
+                  onInvalid={e=> e.target.setCustomValidity('El Email debe tener entre 5 y 20 caracteres')} 
+                  onInput={e=> e.target.setCustomValidity('')} 
+                  minLength="5"
+                  maxLength="20"
                 />
               </div>
               <div className="form__group">
                 <label htmlFor="password" className="form__label" >Password</label>
                 <input 
-                      type="password" 
-                      id="password" 
-                      className="form__input" 
-                      placeholder='••••••••' 
-                      required 
-                      minLength="8" 
-                      onChange={handleChange}
-                      name="password"
-                      value={data.password || ''}
+                  type="password" 
+                  id="password" 
+                  className="form__input" 
+                  placeholder='••••••••' 
+                  required 
+                  minLength="8" 
+                  onChange={handleChange}
+                  name="password"
+                  value={data.password || ''}
                 />
               </div>
               <div className="form__group ma-bt-md">
-                <Link className="forgot-password" to="/forgotPassword">Olvidé mi Password?
+                <Link 
+                      className="forgot-password" 
+                      to="/forgot-password">¿Olvidaste tu Password?
                 </Link>
               </div>
               <div className="form__group">
