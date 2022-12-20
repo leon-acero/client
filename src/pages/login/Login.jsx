@@ -239,6 +239,8 @@ export default function Login() {
                   minLength="8" 
                   onChange={handleChange}
                   name="password"
+                  onInvalid={e=> e.target.setCustomValidity('El Password debe ser de mínimo 8 caracteres')} 
+                  onInput={e=> e.target.setCustomValidity('')} 
                   value={data.password || ''}
                 />
               </div>
