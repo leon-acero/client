@@ -1,6 +1,10 @@
 import "./login.css"
 import axios, { regresaMensajeDeError } from "../../utils/axios";
 
+import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../components/offlineFallback/OfflineFallback';
+
+
 /****************************    React    **********************************/
 import { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
@@ -41,6 +45,12 @@ const containerVariants = {
 
 export default function Login() {
 
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
+
   /****************************    useState    ********************************/
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -73,8 +83,13 @@ export default function Login() {
   /**************************    useEffect    **********************************/
   // Al cargar la pagina pone el focus en el Username
   useEffect(()=>{
+    
+    if (!isOnline) {
+      return;
+    }
+
     inputRef.current.focus();
-  },[])
+  },[isOnline])
   /*****************************************************************************/
 
 
@@ -184,79 +199,89 @@ export default function Login() {
 
 
   return (
-    <LazyMotion features={domAnimation}>
+    <>
+      {
+        isOnline && (
+          <LazyMotion features={domAnimation}>
 
-      <m.div className="login"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      >
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={5000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert 
-              severity= {"error"} 
-              action={action}
-              sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-          >{mensajeSnackBar}
-          </Alert>
-        </Snackbar>   
+            <m.div className="login"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
+              >
+                <Alert 
+                    severity= {"error"} 
+                    action={action}
+                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+                >{mensajeSnackBar}
+                </Alert>
+              </Snackbar>   
+      
+              <main className="main">
+                <div className="login-form">
+                  <h2 className="heading-secondary ma-bt-lg">Inicia sesión</h2>
+      
+                  <form onSubmit={handleSubmit}>
+                    <div className="form__group">
+                      <label htmlFor="email" className="form__label" >Correo Electrónico</label>
+                      <input 
+                        ref={inputRef}
+                        type="email" 
+                        id="email" 
+                        className="form__input" 
+                        placeholder='micorreo@ejemplo.com' 
+                        required 
+                        onChange={handleChange}
+                        name="email"
+                        value={data.email || ''}
+                        onInvalid={e=> e.target.setCustomValidity('El Email debe tener entre 5 y 20 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        minLength="5"
+                        maxLength="20"
+                      />
+                    </div>
+                    <div className="form__group">
+                      <label htmlFor="password" className="form__label" >Password</label>
+                      <input 
+                        type="password" 
+                        id="password" 
+                        className="form__input" 
+                        placeholder='••••••••' 
+                        required 
+                        minLength="8" 
+                        onChange={handleChange}
+                        name="password"
+                        onInvalid={e=> e.target.setCustomValidity('El Password debe ser de mínimo 8 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        value={data.password || ''}
+                      />
+                    </div>
+                    <div className="form__group ma-bt-md">
+                      <Link 
+                            className="forgot-password" 
+                            to="/forgot-password">¿Olvidaste tu Password?
+                      </Link>
+                    </div>
+                    <div className="form__group">
+                      <button className="btn btn--green" disabled={isLoading}>{isLoading ? 'Entrando a El Juanjo' : 'Iniciar mi sesión'}</button>
+                    </div>
+                  </form>
+                </div>
+              </main>
+            </m.div>
+          </LazyMotion>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />
+      }
+    </>
 
-        <main className="main">
-          <div className="login-form">
-            <h2 className="heading-secondary ma-bt-lg">Inicia sesión</h2>
-
-            <form onSubmit={handleSubmit}>
-              <div className="form__group">
-                <label htmlFor="email" className="form__label" >Correo Electrónico</label>
-                <input 
-                  ref={inputRef}
-                  type="email" 
-                  id="email" 
-                  className="form__input" 
-                  placeholder='micorreo@ejemplo.com' 
-                  required 
-                  onChange={handleChange}
-                  name="email"
-                  value={data.email || ''}
-                  onInvalid={e=> e.target.setCustomValidity('El Email debe tener entre 5 y 20 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  minLength="5"
-                  maxLength="20"
-                />
-              </div>
-              <div className="form__group">
-                <label htmlFor="password" className="form__label" >Password</label>
-                <input 
-                  type="password" 
-                  id="password" 
-                  className="form__input" 
-                  placeholder='••••••••' 
-                  required 
-                  minLength="8" 
-                  onChange={handleChange}
-                  name="password"
-                  onInvalid={e=> e.target.setCustomValidity('El Password debe ser de mínimo 8 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  value={data.password || ''}
-                />
-              </div>
-              <div className="form__group ma-bt-md">
-                <Link 
-                      className="forgot-password" 
-                      to="/forgot-password">¿Olvidaste tu Password?
-                </Link>
-              </div>
-              <div className="form__group">
-                <button className="btn btn--green" disabled={isLoading}>{isLoading ? 'Entrando a El Juanjo' : 'Iniciar mi sesión'}</button>
-              </div>
-            </form>
-          </div>
-        </main>
-      </m.div>
-    </LazyMotion>
   )
 }

@@ -2,7 +2,9 @@ import "./productList.css";
 import defaultCameraImage from "../../../../camera.webp"
 
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
-// import axios from "axios";
+
+import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
 
 /*******************************    React     *******************************/
 import { useEffect, useRef, useState } from "react";
@@ -26,14 +28,16 @@ import { DataGrid } from "@mui/x-data-grid";
 /**************************    Components    ********************************/
 import BasicDialog from '../../../../components/basicDialog/BasicDialog';
 import SkeletonElement from '../../../../components/skeletons/SkeletonElement';
-import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 /****************************************************************************/
 
 
 
 export default function ProductList() {
 
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
   const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
 
   /**************************    useRef    **********************************/
   // avoidRerenderFetchProduct evita que se mande llamar dos veces al
@@ -117,6 +121,10 @@ export default function ProductList() {
   /****************************************************************************/
   useEffect (() => {
 
+    if (!isOnline) {
+      return;
+    }
+
     // 1er Validacion: Que useEffect NO repinte dos veces    
     if (avoidRerenderFetchProduct.current) {
       return;
@@ -164,7 +172,7 @@ export default function ProductList() {
 
     }
     fetchProducts();
-  }, [isLoading]);
+  }, [isLoading, isOnline]);
 
 
   /*************************    openDeleteDialog    ***************************/
@@ -334,62 +342,69 @@ export default function ProductList() {
   ];
 
   return (
-    <div className="productList">
-      {/* {
-        !isOnline && <p>NO Estas en linea</p>
-      } */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {updateSuccess ?  "success" : "error"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>
-
+    <>
       {
-      /* ////////////////////////////////////////////////////////////////
-      // -Dialog
-      //////////////////////////////////////////////////////////////// 
-      */}
-      <BasicDialog
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          message= {`¿Estas seguro que deseas borrar a ${currentProduct.productName}?`}
-          onSubmit={handleDelete}
-          captionAceptar={"Borrar"}
-          captionCancelar={"Cancelar"}
-      />
-
-      <div className="productTitleContainer">
-        <h1 className="productTitle">Catálogo de Productos</h1>
-        <Link to="/new-product">
-          <button className="productAddButton">Crear</button>
-        </Link>
-      </div>
-      { 
-        productList?.length > 0 &&
-        <DataGrid className="dataGrid"
-          initialState={{
-            pagination: {
-              pageSize: 8,
-            },
-          }}
-          // pageSize={8}
-          rows={productList}
-          disableSelectionOnClick
-          columns={columns}
-          rowsPerPageOptions={[8, 16, 24]}
-          // checkboxSelection
-        />
+        isOnline && (
+          <div className="productList">
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {updateSuccess ?  "success" : "error"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>
+      
+            {
+            /* ////////////////////////////////////////////////////////////////
+            // -Dialog
+            //////////////////////////////////////////////////////////////// 
+            */}
+            <BasicDialog
+                open={openModal}
+                onClose={() => setOpenModal(false)}
+                message= {`¿Estas seguro que deseas borrar a ${currentProduct.productName}?`}
+                onSubmit={handleDelete}
+                captionAceptar={"Borrar"}
+                captionCancelar={"Cancelar"}
+            />
+      
+            <div className="productTitleContainer">
+              <h1 className="productTitle">Catálogo de Productos</h1>
+              <Link to="/new-product">
+                <button className="productAddButton">Crear</button>
+              </Link>
+            </div>
+            { 
+              productList?.length > 0 &&
+              <DataGrid className="dataGrid"
+                initialState={{
+                  pagination: {
+                    pageSize: 8,
+                  },
+                }}
+                // pageSize={8}
+                rows={productList}
+                disableSelectionOnClick
+                columns={columns}
+                rowsPerPageOptions={[8, 16, 24]}
+                // checkboxSelection
+              />
+            }
+            {
+              isLoading && <SkeletonElement type="rectangular" />
+            }
+          </div>
+        )
       }
       {
-        isLoading && <SkeletonElement type="rectangular" />
+        !isOnline && <OfflineFallback />       
       }
-    </div>
+    </>
+
   );
 }

@@ -1,10 +1,12 @@
 import "./resetPassword.css"
 import axios, { regresaMensajeDeError } from '../../utils/axios';
 
+import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../components/offlineFallback/OfflineFallback';
+
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
 
 /**************************    Snackbar    **********************************/
 import Snackbar from '@mui/material/Snackbar';
@@ -149,71 +151,80 @@ function ResetPassword() {
 
 
   return (
-    <div className='resetPassword'>
+    <>
+      {
+        isOnline && (
+          <div className='resetPassword'>
 
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            // severity= {updateSuccess ?  "success" : "error"} 
-            severity= {"success"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>
-
-      <main className="main-resetPassword">
-        <div className="form-resetPassword">
-          <h2 className='heading-secondary ma-bt-lg'>Cambia tu Password</h2>
-
-          <form className='form--reset-password' onSubmit={handleSubmit}>
-            <div className='form__group'>
-              <label 
-                    htmlFor='password' 
-                    className='form__label' >Password
-              </label>
-              <input 
-                    id="password" 
-                    className='form__input' 
-                    type="password" 
-                    placeholder='••••••••' 
-                    required 
-                    minLength="8"
-                    value={data.password || ''}
-                    name="password"
-                    onInvalid={e=> e.target.setCustomValidity('El Password debe ser de mínimo 8 caracteres')} 
-                    onInput={e=> e.target.setCustomValidity('')} 
-                    onChange={handleChange} />
-            </div>
-            <div className='form__group ma-bt-md'>
-              <label 
-                    htmlFor='confirmPassword' 
-                    className='form__label'>Confirma el Password
-              </label>
-              <input 
-                    id="confirmPassword" 
-                    className='form__input' 
-                    type="password" 
-                    placeholder='••••••••' 
-                    required 
-                    minLength="8"
-                    value={data.confirmPassword || ''}
-                    name="confirmPassword"
-                    onInvalid={e=> e.target.setCustomValidity('La confirmación del Password debe ser de mínimo 8 caracteres')} 
-                    onInput={e=> e.target.setCustomValidity('')}
-                    onChange={handleChange} />
-            </div>
-            <div className='form__group form__button'>
-              <button className='btn btn--green' disabled={isSending}>{isSending ? 'Enviando...' : 'Enviar'}</button>
-            </div>
-          </form>
-
-        </div>
-      </main>
-    </div>
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  // severity= {updateSuccess ?  "success" : "error"} 
+                  severity= {"success"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>
+      
+            <main className="main-resetPassword">
+              <div className="form-resetPassword">
+                <h2 className='heading-secondary ma-bt-lg'>Cambia tu Password</h2>
+      
+                <form className='form--reset-password' onSubmit={handleSubmit}>
+                  <div className='form__group'>
+                    <label 
+                          htmlFor='password' 
+                          className='form__label' >Password
+                    </label>
+                    <input 
+                          id="password" 
+                          className='form__input' 
+                          type="password" 
+                          placeholder='••••••••' 
+                          required 
+                          minLength="8"
+                          value={data.password || ''}
+                          name="password"
+                          onInvalid={e=> e.target.setCustomValidity('El Password debe ser de mínimo 8 caracteres')} 
+                          onInput={e=> e.target.setCustomValidity('')} 
+                          onChange={handleChange} />
+                  </div>
+                  <div className='form__group ma-bt-md'>
+                    <label 
+                          htmlFor='confirmPassword' 
+                          className='form__label'>Confirma el Password
+                    </label>
+                    <input 
+                          id="confirmPassword" 
+                          className='form__input' 
+                          type="password" 
+                          placeholder='••••••••' 
+                          required 
+                          minLength="8"
+                          value={data.confirmPassword || ''}
+                          name="confirmPassword"
+                          onInvalid={e=> e.target.setCustomValidity('La confirmación del Password debe ser de mínimo 8 caracteres')} 
+                          onInput={e=> e.target.setCustomValidity('')}
+                          onChange={handleChange} />
+                  </div>
+                  <div className='form__group form__button'>
+                    <button className='btn btn--green' disabled={isSending}>{isSending ? 'Enviando...' : 'Enviar'}</button>
+                  </div>
+                </form>
+      
+              </div>
+            </main>
+          </div>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />
+      }
+    </>
   )
 }
 

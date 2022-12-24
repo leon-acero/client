@@ -3,11 +3,13 @@ import defaultCameraImage from "../../../../camera.webp"
 
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
+import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
+
 /*******************************    React     *******************************/
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 /****************************************************************************/
-
 
 /**************************    React Icons    *******************************/
 import {FaTrashAlt} from "react-icons/fa";
@@ -25,14 +27,17 @@ import { DataGrid } from "@mui/x-data-grid";
 /**************************    Components    ********************************/
 import BasicDialog from '../../../../components/basicDialog/BasicDialog';
 import SkeletonElement from '../../../../components/skeletons/SkeletonElement';
-// import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 /****************************************************************************/
 
 
 
 export default function ClientList() {
 
-  // const isOnline = useNavigatorOnLine();
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
   
   /**************************    useRef    **********************************/
   // avoidRerenderFetchClient evita que se mande llamar dos veces al
@@ -117,6 +122,10 @@ export default function ClientList() {
   /****************************************************************************/
   useEffect (() => {
 
+    if (!isOnline) {
+      return;
+    }
+
     // 1er Validacion: Que useEffect NO repinte dos veces
     if (avoidRerenderFetchClient.current) {
       return;
@@ -164,7 +173,7 @@ export default function ClientList() {
       }
     }
     fetchClients();
-  }, [isLoading]);
+  }, [isLoading, isOnline]);
 
 
   /*************************    openDeleteDialog    ***************************/
@@ -298,65 +307,75 @@ export default function ClientList() {
   ];
 
   return (
-    <div className="clientList">
-
-      <Snackbar
-      open={openSnackbar}
-      autoHideDuration={5000}
-      onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {updateSuccess ?  "success" : "error"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>
-
+    <>
       {
-      /* ////////////////////////////////////////////////////////////////
-      // -Dialog
-      //////////////////////////////////////////////////////////////// 
-      */}
-      <BasicDialog
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        message= {`¿Estas seguro que deseas borrar a ${currentClient.businessName}?`}
-        onSubmit={handleDelete}
-        captionAceptar={"Borrar"}
-        captionCancelar={"Cancelar"}
-      />
+        isOnline && (
+          <div className="clientList">
 
-      <div className="clientTitleContainer">
-        <h1 className="clientTitle">Catálogo de Clientes</h1>
-        <Link to="/new-client">
-          <button className="clientAddButton">Crear</button>
-        </Link>
-      </div>
-      {
-        clientList?.length > 0 &&
-          <DataGrid className="dataGrid"
-            initialState={{
-              pagination: {
-                pageSize: 8,
-              },
-            }}
-            rows={clientList}
-            disableSelectionOnClick
-            columns={columns}
-            rowsPerPageOptions={[8, 16, 24]}
-            // pageSize={8}
-            // checkboxSelection
-          />
+            <Snackbar
+            open={openSnackbar}
+            autoHideDuration={5000}
+            onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {updateSuccess ?  "success" : "error"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>
+      
+            {
+            /* ////////////////////////////////////////////////////////////////
+            // -Dialog
+            //////////////////////////////////////////////////////////////// 
+            */}
+            <BasicDialog
+              open={openModal}
+              onClose={() => setOpenModal(false)}
+              message= {`¿Estas seguro que deseas borrar a ${currentClient.businessName}?`}
+              onSubmit={handleDelete}
+              captionAceptar={"Borrar"}
+              captionCancelar={"Cancelar"}
+            />
+      
+            <div className="clientTitleContainer">
+              <h1 className="clientTitle">Catálogo de Clientes</h1>
+              <Link to="/new-client">
+                <button className="clientAddButton">Crear</button>
+              </Link>
+            </div>
+            {
+              clientList?.length > 0 &&
+                <DataGrid className="dataGrid"
+                  initialState={{
+                    pagination: {
+                      pageSize: 8,
+                    },
+                  }}
+                  rows={clientList}
+                  disableSelectionOnClick
+                  columns={columns}
+                  rowsPerPageOptions={[8, 16, 24]}
+                  // pageSize={8}
+                  // checkboxSelection
+                />
+            }
+            {
+              isLoading && <SkeletonElement type="rectangular" />
+            }
+            {/* <div>
+              <h1>Estas {isOnline ? 'online' : 'offline'}.</h1>;
+            </div> */}
+      
+          </div>
+        )
       }
       {
-        isLoading && <SkeletonElement type="rectangular" />
+        !isOnline && <OfflineFallback />       
       }
-      {/* <div>
-        <h1>Estas {isOnline ? 'online' : 'offline'}.</h1>;
-      </div> */}
+    </>
 
-    </div>
   );
 }
 

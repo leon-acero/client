@@ -1,5 +1,7 @@
 import "./updateOrder.css"
-// import axios from "axios";
+
+import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
 
 /****************************    React    ***********************************/
 import { useState, useEffect, useRef, useContext } from 'react';
@@ -51,6 +53,12 @@ const containerVariants = {
 
 
 export default function UpdateOrder() {
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
 
   /****************************    useParams    *******************************/
   // El id del usuario de la App, es decir el id del Vendedor que esta usando la App
@@ -198,6 +206,10 @@ export default function UpdateOrder() {
 
   useEffect (() => {
 
+    if (!isOnline) {
+      return;
+    }
+
     if (avoidRerenderFetchClient.current) {
       return;
     }
@@ -253,7 +265,7 @@ export default function UpdateOrder() {
       fetchOrder();
     }
    
-  }, [clientId, fecha, theBasket, usarComponenteComo]);
+  }, [clientId, fecha, theBasket, usarComponenteComo, isOnline]);
 
   
   /**************************    theBasket    **********************************/
@@ -632,6 +644,10 @@ export default function UpdateOrder() {
   // Carga el Catálogo de Productos al cargar la Página
   useEffect (() => {
     
+    if (!isOnline) {
+      return;
+    }
+
     if (avoidRerenderFetchProducts.current) {
       return;
     }
@@ -678,7 +694,7 @@ export default function UpdateOrder() {
       }
     }
     fetchPosts();
-  }, [isLoading]);
+  }, [isLoading, isOnline]);
   /****************************************************************************/
   
 
@@ -812,312 +828,322 @@ export default function UpdateOrder() {
 
 
   return (
-    <LazyMotion features={domAnimation} >
+    <>
+      {
+        isOnline && (
+          <LazyMotion features={domAnimation} >
 
-      <m.div className="updateOrder"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"      
-      >
-
-          <BasicDialog
-            open={openModal}
-            onClose={() => setOpenModal(false)}
-            message= {`¿Estas seguro que deseas borrar el Pedido?`}
-            onSubmit={handleDeleteOrder}
-            captionAceptar={"Borrar"}
-            captionCancelar={"Cancelar"}
-          />
-
-          <BasicDialog
-            open={openModalEstatusPedido}
-            onClose={() => setOpenModalEstatusPedido(false)}
-            message= {`El Pedido aun tiene estatus: Por Entregar, si deseas cerrar el pedido selecciona Cancelar, cambia el estatus a Entregado y vuelve a Grabar. Si deseas que el Pedido siga abierto selecciona Aceptar para grabar.`}
-            onSubmit={handlePlaceOrder}
-            captionAceptar={"Aceptar"}
-            captionCancelar={"Cancelar"}
-          />
-              
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={5000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert 
-              severity= {updateSuccess ?  "success" : "error"} 
-              action={action}
-              sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-          >{mensajeSnackBar}
-          </Alert>
-        </Snackbar>      
-
-        <div className="businessInfo">
-          <p className="businessInfo__businessName">{businessName}</p>
-          <p className="businessInfo__cellPhone">{cellPhone}</p>
-          <p className="businessInfo__esMayorista">{esMayorista ? "Mayorista" : "Minorista"}</p>
-        </div>
-
-        <div className="salesHeader">
-          <div className="searchBar">
-              <input 
-                    type="text" 
-                    placeholder='Buscar Producto...'
-                    className="searchInput" 
-                    onChange={e=>setSearchBarQuery(e.target.value.toString().toLowerCase())}
-              />
-              {/* <SearchIcon className="productSearch" /> */}
-              <FaSearch className="productSearch" />
-              {/* <button className="productSearch">Buscar</button> */}
-          </div>
-
-          {/* 
-          <div className="estatusPedidoPlaceOrder">
-            {
-              usarComponenteComo === "actualizarPedido" && 
-                    <button className="deleteOrderButton"
-                            disabled={isSaving}
-                            // onClick={handleDeleteOrder}
-                            onClick={openDeleteDialog}
-                    >{isDeleting ? 'Borrando...' : 'Borrar'}
-                    </button> 
-            }
-
-            <div className="container-estatusPedido">
-              <select 
-                  className="container-estatusPedido__select"
-                  id="estatusPedido" 
-                  value={theBasket.estatusPedido}
-                  onChange={handleEstatusPedido}
-                  name="estatusPedido"
-              >
-                  <option value="1">Por entregar</option>
-                  <option value="2">Entregado</option>
-              </select>          
-            </div>
-
-            <button className="placeOrderButton"
-                    disabled={isSaving}
-                    onClick={handlePlaceOrder}
+            <m.div className="updateOrder"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"      
             >
-              {usarComponenteComo === "nuevoPedido" &&
-                (isSaving ? 'Creando...' : 'Crear')
-              }
-              {usarComponenteComo === "actualizarPedido" &&
-                (isSaving ? 'Actualizando...' : 'Actualizar')
-              }
-            </button>
-            
-          </div> */}
-        </div>
-
-        <div className="makeOrder">
-          <div className="topPanel">
-            <p className="productListTitle">Catálogo de Productos</p>
-            <div className="makeOrder__container">
-              <div className="carousel">
-                {
-                  // productCatalog?.length === 0 && <Skeleton animation="wave" variant="rounded" width={980} height={320}  />
-                  isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
-                }
-                {
-                  productCatalog
-                    .filter(product => product.sku.toString().includes(searchBarQuery) ||
-                                      product.productName.toLowerCase().includes(searchBarQuery))
-                    .map((product, index) => 
-                      ( <ProductInput key={index}
-                                index={index} 
-                                product={product} 
-                                addProductToBasket={addProductToBasket}
-                                esMayorista={esMayorista}
-                        />
-                      )
-                    )
-                }
-              </div>
-            </div>  
-          </div>
-
-          <div className="bottomPanel">
-
-            <div className="newOrder__container">
-              <div className="newOrder--ordersTitle">
-                <p className="orderedProductsTitle">Productos Ordenados</p>
-                <div className="newOrderIconContainer">
-                  <FaShoppingCart className="newOrderIcon" />
-                  {
-                    theBasket?.productOrdered?.length > 0 && <span className="newOrderIconBadge">{theBasket?.productOrdered?.length}</span>
-                  }
-                </div>
-              </div>
-            </div>
-
-            <div className="productOrder">
-              {
-                theBasket?.productOrdered?.map((product, index)=> {
-                    return ( 
-                      <ProductOrdered 
-                        key={index}
-                        index={index} 
-                        theBasket={theBasket} 
-                        product={product}
-                        handleQuantityChange={handleQuantityChange} 
-                        removeProductFromBasket={removeProductFromBasket} 
-                        // seAplicaDescuento={seAplicaDescuento}
-                      />
-                    )
-                  }
-                )
-              }
-
-              <div className="descuento">
-                <input 
-                    className="descuento__checkbox"
-                    type="checkbox" 
-                    id="aplicarDescuento" 
-                    name="aplicarDescuento"
-                    checked={theBasket.seAplicaDescuento}
-                    value={theBasket.seAplicaDescuento}
-                    onChange={handleAplicaDescuento}
+      
+                <BasicDialog
+                  open={openModal}
+                  onClose={() => setOpenModal(false)}
+                  message= {`¿Estas seguro que deseas borrar el Pedido?`}
+                  onSubmit={handleDeleteOrder}
+                  captionAceptar={"Borrar"}
+                  captionCancelar={"Cancelar"}
                 />
-                <label className="descuento__label" htmlFor="aplicarDescuento">¿Aplicar 10% de Descuento?</label>
-              </div>
-
-              <div className="totalPedido">
-    
-                {/* Total Venta */}
-                <div className="totalPedido__container">
-                  <span className="totalPedido__item">Total Venta: </span>
-                  
-                  {/* <span className="totalPedido__currency">{`$${totalBasket}`}</span> */}
-                  <span className="totalPedido__currency">
-                    {
-                      // `$${totalBasket}`
-                      <NumericFormat 
-                              value={totalBasket} 
-                              decimalScale={2} 
-                              thousandSeparator="," 
-                              prefix={'$'} 
-                              decimalSeparator="." 
-                              displayType="text" 
-                              renderText={(value) => <span>{value}</span>}
-                      />
-                    }
-                  </span>
-                </div>
-
-                {/* Total Descuento */}
-                <div className="totalPedido__container">
-                  <span className="totalPedido__item">Total Descuento (-): </span>
-                  
-                  <span className="totalPedido__currency">
-                    {
-                      // `- $${totalDescuento}`
-                      <NumericFormat 
-                              value={totalDescuento} 
-                              decimalScale={2} 
-                              thousandSeparator="," 
-                              prefix={'$'} 
-                              decimalSeparator="." 
-                              displayType="text" 
-                              renderText={(value) => <span>{value}</span>}
-                      />
-                    }
-                  </span>
-                </div>
-
-                {/* Total Pedido = Total Venta - Total Descuento */}
-                <div className="totalPedido__container">
-                  <span className="totalPedido__item pedidoTotal">Total Pedido: </span>
-                  
-                  {/* <span className="totalPedido__currency pedidoTotal">{`$${totalBasket - totalDescuento}`}</span>          */}
-                  <span className="totalPedido__currency pedidoTotal">
-                    {/* {`$${totalBasket - totalDescuento}`} */}
-                    <NumericFormat 
-                              value={totalBasket - totalDescuento} 
-                              decimalScale={2} 
-                              thousandSeparator="," 
-                              prefix={'$'} 
-                              decimalSeparator="." 
-                              displayType="text" 
-                              renderText={(value) => <span>{value}</span>}
-                    />
-                  </span>         
-                </div>
-              </div>
-            </div>
-            
-          </div>
-
-          {/* REACT-SELECT
-          <div className="container-estatusPedido">
-            <label htmlFor="estatusPedido">Estatus</label>
-            <Select
-              className="container-estatusPedido__select"
-              options={options}
-              defaultValue={ options[0] } 
-              onChange={handleEstatusPedido}
-              isSearchable={false}
-            />
-          </div> */}        
-        </div> 
-        <div className="salesFooter">
-          <div className="estatusPedidoPlaceOrder">
-            {
-              usarComponenteComo === "actualizarPedido" && 
-                    <button className="deleteOrderButton"
-                            disabled={isDeleting}
-                            // onClick={handleDeleteOrder}
-                            onClick={openDeleteDialog}
-                    >{isDeleting ? 'Borrando...' : 'Borrar'}
-                    </button> 
-            }
-
-            <div className="container-estatusPedido">
-              <label htmlFor="estatusPedido">Estatus Pedido</label>
-              <select 
-                  className="container-estatusPedido__select"
-                  id="estatusPedido" 
-                  // value={estatusPedido}
-                  value={theBasket.estatusPedido}
-                  onChange={handleEstatusPedido}
-                  name="estatusPedido"
+      
+                <BasicDialog
+                  open={openModalEstatusPedido}
+                  onClose={() => setOpenModalEstatusPedido(false)}
+                  message= {`El Pedido aun tiene estatus: Por Entregar, si deseas cerrar el pedido selecciona Cancelar, cambia el estatus a Entregado y vuelve a Grabar. Si deseas que el Pedido siga abierto selecciona Aceptar para grabar.`}
+                  onSubmit={handlePlaceOrder}
+                  captionAceptar={"Aceptar"}
+                  captionCancelar={"Cancelar"}
+                />
+                    
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
               >
-                  {/* <option value="porEntregar">Por entregar</option>
-                  <option value="entregado">Entregado</option> */}
-                  {/* 1 es Por Entregar y 2 es Entregado */}
-                  <option value="0">Selecciona el Estatus</option>
-                  <option value="1">Por entregar</option>
-                  <option value="2">Entregado</option>
-              </select>          
-            </div>
-
-            <button className="placeOrderButton"
-                    disabled={isSaving}
-                    // onClick={handlePlaceOrder}
-                    onClick={
-                        usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 1 
-                        ? openUpdateEstatusPedido 
-                        : usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 2 
-                        ? handlePlaceOrder 
-                        : usarComponenteComo === "nuevoPedido" 
-                        ? handlePlaceOrder 
-                        : handlePlaceOrder
-                        // usarComponenteComo === "nuevoPedido" ? handlePlaceOrder : openUpdateEstatusPedido
-                      
+                <Alert 
+                    severity= {updateSuccess ?  "success" : "error"} 
+                    action={action}
+                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+                >{mensajeSnackBar}
+                </Alert>
+              </Snackbar>      
+      
+              <div className="businessInfo">
+                <p className="businessInfo__businessName">{businessName}</p>
+                <p className="businessInfo__cellPhone">{cellPhone}</p>
+                <p className="businessInfo__esMayorista">{esMayorista ? "Mayorista" : "Minorista"}</p>
+              </div>
+      
+              <div className="salesHeader">
+                <div className="searchBar">
+                    <input 
+                          type="text" 
+                          placeholder='Buscar Producto...'
+                          className="searchInput" 
+                          onChange={e=>setSearchBarQuery(e.target.value.toString().toLowerCase())}
+                    />
+                    {/* <SearchIcon className="productSearch" /> */}
+                    <FaSearch className="productSearch" />
+                    {/* <button className="productSearch">Buscar</button> */}
+                </div>
+      
+                {/* 
+                <div className="estatusPedidoPlaceOrder">
+                  {
+                    usarComponenteComo === "actualizarPedido" && 
+                          <button className="deleteOrderButton"
+                                  disabled={isSaving}
+                                  // onClick={handleDeleteOrder}
+                                  onClick={openDeleteDialog}
+                          >{isDeleting ? 'Borrando...' : 'Borrar'}
+                          </button> 
+                  }
+      
+                  <div className="container-estatusPedido">
+                    <select 
+                        className="container-estatusPedido__select"
+                        id="estatusPedido" 
+                        value={theBasket.estatusPedido}
+                        onChange={handleEstatusPedido}
+                        name="estatusPedido"
+                    >
+                        <option value="1">Por entregar</option>
+                        <option value="2">Entregado</option>
+                    </select>          
+                  </div>
+      
+                  <button className="placeOrderButton"
+                          disabled={isSaving}
+                          onClick={handlePlaceOrder}
+                  >
+                    {usarComponenteComo === "nuevoPedido" &&
+                      (isSaving ? 'Creando...' : 'Crear')
                     }
-            >
-              {usarComponenteComo === "nuevoPedido" &&
-                (isSaving ? 'Creando...' : 'Crear')
-              }
-              {usarComponenteComo === "actualizarPedido" &&
-                (isSaving ? 'Grabando...' : 'Grabar')
-              }
-            </button>
-            
-          </div>      
-        
-        </div>     
-      </m.div>
-    </LazyMotion>
+                    {usarComponenteComo === "actualizarPedido" &&
+                      (isSaving ? 'Actualizando...' : 'Actualizar')
+                    }
+                  </button>
+                  
+                </div> */}
+              </div>
+      
+              <div className="makeOrder">
+                <div className="topPanel">
+                  <p className="productListTitle">Catálogo de Productos</p>
+                  <div className="makeOrder__container">
+                    <div className="carousel">
+                      {
+                        // productCatalog?.length === 0 && <Skeleton animation="wave" variant="rounded" width={980} height={320}  />
+                        isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
+                      }
+                      {
+                        productCatalog
+                          .filter(product => product.sku.toString().includes(searchBarQuery) ||
+                                            product.productName.toLowerCase().includes(searchBarQuery))
+                          .map((product, index) => 
+                            ( <ProductInput key={index}
+                                      index={index} 
+                                      product={product} 
+                                      addProductToBasket={addProductToBasket}
+                                      esMayorista={esMayorista}
+                              />
+                            )
+                          )
+                      }
+                    </div>
+                  </div>  
+                </div>
+      
+                <div className="bottomPanel">
+      
+                  <div className="newOrder__container">
+                    <div className="newOrder--ordersTitle">
+                      <p className="orderedProductsTitle">Productos Ordenados</p>
+                      <div className="newOrderIconContainer">
+                        <FaShoppingCart className="newOrderIcon" />
+                        {
+                          theBasket?.productOrdered?.length > 0 && <span className="newOrderIconBadge">{theBasket?.productOrdered?.length}</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+      
+                  <div className="productOrder">
+                    {
+                      theBasket?.productOrdered?.map((product, index)=> {
+                          return ( 
+                            <ProductOrdered 
+                              key={index}
+                              index={index} 
+                              theBasket={theBasket} 
+                              product={product}
+                              handleQuantityChange={handleQuantityChange} 
+                              removeProductFromBasket={removeProductFromBasket} 
+                              // seAplicaDescuento={seAplicaDescuento}
+                            />
+                          )
+                        }
+                      )
+                    }
+      
+                    <div className="descuento">
+                      <input 
+                          className="descuento__checkbox"
+                          type="checkbox" 
+                          id="aplicarDescuento" 
+                          name="aplicarDescuento"
+                          checked={theBasket.seAplicaDescuento}
+                          value={theBasket.seAplicaDescuento}
+                          onChange={handleAplicaDescuento}
+                      />
+                      <label className="descuento__label" htmlFor="aplicarDescuento">¿Aplicar 10% de Descuento?</label>
+                    </div>
+      
+                    <div className="totalPedido">
+          
+                      {/* Total Venta */}
+                      <div className="totalPedido__container">
+                        <span className="totalPedido__item">Total Venta: </span>
+                        
+                        {/* <span className="totalPedido__currency">{`$${totalBasket}`}</span> */}
+                        <span className="totalPedido__currency">
+                          {
+                            // `$${totalBasket}`
+                            <NumericFormat 
+                                    value={totalBasket} 
+                                    decimalScale={2} 
+                                    thousandSeparator="," 
+                                    prefix={'$'} 
+                                    decimalSeparator="." 
+                                    displayType="text" 
+                                    renderText={(value) => <span>{value}</span>}
+                            />
+                          }
+                        </span>
+                      </div>
+      
+                      {/* Total Descuento */}
+                      <div className="totalPedido__container">
+                        <span className="totalPedido__item">Total Descuento (-): </span>
+                        
+                        <span className="totalPedido__currency">
+                          {
+                            // `- $${totalDescuento}`
+                            <NumericFormat 
+                                    value={totalDescuento} 
+                                    decimalScale={2} 
+                                    thousandSeparator="," 
+                                    prefix={'$'} 
+                                    decimalSeparator="." 
+                                    displayType="text" 
+                                    renderText={(value) => <span>{value}</span>}
+                            />
+                          }
+                        </span>
+                      </div>
+      
+                      {/* Total Pedido = Total Venta - Total Descuento */}
+                      <div className="totalPedido__container">
+                        <span className="totalPedido__item pedidoTotal">Total Pedido: </span>
+                        
+                        {/* <span className="totalPedido__currency pedidoTotal">{`$${totalBasket - totalDescuento}`}</span>          */}
+                        <span className="totalPedido__currency pedidoTotal">
+                          {/* {`$${totalBasket - totalDescuento}`} */}
+                          <NumericFormat 
+                                    value={totalBasket - totalDescuento} 
+                                    decimalScale={2} 
+                                    thousandSeparator="," 
+                                    prefix={'$'} 
+                                    decimalSeparator="." 
+                                    displayType="text" 
+                                    renderText={(value) => <span>{value}</span>}
+                          />
+                        </span>         
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+      
+                {/* REACT-SELECT
+                <div className="container-estatusPedido">
+                  <label htmlFor="estatusPedido">Estatus</label>
+                  <Select
+                    className="container-estatusPedido__select"
+                    options={options}
+                    defaultValue={ options[0] } 
+                    onChange={handleEstatusPedido}
+                    isSearchable={false}
+                  />
+                </div> */}        
+              </div> 
+              <div className="salesFooter">
+                <div className="estatusPedidoPlaceOrder">
+                  {
+                    usarComponenteComo === "actualizarPedido" && 
+                          <button className="deleteOrderButton"
+                                  disabled={isDeleting}
+                                  // onClick={handleDeleteOrder}
+                                  onClick={openDeleteDialog}
+                          >{isDeleting ? 'Borrando...' : 'Borrar'}
+                          </button> 
+                  }
+      
+                  <div className="container-estatusPedido">
+                    <label htmlFor="estatusPedido">Estatus Pedido</label>
+                    <select 
+                        className="container-estatusPedido__select"
+                        id="estatusPedido" 
+                        // value={estatusPedido}
+                        value={theBasket.estatusPedido}
+                        onChange={handleEstatusPedido}
+                        name="estatusPedido"
+                    >
+                        {/* <option value="porEntregar">Por entregar</option>
+                        <option value="entregado">Entregado</option> */}
+                        {/* 1 es Por Entregar y 2 es Entregado */}
+                        <option value="0">Selecciona el Estatus</option>
+                        <option value="1">Por entregar</option>
+                        <option value="2">Entregado</option>
+                    </select>          
+                  </div>
+      
+                  <button className="placeOrderButton"
+                          disabled={isSaving}
+                          // onClick={handlePlaceOrder}
+                          onClick={
+                              usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 1 
+                              ? openUpdateEstatusPedido 
+                              : usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 2 
+                              ? handlePlaceOrder 
+                              : usarComponenteComo === "nuevoPedido" 
+                              ? handlePlaceOrder 
+                              : handlePlaceOrder
+                              // usarComponenteComo === "nuevoPedido" ? handlePlaceOrder : openUpdateEstatusPedido
+                            
+                          }
+                  >
+                    {usarComponenteComo === "nuevoPedido" &&
+                      (isSaving ? 'Creando...' : 'Crear')
+                    }
+                    {usarComponenteComo === "actualizarPedido" &&
+                      (isSaving ? 'Grabando...' : 'Grabar')
+                    }
+                  </button>
+                  
+                </div>      
+              
+              </div>     
+            </m.div>
+          </LazyMotion>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />
+      }
+    </>
+
   )
 }

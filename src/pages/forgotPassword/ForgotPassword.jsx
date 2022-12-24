@@ -1,5 +1,9 @@
 import "./forgotPassword.css";
-// import axios, { regresaMensajeDeError } from '../../../utils/axios';
+import axios, { FRONT_END_URL, regresaMensajeDeError } from '../../utils/axios';
+
+import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../components/offlineFallback/OfflineFallback';
+
 
 /*******************************    React     *******************************/
 import { useState, useRef, useEffect } from 'react'
@@ -15,7 +19,6 @@ import { Alert } from '@mui/material';
 
 /**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
-import axios, { FRONT_END_URL, regresaMensajeDeError } from '../../utils/axios';
 
 
 const containerVariants = {
@@ -31,6 +34,12 @@ const containerVariants = {
 
 
 function ForgotPassword() {
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
 
   /**************************    useState    **********************************/
   // email guarda lo que el usuario capturó para iniciar la busqueda
@@ -55,8 +64,13 @@ function ForgotPassword() {
   /**************************    useEffect    **********************************/
   // Al cargar la pagina pone el focus en el buscar el Negocio
   useEffect(()=>{
-    inputRef.current.focus();
-  },[])
+
+    if (!isOnline) {
+      return;
+    }
+
+    inputRef?.current?.focus();
+  },[isOnline])
   /*****************************************************************************/
 
 
@@ -113,7 +127,7 @@ function ForgotPassword() {
         //   setMensajeSnackBar("No se encontró un Negocio con esa búsqueda.")
         //   setOpenSnackbar(true);
         // }
-        inputRef.current.focus();
+        inputRef?.current?.focus();
       }
 
     }
@@ -155,51 +169,62 @@ function ForgotPassword() {
   );
 
   return (
-    <LazyMotion features={domAnimation}>
-      <m.div className='forgotPassword'
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={5000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert 
-              severity= {"success"} 
-              action={action}
-              sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-          >{mensajeSnackBar}
-          </Alert>
-        </Snackbar>
 
-        <h2 className='forgotPassword__title'>Olvidaste tu Password</h2>
-        <form className='formForgotPassword' onSubmit={handleForgotPassword}>
-          <label className='labelCorreoElectronico' htmlFor="email">Correo Electrónico:</label>
-          <input
-            className="inputUserForgotPassword"                  
-            ref={inputRef}
-            type="email"
-            value={email || ''}
-            name="email"
-            id="email"
-            placeholder="eljuanjo@ejemplo.com"
-            onChange={(e) => setEmail(e.target.value.toLowerCase())}
-            required
-            onInvalid={e=> e.target.setCustomValidity('El Correo Electrónico es inválido, debe tener entre 3 y 80 caracteres')} 
-            onInput={e=> e.target.setCustomValidity('')} 
-            minLength="3"
-            maxLength="80"
-            autoComplete="off" 
-          />
-          <button className="btnForgotPassword" disabled={isSearching}>
-            {isSearching ? 'Enviando...' : 'Enviar'}
-          </button>
-        </form>
-      </m.div>
-
-    </LazyMotion>  
+    <>
+      {
+        isOnline && (
+          <LazyMotion features={domAnimation}>
+            <m.div className='forgotPassword'
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
+              >
+                <Alert 
+                    severity= {"success"} 
+                    action={action}
+                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+                >{mensajeSnackBar}
+                </Alert>
+              </Snackbar>
+      
+              <h2 className='forgotPassword__title'>Olvidaste tu Password</h2>
+              <form className='formForgotPassword' onSubmit={handleForgotPassword}>
+                <label className='labelCorreoElectronico' htmlFor="email">Correo Electrónico:</label>
+                <input
+                  className="inputUserForgotPassword"                  
+                  ref={inputRef}
+                  type="email"
+                  value={email || ''}
+                  name="email"
+                  id="email"
+                  placeholder="eljuanjo@ejemplo.com"
+                  onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                  required
+                  onInvalid={e=> e.target.setCustomValidity('El Correo Electrónico es inválido, debe tener entre 3 y 80 caracteres')} 
+                  onInput={e=> e.target.setCustomValidity('')} 
+                  minLength="3"
+                  maxLength="80"
+                  autoComplete="off" 
+                />
+                <button className="btnForgotPassword" disabled={isSearching}>
+                  {isSearching ? 'Enviando...' : 'Enviar'}
+                </button>
+              </form>
+            </m.div>
+      
+          </LazyMotion> 
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />
+      }
+    </>
+ 
   )
 }
 

@@ -1,6 +1,9 @@
 import "./searchClient.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+
 /*******************************    React     *******************************/
 import { useState, useRef, useEffect } from 'react'
 /****************************************************************************/
@@ -36,6 +39,12 @@ const containerVariants = {
 
 export default function SearchClient() {
 
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
   /**************************    useState    **********************************/
   // query guarda lo que el usuario capturó para iniciar la busqueda
   // data es un Array con el resultado de la búsqueda
@@ -60,7 +69,7 @@ export default function SearchClient() {
   /**************************    useEffect    **********************************/
   // Al cargar la pagina pone el focus en el buscar el Negocio
   useEffect(()=>{
-    inputRef.current.focus();
+    inputRef?.current?.focus();
   },[])
   /*****************************************************************************/
 
@@ -105,7 +114,7 @@ export default function SearchClient() {
           setMensajeSnackBar("No se encontró un Negocio con esa búsqueda.")
           setOpenSnackbar(true);
         }
-        inputRef.current.focus();
+        inputRef?.current?.focus();
       }
 
     }
@@ -147,74 +156,83 @@ export default function SearchClient() {
   );
 
   return (
-    <LazyMotion features={domAnimation}>
-      <m.div className='searchClient'
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={5000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert 
-              severity= {"success"} 
-              action={action}
-              sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-          >{mensajeSnackBar}
-          </Alert>
-        </Snackbar>
-
-        {/* <h2><span>PASO 1: </span>BUSCAR Y ELEGIR UN NEGOCIO</h2> */}
-        <form className='searchClientInput' onSubmit={handleSearch}>
-          {/* <label>Buscar Cliente</label> */}
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Buscar Negocio, ejemplo: Abarrotes El Puerto"
-            className="clientSearchInput"                  
-            onChange={(e) => setQuery(e.target.value.toLowerCase())}
-            required
-            onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 3 y 80 caracteres')} 
-            onInput={e=> e.target.setCustomValidity('')} 
-            minLength="3"
-            maxLength="80"
-          />
-          <button className="btnSearchClient" disabled={isSearching}>
-            {isSearching ? 'Buscando...' : 'Buscar'}
-          </button>
-        </form>
-        
-        {
-          data && <Table data={data} />
-        }
-
-        {
-          isSearching && <SkeletonElement 
-                            type="rectangular" 
-                            width="100%" height="5.6rem" 
-                          />
-        }
-        {/* <p>{data.id} {data.businessName} {data.cellPhone}</p> */}
-
-        {/* <div className="container__ClientsFound">
-          {
-            data.map(client=> 
-              (
-                <ClientFound 
-                      key={client.id} 
-                      id={client.id} 
-                      businessName={client.businessName} 
-                      cellPhone={client.cellPhone} 
-                      esMayorista={client.esMayorista} />
-              ) 
-            )
-          }
-        </div> */}
-      </m.div>
-
-    </LazyMotion>
+    <>
+      {
+        isOnline && (
+          <LazyMotion features={domAnimation}>
+            <m.div className='searchClient'
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
+              >
+                <Alert 
+                    severity= {"success"} 
+                    action={action}
+                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+                >{mensajeSnackBar}
+                </Alert>
+              </Snackbar>
+      
+              {/* <h2><span>PASO 1: </span>BUSCAR Y ELEGIR UN NEGOCIO</h2> */}
+              <form className='searchClientInput' onSubmit={handleSearch}>
+                {/* <label>Buscar Cliente</label> */}
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Buscar Negocio, ejemplo: Abarrotes El Puerto"
+                  className="clientSearchInput"                  
+                  onChange={(e) => setQuery(e.target.value.toLowerCase())}
+                  required
+                  onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 3 y 80 caracteres')} 
+                  onInput={e=> e.target.setCustomValidity('')} 
+                  minLength="3"
+                  maxLength="80"
+                />
+                <button className="btnSearchClient" disabled={isSearching}>
+                  {isSearching ? 'Buscando...' : 'Buscar'}
+                </button>
+              </form>
+              
+              {
+                data && <Table data={data} />
+              }
+      
+              {
+                isSearching && <SkeletonElement 
+                                  type="rectangular" 
+                                  width="100%" height="5.6rem" 
+                                />
+              }
+              {/* <p>{data.id} {data.businessName} {data.cellPhone}</p> */}
+      
+              {/* <div className="container__ClientsFound">
+                {
+                  data.map(client=> 
+                    (
+                      <ClientFound 
+                            key={client.id} 
+                            id={client.id} 
+                            businessName={client.businessName} 
+                            cellPhone={client.cellPhone} 
+                            esMayorista={client.esMayorista} />
+                    ) 
+                  )
+                }
+              </div> */}
+            </m.div>
+      
+          </LazyMotion>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />  
+      }
+    </>
   )
 }
 

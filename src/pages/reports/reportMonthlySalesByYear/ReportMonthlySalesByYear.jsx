@@ -1,6 +1,9 @@
 import "./reportMonthlySalesByYear.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
+
 /*******************************    React     *******************************/
 import React, { useEffect, useRef, useState } from 'react'
 /****************************************************************************/
@@ -28,6 +31,12 @@ import { Alert } from '@mui/material';
 
 export default function ReportMonthlySalesByYear() {
   // console.log("ReportMonthlySalesByYear started")
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
 
   /************************    useRef    ********************************* 
   // Agregué estos dos useRefs porque en React18 se hace un re-render
@@ -75,6 +84,10 @@ export default function ReportMonthlySalesByYear() {
 
   useEffect (() => {
 
+    if (!isOnline) {
+      return;
+    }
+
     if (avoidRerenderFetchYearsSales.current) {
       return;
     }
@@ -117,7 +130,7 @@ export default function ReportMonthlySalesByYear() {
     
     fetchYearsSales();
     
-  }, []);
+  }, [isOnline]);
 
 
   /*****************************    useEffect    ******************************/
@@ -125,6 +138,10 @@ export default function ReportMonthlySalesByYear() {
   // en particular
   /****************************************************************************/
   useEffect (() => {
+
+    if (!isOnline) {
+      return;
+    }
 
     const fetchVentasDelNegocio = async () => {
 
@@ -172,7 +189,7 @@ export default function ReportMonthlySalesByYear() {
       }
     }
     fetchVentasDelNegocio();
-  }, [year]);
+  }, [year, isOnline]);
 
 
   /*****************************    getAnios    ******************************/
@@ -224,51 +241,61 @@ export default function ReportMonthlySalesByYear() {
 
 
   const out = (
-    <div className="reportMonthlySalesByYear">
+    <>
+      {
+        isOnline && (
+          <div className="reportMonthlySalesByYear">
 
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {"success"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>     
-      {
-        anios && (
-                <select className="yearsList"
-                  onChange={(e)=>handleChange(e)}
-                  value={year}
-                >
-                  {getAnios()}
-                </select>
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {"success"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>     
+            {
+              anios && (
+                      <select className="yearsList"
+                        onChange={(e)=>handleChange(e)}
+                        value={year}
+                      >
+                        {getAnios()}
+                      </select>
+              )
+            }
+            {
+              // !anios && <div className="yearsList">Loading...</div>
+              !anios && <Skeleton className="yearsList" animation="wave" variant="rounded" width={110} height={30}  />
+            }
+            {
+              chartData && (
+                <Chart 
+                      data={chartData} 
+                      // title={`Venta Anual ${year} de $${Total}`} 
+            
+                      title={<NumericFormat value={Total} decimalScale={2} thousandSeparator="," prefix={'$'} decimalSeparator="." displayType="text" renderText={(value) => <span>Venta Anual {year} de {value}</span>}
+                      />} 
+                      grid dataKey="SubTotal"
+                />
+              )
+            }
+            {
+              !chartData && <SkeletonElement type="rectangular" />
+              // !chartData && <Skeleton animation="wave" variant="rounded" width={980} height={320}  />
+            }
+          </div>
         )
       }
       {
-        // !anios && <div className="yearsList">Loading...</div>
-        !anios && <Skeleton className="yearsList" animation="wave" variant="rounded" width={110} height={30}  />
+        !isOnline && <OfflineFallback />
       }
-      {
-        chartData && (
-          <Chart 
-                data={chartData} 
-                // title={`Venta Anual ${year} de $${Total}`} 
-      
-                title={<NumericFormat value={Total} decimalScale={2} thousandSeparator="," prefix={'$'} decimalSeparator="." displayType="text" renderText={(value) => <span>Venta Anual {year} de {value}</span>}
-                />} 
-                grid dataKey="SubTotal"
-          />
-        )
-      }
-      {
-        !chartData && <SkeletonElement type="rectangular" />
-        // !chartData && <Skeleton animation="wave" variant="rounded" width={980} height={320}  />
-      }
-    </div>
+    </>
+
   )
 
   // console.log("ReportMonthlySalesByYear finished")

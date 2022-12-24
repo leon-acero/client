@@ -1,6 +1,9 @@
 import "./newOrUpdateOrder.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+
 /*******************************    React     *******************************/
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useHistory } from 'react-router-dom';
@@ -43,6 +46,11 @@ const containerVariants = {
 
 export default function NewOrUpdateOrder() {
 
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
   /**************************    useHistory    ********************************/
   const history = useHistory();
   /*****************************************************************************/
@@ -79,6 +87,10 @@ export default function NewOrUpdateOrder() {
    
   useEffect (()=>{
 
+    if (!isOnline) {
+      return;
+    }
+
     if (avoidRerenderFetchClient.current) {
       return;
     }
@@ -112,7 +124,7 @@ export default function NewOrUpdateOrder() {
     }
 
     fetchUltimosCincoPedidosPorEntregar ();
-  }, [clientId])
+  }, [clientId, isOnline])
   /****************************************************************************/
 
   /**********************    handleGoBackOnePage    *************************/
@@ -152,110 +164,118 @@ export default function NewOrUpdateOrder() {
   );
 
   return (
-    <LazyMotion features={domAnimation} >
-      <m.div className="newOrUpdateOrder"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={5000}
-          onClose={handleCloseSnackbar}
-        >
-          <Alert 
-              severity= {"error"} 
-              action={action}
-              sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-          >{mensajeSnackBar}
-          </Alert>
-        </Snackbar>
-
-        <div className="regresarAPaginaAnterior">
-          <FaArrowLeft onClick={handleGoBackOnePage} className="arrowLeftGoBack" />
-        </div>
-
-        <main className="main-newOrUpdateOrder">
-          <div className="form-newOrUpdateOrder">
-            <div className="businessInfo">
-              <div className="editarCliente">
-                <p className="businessInfo__businessName">{businessName}</p>
-                <Link to={"/client/" + clientId}>
-                  <button className="clientListEdit">Editar</button>
-                </Link>
+    <>
+      {
+        isOnline && (
+          <LazyMotion features={domAnimation} >
+            <m.div className="newOrUpdateOrder"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
+              >
+                <Alert 
+                    severity= {"error"} 
+                    action={action}
+                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+                >{mensajeSnackBar}
+                </Alert>
+              </Snackbar>
+      
+              <div className="regresarAPaginaAnterior">
+                <FaArrowLeft onClick={handleGoBackOnePage} className="arrowLeftGoBack" />
               </div>
-              <p className="businessInfo__cellPhone">{cellPhone}</p>
-              <p className="businessInfo__esMayorista">{esMayorista ? "Mayorista" : "Minorista"}</p>
-            </div>
-
-            <div className="ultimosPedidos__container">
-              <Link className="linkNuevoPedido" to={{
-                    // pathname: `/new-order/${clientId}`,
-                    pathname: `/update-order/client/${clientId}`,
-                    state: {
-                            clientId,
-                            businessName, 
-                            cellPhone, 
-                            esMayorista,
-                            usarComponenteComo: "nuevoPedido",
-                            businessImageCover,
-                            // en un nuevo pedido NO uso fecha, solo en actualizar
-                            // le paso de todos modos una fecha para que no haya undefined
-                            fecha: new Date()
-                    }
-                  }}><button className="linkNuevoPedido__button">Nuevo Pedido</button>
-              </Link>
-              
-                {
-                  // ultimosCincoPedidos?.length > 0 && (
-                    <div className="pedidosPorEntregar__container">
-                      <p className="pedidosPorEntregar__title">Pedidos Por Entregar por Fecha</p>
-
-                      <div className="ultimosCincoPedidos_group">
-                        {
-                          !ultimosCincoPedidos 
-                          ?
-                            <SkeletonElement type="rectangular" width="20rem" height="auto" /> 
-                          :
-                          ultimosCincoPedidos?.length > 0 
-                          ? 
-                            (
-                              ultimosCincoPedidos.map((current, index) =>                                  
-                                <Link 
-                                  key={index} 
-                                  className="linkActualizarPedido__button" 
-                                  to={{
-                                    pathname: `/update-order/client/${clientId}`,
-                                    state: {
-                                      clientId: clientId,
-                                      businessName: businessName, 
-                                      cellPhone: cellPhone, 
-                                      esMayorista: esMayorista,
-                                      businessImageCover: businessImageCover,
-                                      fecha: current._id.Fecha,
-                                      usarComponenteComo: "actualizarPedido"
-                                    }
-                                  }}
-                                >
-                                  {
-                                    (new Date (current._id.Fecha)).toString().split(" ", 5).join(" ")
-                                  } 
-                                </Link>                             
-                              ) 
-                            ) 
-                          :
-                            <p className='sinPedidosPorEntregar'>No hay pedidos por Entregar</p>                                      
-                        }
-                      </div>              
-                    </div>                
-                  // )
-                }              
-            </div>            
-          </div>
-        </main>
-
-      </m.div>
-    </LazyMotion>
-
+      
+              <main className="main-newOrUpdateOrder">
+                <div className="form-newOrUpdateOrder">
+                  <div className="businessInfo">
+                    <div className="editarCliente">
+                      <p className="businessInfo__businessName">{businessName}</p>
+                      <Link to={"/client/" + clientId}>
+                        <button className="clientListEdit">Editar</button>
+                      </Link>
+                    </div>
+                    <p className="businessInfo__cellPhone">{cellPhone}</p>
+                    <p className="businessInfo__esMayorista">{esMayorista ? "Mayorista" : "Minorista"}</p>
+                  </div>
+      
+                  <div className="ultimosPedidos__container">
+                    <Link className="linkNuevoPedido" to={{
+                          // pathname: `/new-order/${clientId}`,
+                          pathname: `/update-order/client/${clientId}`,
+                          state: {
+                                  clientId,
+                                  businessName, 
+                                  cellPhone, 
+                                  esMayorista,
+                                  usarComponenteComo: "nuevoPedido",
+                                  businessImageCover,
+                                  // en un nuevo pedido NO uso fecha, solo en actualizar
+                                  // le paso de todos modos una fecha para que no haya undefined
+                                  fecha: new Date()
+                          }
+                        }}><button className="linkNuevoPedido__button">Nuevo Pedido</button>
+                    </Link>
+                    
+                      {
+                        // ultimosCincoPedidos?.length > 0 && (
+                          <div className="pedidosPorEntregar__container">
+                            <p className="pedidosPorEntregar__title">Pedidos Por Entregar por Fecha</p>
+      
+                            <div className="ultimosCincoPedidos_group">
+                              {
+                                !ultimosCincoPedidos 
+                                ?
+                                  <SkeletonElement type="rectangular" width="20rem" height="auto" /> 
+                                :
+                                ultimosCincoPedidos?.length > 0 
+                                ? 
+                                  (
+                                    ultimosCincoPedidos.map((current, index) =>                                  
+                                      <Link 
+                                        key={index} 
+                                        className="linkActualizarPedido__button" 
+                                        to={{
+                                          pathname: `/update-order/client/${clientId}`,
+                                          state: {
+                                            clientId: clientId,
+                                            businessName: businessName, 
+                                            cellPhone: cellPhone, 
+                                            esMayorista: esMayorista,
+                                            businessImageCover: businessImageCover,
+                                            fecha: current._id.Fecha,
+                                            usarComponenteComo: "actualizarPedido"
+                                          }
+                                        }}
+                                      >
+                                        {
+                                          (new Date (current._id.Fecha)).toString().split(" ", 5).join(" ")
+                                        } 
+                                      </Link>                             
+                                    ) 
+                                  ) 
+                                :
+                                  <p className='sinPedidosPorEntregar'>No hay pedidos por Entregar</p>                                      
+                              }
+                            </div>              
+                          </div>                
+                        // )
+                      }              
+                  </div>            
+                </div>
+              </main>
+      
+            </m.div>
+          </LazyMotion>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />  
+      }
+    </>
   )
 }

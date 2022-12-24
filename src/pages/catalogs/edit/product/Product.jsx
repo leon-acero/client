@@ -1,8 +1,10 @@
 import "./product.css";
 import defaultCameraImage from "../../../../camera.webp"
 
-// import axios from "axios";
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
+
+import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
@@ -23,6 +25,11 @@ import { Alert } from '@mui/material';
 
 
 export default function Product() {
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
 
   /**************************    useRef    **********************************/
   // avoidRerenderFetchProduct evita que se mande llamar dos veces al
@@ -168,6 +175,10 @@ export default function Product() {
 
   useEffect (() => {
 
+    if (!isOnline) {
+      return;
+    }
+
     if (avoidRerenderFetchProduct.current) {
       return;
     }
@@ -202,7 +213,7 @@ export default function Product() {
 
     fetchProduct();
    
-  }, [productId]);
+  }, [productId, isOnline]);
 
 
   /************************     handleImageCoverChange    ********************/
@@ -281,240 +292,250 @@ export default function Product() {
 
  
   return (
-    <div className="product">
+    <>
+      {
+        isOnline && (
+          <div className="product">
       
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {updateSuccess ?  "success" : "error"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>
-
-      <div className="productTitleContainer">
-        <h1 className="productTitle">Editar Producto</h1>
-        <Link to="/new-product">
-          <button className="productAddButton">Crear</button>
-        </Link>
-      </div>
-      <div className="productContainer">
-        <div className="productShow">
-          <div className="productShowTop">
-            <img
-              className="productShowImg"
-              src= {
-                      // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
-                      // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
-                      fileBlob ? fileBlob : productData.imageCover ?
-                      `${productData.imageCover}` : defaultCameraImage
-                    }
-              alt=""
-            />            
-
-            <div className="productShowTopTitle">
-              <span className="productShowProductname">{productData.productName}</span>
-              <span className="productShowProductTitle">SKU: {productData.sku}</span>
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {updateSuccess ?  "success" : "error"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>
+      
+            <div className="productTitleContainer">
+              <h1 className="productTitle">Editar Producto</h1>
+              <Link to="/new-product">
+                <button className="productAddButton">Crear</button>
+              </Link>
+            </div>
+            <div className="productContainer">
+              <div className="productShow">
+                <div className="productShowTop">
+                  <img
+                    className="productShowImg"
+                    src= {
+                            // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
+                            // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
+                            fileBlob ? fileBlob : productData.imageCover ?
+                            `${productData.imageCover}` : defaultCameraImage
+                          }
+                    alt=""
+                  />            
+      
+                  <div className="productShowTopTitle">
+                    <span className="productShowProductname">{productData.productName}</span>
+                    <span className="productShowProductTitle">SKU: {productData.sku}</span>
+                  </div>
+                </div>
+                <div className="productShowBottom">
+                  <span className="productShowTitle">Detalle</span>
+                  <div className="productShowInfo">
+                    <FaDollyFlatbed className="productShowIcon" />
+                    <span className="productShowInfoTitle">Inventario Actual: {productData.inventarioActual}</span>
+                  </div>
+                  <div className="productShowInfo">
+                    <FaDollyFlatbed className="productShowIcon" />
+                    <span className="productShowInfoTitle">Inventario Mínimo: {productData.inventarioMinimo}</span>
+                  </div>
+                  <div className="productShowInfo">
+                    <FaDollarSign className="productShowIcon" />
+                    <span className="productShowInfoTitle">Precio Menudeo: ${productData.priceMenudeo}</span>
+                  </div>           
+                  <div className="productShowInfo">
+                    <FaDollarSign className="productShowIcon" />
+                    <span className="productShowInfoTitle">Precio Mayoreo: ${productData.priceMayoreo}</span>
+                  </div> 
+                  <div className="productShowInfo">
+                    <FaDollarSign className="productShowIcon" />
+                    <span className="productShowInfoTitle">Costo: ${productData.costo}</span>
+                  </div>             
+                  <div className="productShowInfo">
+                    <FaChrome className="productShowIcon" />
+                    <span className="productShowInfoTitle">{productData.slug}</span>
+                  </div>              
+                </div>
+              </div>
+              <div className="productUpdate">
+                <span className="productUpdateTitle">Editar</span>
+      
+                <form className="productUpdateForm" onSubmit={handleSubmit}>
+                  <div className="productUpdateLeft">
+                    <div className="productUpdateItem">
+                      <label>SKU *</label>
+                      <input
+                        type="text"
+                        placeholder={productData.sku}
+                        className="productUpdateInput"                  
+                        onChange={handleChange}
+                        name="sku"
+                        value={productData.sku || ''}
+                        required
+                        onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        minLength="1"
+                        maxLength="5"
+                        autoComplete="off"
+                      />
+                    </div>              
+                    <div className="productUpdateItem">
+                      <label>Producto *</label>
+                      <input
+                        type="text"
+                        placeholder={productData.productName}
+                        className="productUpdateInput"                  
+                        onChange={handleChange}
+                        name="productName"
+                        value={productData.productName || ''}
+                        required
+                        onInvalid={e=> e.target.setCustomValidity('El Nombre del Producto debe tener entre 5 y 40 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        minLength="5"
+                        maxLength="40"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="productUpdateItem">
+                      <label>Inventario Actual *</label>
+                      <input
+                        type="number" 
+                        pattern="/[^0-9]|(?<=\..*)\./g" 
+                        step="1" 
+                        min="1"
+                        max="999999"
+                        placeholder={productData.inventarioActual}
+                        className="productUpdateInput"
+                        onChange={handleChange}
+                        onKeyPress={(e)=>handleNumbers(e)}
+                        name="inventarioActual"
+                        value={productData.inventarioActual || ''}
+                        required
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual')} 
+                        onInput={e=> e.target.setCustomValidity('')}
+                        autoComplete="off" 
+                      />
+                    </div>
+                    <div className="productUpdateItem">
+                      <label>Inventario Minimo *</label>
+                      <input
+                        type="number" 
+                        pattern="/[^0-9]|(?<=\..*)\./g" 
+                        step="1" 
+                        min="1"
+                        max="999999"
+                        placeholder={productData.inventarioMinimo}
+                        className="productUpdateInput"
+                        onChange={handleChange}
+                        onKeyPress={(e)=>handleNumbers(e)}
+                        name="inventarioMinimo"
+                        value={productData.inventarioMinimo || ''}  
+                        required         
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo')} 
+                        onInput={e=> e.target.setCustomValidity('')}
+                        autoComplete="off"                 
+                      />
+                    </div>
+                    <div className="productUpdateItem">
+                      <label>Precio Menudeo *</label>
+                      <input
+                        type="number" 
+                        pattern="/[^0-9.]|(?<=\..*)\./g" 
+                        step="0.01" 
+                        min="1"
+                        max="999999"
+                        placeholder={productData.priceMenudeo}
+                        className="productUpdateInput"
+                        onChange={handleChange}
+                        onKeyPress={(e)=>handleNumbers(e)}
+                        name="priceMenudeo"
+                        value={productData.priceMenudeo || ''}
+                        required 
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo')} 
+                        onInput={e=> e.target.setCustomValidity('')}
+                        autoComplete="off"                
+                      />
+                    </div>
+                    <div className="productUpdateItem">
+                      <label>Precio Mayoreo</label>
+                      <input
+                        type="number" 
+                        pattern="/[^0-9.]|(?<=\..*)\./g" 
+                        step="0.01" 
+                        min="1"
+                        max="999999"
+                        placeholder={productData.priceMayoreo}
+                        className="productUpdateInput"
+                        onChange={handleChange}
+                        onKeyPress={(e)=>handleNumbers(e)}
+                        name="priceMayoreo"
+                        value={productData.priceMayoreo || ''}
+                        autoComplete="off"                  
+                      />
+                    </div>              
+                    <div className="productUpdateItem">
+                      <label>Costo *</label>
+                      <input
+                        type="number" 
+                        pattern="/[^0-9.]|(?<=\..*)\./g" 
+                        step="0.01" 
+                        min="1"
+                        max="999999"
+                        placeholder={productData.costo}
+                        className="productUpdateInput"
+                        onChange={handleChange}
+                        onKeyPress={(e)=>handleNumbers(e)}
+                        name="costo"
+                        value={productData.costo || ''}
+                        required 
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto')} 
+                        onInput={e=> e.target.setCustomValidity('')}
+                        autoComplete="off"                 
+                      />
+                    </div>
+                  </div>
+      
+                  <div className="productUpdateRight">
+                    <div className="productUpdateUpload">
+                      <img
+                        className="productUpdateImg"
+                        src= {
+                                // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
+                                // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
+                                fileBlob ? fileBlob : productData.imageCover ?
+                                `${productData.imageCover}` : defaultCameraImage
+                            }
+                        alt=""
+                      />                
+                      <label htmlFor="photo">
+                        <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer", "color": "#343a40"}} />
+                      </label>
+                      <input  type="file" 
+                              accept="image/*" 
+                              id="photo" 
+                              name="photo" 
+                              style={{ display: "none" }} 
+                              onChange={(e)=>handleImageCoverChange(e)}
+                      />
+                    </div>
+                    <button className="productUpdateButton" disabled={isSaving}>{isSaving ? 'Actualizando...' : 'Actualizar'}</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
-          <div className="productShowBottom">
-            <span className="productShowTitle">Detalle</span>
-            <div className="productShowInfo">
-              <FaDollyFlatbed className="productShowIcon" />
-              <span className="productShowInfoTitle">Inventario Actual: {productData.inventarioActual}</span>
-            </div>
-            <div className="productShowInfo">
-              <FaDollyFlatbed className="productShowIcon" />
-              <span className="productShowInfoTitle">Inventario Mínimo: {productData.inventarioMinimo}</span>
-            </div>
-            <div className="productShowInfo">
-              <FaDollarSign className="productShowIcon" />
-              <span className="productShowInfoTitle">Precio Menudeo: ${productData.priceMenudeo}</span>
-            </div>           
-            <div className="productShowInfo">
-              <FaDollarSign className="productShowIcon" />
-              <span className="productShowInfoTitle">Precio Mayoreo: ${productData.priceMayoreo}</span>
-            </div> 
-            <div className="productShowInfo">
-              <FaDollarSign className="productShowIcon" />
-              <span className="productShowInfoTitle">Costo: ${productData.costo}</span>
-            </div>             
-            <div className="productShowInfo">
-              <FaChrome className="productShowIcon" />
-              <span className="productShowInfoTitle">{productData.slug}</span>
-            </div>              
-          </div>
-        </div>
-        <div className="productUpdate">
-          <span className="productUpdateTitle">Editar</span>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback /> 
+      }
+    </>
 
-          <form className="productUpdateForm" onSubmit={handleSubmit}>
-            <div className="productUpdateLeft">
-              <div className="productUpdateItem">
-                <label>SKU *</label>
-                <input
-                  type="text"
-                  placeholder={productData.sku}
-                  className="productUpdateInput"                  
-                  onChange={handleChange}
-                  name="sku"
-                  value={productData.sku || ''}
-                  required
-                  onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  minLength="1"
-                  maxLength="5"
-                  autoComplete="off"
-                />
-              </div>              
-              <div className="productUpdateItem">
-                <label>Producto *</label>
-                <input
-                  type="text"
-                  placeholder={productData.productName}
-                  className="productUpdateInput"                  
-                  onChange={handleChange}
-                  name="productName"
-                  value={productData.productName || ''}
-                  required
-                  onInvalid={e=> e.target.setCustomValidity('El Nombre del Producto debe tener entre 5 y 40 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  minLength="5"
-                  maxLength="40"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="productUpdateItem">
-                <label>Inventario Actual *</label>
-                <input
-                  type="number" 
-                  pattern="/[^0-9]|(?<=\..*)\./g" 
-                  step="1" 
-                  min="1"
-                  max="999999"
-                  placeholder={productData.inventarioActual}
-                  className="productUpdateInput"
-                  onChange={handleChange}
-                  onKeyPress={(e)=>handleNumbers(e)}
-                  name="inventarioActual"
-                  value={productData.inventarioActual || ''}
-                  required
-                  onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual')} 
-                  onInput={e=> e.target.setCustomValidity('')}
-                  autoComplete="off" 
-                />
-              </div>
-              <div className="productUpdateItem">
-                <label>Inventario Minimo *</label>
-                <input
-                  type="number" 
-                  pattern="/[^0-9]|(?<=\..*)\./g" 
-                  step="1" 
-                  min="1"
-                  max="999999"
-                  placeholder={productData.inventarioMinimo}
-                  className="productUpdateInput"
-                  onChange={handleChange}
-                  onKeyPress={(e)=>handleNumbers(e)}
-                  name="inventarioMinimo"
-                  value={productData.inventarioMinimo || ''}  
-                  required         
-                  onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo')} 
-                  onInput={e=> e.target.setCustomValidity('')}
-                  autoComplete="off"                 
-                />
-              </div>
-              <div className="productUpdateItem">
-                <label>Precio Menudeo *</label>
-                <input
-                  type="number" 
-                  pattern="/[^0-9.]|(?<=\..*)\./g" 
-                  step="0.01" 
-                  min="1"
-                  max="999999"
-                  placeholder={productData.priceMenudeo}
-                  className="productUpdateInput"
-                  onChange={handleChange}
-                  onKeyPress={(e)=>handleNumbers(e)}
-                  name="priceMenudeo"
-                  value={productData.priceMenudeo || ''}
-                  required 
-                  onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo')} 
-                  onInput={e=> e.target.setCustomValidity('')}
-                  autoComplete="off"                
-                />
-              </div>
-              <div className="productUpdateItem">
-                <label>Precio Mayoreo</label>
-                <input
-                  type="number" 
-                  pattern="/[^0-9.]|(?<=\..*)\./g" 
-                  step="0.01" 
-                  min="1"
-                  max="999999"
-                  placeholder={productData.priceMayoreo}
-                  className="productUpdateInput"
-                  onChange={handleChange}
-                  onKeyPress={(e)=>handleNumbers(e)}
-                  name="priceMayoreo"
-                  value={productData.priceMayoreo || ''}
-                  autoComplete="off"                  
-                />
-              </div>              
-              <div className="productUpdateItem">
-                <label>Costo *</label>
-                <input
-                  type="number" 
-                  pattern="/[^0-9.]|(?<=\..*)\./g" 
-                  step="0.01" 
-                  min="1"
-                  max="999999"
-                  placeholder={productData.costo}
-                  className="productUpdateInput"
-                  onChange={handleChange}
-                  onKeyPress={(e)=>handleNumbers(e)}
-                  name="costo"
-                  value={productData.costo || ''}
-                  required 
-                  onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto')} 
-                  onInput={e=> e.target.setCustomValidity('')}
-                  autoComplete="off"                 
-                />
-              </div>
-            </div>
-
-            <div className="productUpdateRight">
-              <div className="productUpdateUpload">
-                <img
-                  className="productUpdateImg"
-                  src= {
-                          // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
-                          // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
-                          fileBlob ? fileBlob : productData.imageCover ?
-                          `${productData.imageCover}` : defaultCameraImage
-                       }
-                  alt=""
-                />                
-                <label htmlFor="photo">
-                  <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer", "color": "#343a40"}} />
-                </label>
-                <input  type="file" 
-                        accept="image/*" 
-                        id="photo" 
-                        name="photo" 
-                        style={{ display: "none" }} 
-                        onChange={(e)=>handleImageCoverChange(e)}
-                />
-              </div>
-              <button className="productUpdateButton" disabled={isSaving}>{isSaving ? 'Actualizando...' : 'Actualizar'}</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
   );
 }

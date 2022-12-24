@@ -1,6 +1,9 @@
 import "./reportWholeBusinessSalesByYear.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
+
 /*******************************    React     *******************************/
 import React, { useEffect, useRef, useState } from 'react'
 /****************************************************************************/
@@ -22,6 +25,11 @@ import { Alert } from '@mui/material';
 export default function ReportWholeBusinessSalesByYear() {
 
   // console.log("ReportWholeBusinessSalesByYear started")
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
 
 
   /************************    useRef    ********************************* 
@@ -57,6 +65,10 @@ export default function ReportWholeBusinessSalesByYear() {
   **************************    useEffect    ******************************* */
   useEffect (() => {
 
+    if (!isOnline) {
+      return;
+    }
+
     const fetchVentasDelNegocio = async () => {
 
       if (avoidRerenderFetchVentasDelNegocio.current) {
@@ -86,7 +98,7 @@ export default function ReportWholeBusinessSalesByYear() {
       
     }
     fetchVentasDelNegocio();
-  },[]);
+  },[isOnline]);
 
   
   /************************     handleCloseSnackbar    **********************/
@@ -119,44 +131,54 @@ export default function ReportWholeBusinessSalesByYear() {
   // console.log("ReportWholeBusinessSalesByYear render")
 
   const out = (
-    <div className='reportWholeBusinessSalesByYear'>  
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {"success"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>     
+    <>
       {
-        isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
+        isOnline && (
+          <div className='reportWholeBusinessSalesByYear'>  
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {"success"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>     
+            {
+              isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
+            }
+            {
+              !isLoading && chartData &&
+                (
+                  <Chart data={chartData} 
+                    title={
+                      <NumericFormat 
+                        value={granTotal} 
+                        decimalScale={2} 
+                        thousandSeparator="," 
+                        prefix={'$'} 
+                        decimalSeparator="." 
+                        displayType="text" 
+                        renderText={(value) => <span>Venta {value}</span>}
+                      />
+                    } 
+                    grid 
+                    dataKey="Total"
+                    className="graph"
+                  />
+                )
+            }
+          </div>
+        )
       }
       {
-        !isLoading && chartData &&
-          (
-            <Chart data={chartData} 
-              title={
-                <NumericFormat 
-                  value={granTotal} 
-                  decimalScale={2} 
-                  thousandSeparator="," 
-                  prefix={'$'} 
-                  decimalSeparator="." 
-                  displayType="text" 
-                  renderText={(value) => <span>Venta {value}</span>}
-                />
-              } 
-              grid 
-              dataKey="Total"
-              className="graph"
-            />
-          )
+        !isOnline && <OfflineFallback />
       }
-    </div>
+    </>
+
   )
 
   // console.log("ReportWholeBusinessSalesByYear finished")

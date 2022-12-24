@@ -1,20 +1,21 @@
 import "./App.css";
 
-/***************************   Components   *****************************/
-import Sidebar from "./components/sidebar/Sidebar";
-import Topbar from "./components/topbar/Topbar";
-import Logout from './components/logout/Logout';
-/***********************************************************************/
-
-
 /***************************   React   *****************************/
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useContext } from 'react';
 /***********************************************************************/
 
-
 /***************************   Provider   ******************************/
 import { stateContext } from './context/StateProvider';
+/***********************************************************************/
+
+/***************************   Components   *****************************/
+import Sidebar from "./components/sidebar/Sidebar";
+import Topbar from "./components/topbar/Topbar";
+import Logout from './components/logout/Logout';
+import SplashScreen from './components/splashScreen/SplashScreen';
+import SplashScreenAlt from './components/splashScreenAlt/SplashScreenAlt';
+import PageNotFound from './components/pageNotFound/PageNotFound';
 /***********************************************************************/
 
 
@@ -35,19 +36,18 @@ import SearchClient from './pages/placeOrder/searchClient/SearchClient';
 // import NewOrder from './pages/placeOrder/newOrder/NewOrder';
 import NewOrUpdateOrder from './pages/placeOrder/newOrUpdateOrder/NewOrUpdateOrder';
 import UpdateOrder from './pages/placeOrder/updateOrder/UpdateOrder';
+import ForgotPassword from './pages/forgotPassword/ForgotPassword';
+import ResetPassword from './pages/resetPassword/ResetPassword';
 
 import ReportWeeklySalesByMonth from './pages/reports/reportWeeklySalesByMonth/ReportWeeklySalesByMonth';
 import ReportMonthlySalesByYear from './pages/reports/reportMonthlySalesByYear/ReportMonthlySalesByYear';
 import ReportWholeBusinessSalesByYear from './pages/reports/reportWholeYearSales/ReportWholeBusinessSalesByYear';
-
 /***********************************************************************/
 
+
+/***************************   Custom Hooks   **************************/
 import { useMatchMedia } from "./hooks/useMatchMedia";
-import SplashScreen from './components/splashScreen/SplashScreen';
-import SplashScreenAlt from './components/splashScreenAlt/SplashScreenAlt';
-import ForgotPassword from './pages/forgotPassword/ForgotPassword';
-import ResetPassword from './pages/resetPassword/ResetPassword';
-import NoMatch from './components/noMatch/NoMatch';
+/***********************************************************************/
 
 
 function App() {
@@ -85,7 +85,7 @@ function App() {
               </Route>
 
               <Route path="*">
-                <NoMatch />
+                <PageNotFound />
               </Route>
             </Switch>
         ) 
@@ -124,7 +124,7 @@ function App() {
               </Route>
 
               <Route path="*">
-                <NoMatch />
+                <PageNotFound />
               </Route>
 
             </Switch>
@@ -253,7 +253,7 @@ function App() {
                 </Route>
 
                 <Route path="*">
-                  <NoMatch />
+                  <PageNotFound />
                 </Route>
 
               </Switch>

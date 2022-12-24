@@ -3,6 +3,7 @@ import defaultCameraImage from "../../../../camera.webp"
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
 import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
@@ -24,7 +25,11 @@ import { Alert } from '@mui/material';
 
 export default function Client() {
 
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
   const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
 
   /**************************    useRef    **********************************/
   // avoidRerenderFetchClient evita que se mande llamar dos veces al
@@ -172,11 +177,15 @@ export default function Client() {
 
 
   /************************     useEffect    *******************************/
-  // fetchClient mandao cargar desde la BD el Producto que me ineteresa
+  // fetchClient mandao cargar desde la BD el Cliente que me ineteresa
   // actualizar
   /**************************************************************************/
 
   useEffect (() => {
+
+    if (!isOnline) {
+      return;
+    }
 
     if (avoidRerenderFetchClient.current) {
       return;
@@ -186,8 +195,6 @@ export default function Client() {
 
       // solo debe de cargar datos una vez, osea al cargar la pagina
       avoidRerenderFetchClient.current = true;
-
-      
 
       try {
         // console.log("cargar cliente")
@@ -213,7 +220,7 @@ export default function Client() {
 
     fetchClient();
    
-  }, [clientId]);
+  }, [clientId, isOnline]);
 
 
   /************************     handleImageCoverChange    ********************/
@@ -281,252 +288,261 @@ export default function Client() {
   );
 
   return (
-    <div className="client">
+ 
+    <>
+      {
+        isOnline && (
+          <div  className="client">
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {updateSuccess ?  "success" : "error"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>
 
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {updateSuccess ?  "success" : "error"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>
-
-      <div className="clientTitleContainer">
-        <h1 className="clientTitle">Editar Cliente</h1>
-        <Link to="/new-client">
-          <button className="clientAddButton">Crear</button>
-        </Link>
-      </div>
-      <div className="clientContainer">
-        <div className="clientShow">
-          <div className="clientShowTop">
-            <img
-              className="clientShowImg"
-              src= {
-                      // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
-                      // fileBlob ? fileBlob : `${clientData.imageCover}`
-                      fileBlob ? fileBlob : clientData.imageCover ?
-                      `${clientData.imageCover}` : defaultCameraImage
-                   }
-              alt=""
-            /> 
-
-            <div className="clientShowTopTitle">
-              <span className="clientShowClientname">{clientData.businessName}</span>
-              <span className="clientShowClientTitle">{clientData.ownerName}</span>
+            <div className="clientTitleContainer">
+              <h1 className="clientTitle">Editar Cliente</h1>
+              <Link to="/new-client">
+                <button className="clientAddButton">Crear</button>
+              </Link>
             </div>
-          </div>
-          <div className="clientShowBottom">
-            <span className="clientShowTitle">Detalle</span>
-            <div className="clientShowInfo">
-              <FaBarcode className="clientShowIcon" />
-              <span className="clientShowInfoTitle">SKU: {clientData.sku}</span>
-            </div>
-            <div className="clientShowInfo">
-              <FaLocationArrow className="clientShowIcon" />
-              <span className="clientShowInfoTitle">{clientData.businessAddress}</span>
-            </div>
-            <div className="clientShowInfo">
-              <FaHouzz className="clientShowIcon" />
-              <span className="clientShowInfoTitle">{clientData.esMayorista ? "Es Mayorista" : "Es Minorista"}</span>
-            </div>
-            <div className="clientShowInfo">
-              <FaChrome className="clientShowIcon" />
-              <span className="clientShowInfoTitle">{clientData.slug}</span>
-            </div>           
-
-            <span className="clientShowTitle">Contacto</span>
-            <div className="clientShowInfo">
-              <FaMobileAlt className="clientShowIcon" />
-              <span className="clientShowInfoTitle">{clientData.cellPhone}</span>
-            </div>
-            <div className="clientShowInfo">
-              <FaPhoneAlt className="clientShowIcon" />
-              <span className="clientShowInfoTitle">{clientData.fixedPhone}</span>
-            </div>
-            <div className="clientShowInfo">
-              <FaEnvelope className="clientShowIcon" />
-              <span className="clientShowInfoTitle">{clientData.email}</span>
-            </div>
-          </div>
-        </div>
-        <div className="clientUpdate">
-          <span className="clientUpdateTitle">Editar</span>
-
-          <form className="clientUpdateForm" onSubmit={handleSubmit}>
-            <div className="clientUpdateLeft">
-              <div className="clientUpdateItem">
-                <label>SKU *</label>
-                <input
-                  className="clientUpdateInput"                  
-                  type="text"
-                  placeholder={clientData.sku}
-                  onChange={handleChange}
-                  name="sku"
-                  value={clientData.sku || ''}
-                  required
-                  onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  autoComplete="off"
-                  minLength="1"
-                  maxLength="25"
-                />
-              </div>              
-              <div className="clientUpdateItem">
-                <label>Negocio *</label>
-                <input
-                  className="clientUpdateInput"                  
-                  type="text"
-                  placeholder={clientData.businessName}
-                  onChange={handleChange}
-                  name="businessName"
-                  value={clientData.businessName || ''}
-                  required
-                  onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 5 y 80 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  minLength="5"
-                  maxLength="80"
-                  autoComplete="off"
-                />
+            <div className="clientContainer">
+              <div className="clientShow">
+                <div className="clientShowTop">
+                  <img
+                    className="clientShowImg"
+                    src= {
+                            // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
+                            // fileBlob ? fileBlob : `${clientData.imageCover}`
+                            fileBlob ? fileBlob : clientData.imageCover ?
+                            `${clientData.imageCover}` : defaultCameraImage
+                        }
+                    alt=""
+                  /> 
+      
+                  <div className="clientShowTopTitle">
+                    <span className="clientShowClientname">{clientData.businessName}</span>
+                    <span className="clientShowClientTitle">{clientData.ownerName}</span>
+                  </div>
+                </div>
+                <div className="clientShowBottom">
+                  <span className="clientShowTitle">Detalle</span>
+                  <div className="clientShowInfo">
+                    <FaBarcode className="clientShowIcon" />
+                    <span className="clientShowInfoTitle">SKU: {clientData.sku}</span>
+                  </div>
+                  <div className="clientShowInfo">
+                    <FaLocationArrow className="clientShowIcon" />
+                    <span className="clientShowInfoTitle">{clientData.businessAddress}</span>
+                  </div>
+                  <div className="clientShowInfo">
+                    <FaHouzz className="clientShowIcon" />
+                    <span className="clientShowInfoTitle">{clientData.esMayorista ? "Es Mayorista" : "Es Minorista"}</span>
+                  </div>
+                  <div className="clientShowInfo">
+                    <FaChrome className="clientShowIcon" />
+                    <span className="clientShowInfoTitle">{clientData.slug}</span>
+                  </div>           
+      
+                  <span className="clientShowTitle">Contacto</span>
+                  <div className="clientShowInfo">
+                    <FaMobileAlt className="clientShowIcon" />
+                    <span className="clientShowInfoTitle">{clientData.cellPhone}</span>
+                  </div>
+                  <div className="clientShowInfo">
+                    <FaPhoneAlt className="clientShowIcon" />
+                    <span className="clientShowInfoTitle">{clientData.fixedPhone}</span>
+                  </div>
+                  <div className="clientShowInfo">
+                    <FaEnvelope className="clientShowIcon" />
+                    <span className="clientShowInfoTitle">{clientData.email}</span>
+                  </div>
+                </div>
               </div>
-              <div className="clientUpdateItem">
-                <label>Contacto *</label>
-                <input
-                  className="clientUpdateInput"
-                  type="text"
-                  placeholder={clientData.ownerName}
-                  onChange={handleChange}
-                  name="ownerName"
-                  value={clientData.ownerName || ''}
-                  required
-                  onInvalid={e=> e.target.setCustomValidity('El Nombre del Contacto debe tener entre 5 y 80 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  minLength="5"
-                  maxLength="80"
-                  autoComplete="off"
-                />
+              <div className="clientUpdate">
+                <span className="clientUpdateTitle">Editar</span>
+      
+                <form className="clientUpdateForm" onSubmit={handleSubmit}>
+                  <div className="clientUpdateLeft">
+                    <div className="clientUpdateItem">
+                      <label>SKU *</label>
+                      <input
+                        className="clientUpdateInput"                  
+                        type="text"
+                        placeholder={clientData.sku}
+                        onChange={handleChange}
+                        name="sku"
+                        value={clientData.sku || ''}
+                        required
+                        onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        autoComplete="off"
+                        minLength="1"
+                        maxLength="25"
+                      />
+                    </div>              
+                    <div className="clientUpdateItem">
+                      <label>Negocio *</label>
+                      <input
+                        className="clientUpdateInput"                  
+                        type="text"
+                        placeholder={clientData.businessName}
+                        onChange={handleChange}
+                        name="businessName"
+                        value={clientData.businessName || ''}
+                        required
+                        onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 5 y 80 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        minLength="5"
+                        maxLength="80"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="clientUpdateItem">
+                      <label>Contacto *</label>
+                      <input
+                        className="clientUpdateInput"
+                        type="text"
+                        placeholder={clientData.ownerName}
+                        onChange={handleChange}
+                        name="ownerName"
+                        value={clientData.ownerName || ''}
+                        required
+                        onInvalid={e=> e.target.setCustomValidity('El Nombre del Contacto debe tener entre 5 y 80 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        minLength="5"
+                        maxLength="80"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div className="clientUpdateItem">
+                      <label>Email</label>
+                      <input
+                        className="clientUpdateInput"
+                        type="email"
+                        placeholder={clientData.email}
+                        onChange={handleChange}
+                        name="email"
+                        value={clientData.email || ''}  
+                        autoComplete="off"                
+                      />
+                    </div>
+                    <div className="clientUpdateItem">
+                      <label>Celular</label>
+                      <input
+                        className="clientUpdateInput"
+                        type="text"
+                        placeholder={clientData.cellPhone}
+                        onChange={handleChange}
+                        name="cellPhone"
+                        value={clientData.cellPhone || ''}  
+                        onInvalid={e=> e.target.setCustomValidity('El Número de Celular debe ser menor a 20 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        maxLength="20"
+                        autoComplete="off"     
+                      />
+                    </div>
+                    <div className="clientUpdateItem">
+                      <label>Teléfono Fijo</label>
+                      <input
+                        className="clientUpdateInput"
+                        type="text"
+                        placeholder={clientData.fixedPhone}
+                        onChange={handleChange}
+                        name="fixedPhone"
+                        value={clientData.fixedPhone || ''} 
+                        onInvalid={e=> e.target.setCustomValidity('El Número de Teléfono debe ser menor a 20 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        maxLength="20"
+                        autoComplete="off"                                   
+                      />
+                    </div>              
+                    <div className="clientUpdateItem">
+                      <label>Dirección</label>
+                      <input
+                        className="clientUpdateInput"
+                        type="text"
+                        placeholder={clientData.businessAddress}
+                        onChange={handleChange}
+                        name="businessAddress"
+                        value={clientData.businessAddress || ''}   
+                        onInvalid={e=> e.target.setCustomValidity('La Dirección debe tener menos de 100 caracteres')} 
+                        onInput={e=> e.target.setCustomValidity('')} 
+                        maxLength="100"
+                        autoComplete="off"               
+                      />
+                    </div>
+                    
+                    <div className="clientUpdateItemCheckbox">
+                      <label htmlFor="esMayorista" className="labelCheckboxUpdate">¿Es Mayorista?</label>
+                      <input
+                          className="inputCheckboxDataType"
+                          type="checkbox" 
+                          id="esMayorista" 
+                          checked={clientData.esMayorista}
+                          onChange={handleChange}
+                          name="esMayorista"
+                          value={clientData.esMayorista}
+                      />
+                    </div>
+                    {/* <div className="clientUpdateItem">
+                      <label>Es Mayorista</label>
+                      <select className="newClientSelect" name="esmayorista" id="esmayorista">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                      </select>
+                    </div> */}
+      
+                    {/* <input
+                      type="text"
+                      placeholder={data.imageCover}
+                      onChange={handleChange}
+                      name="imageCover"
+                      value={data.imageCover}
+                  /> */}
+                  </div>
+                  <div className="clientUpdateRight">
+                    <div className="clientUpdateUpload">
+                      <img
+                        className="clientUpdateImg"
+                        src= {
+                                // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
+                                fileBlob ? fileBlob : clientData.imageCover ?
+                                `${clientData.imageCover}` : defaultCameraImage
+                            }
+                        alt=""
+                      /> 
+      
+                      <label htmlFor="photo">
+                        <FaCloudUploadAlt className="clientUpdateIcon__upload" />
+                      </label>
+                      <input  
+                              className="inputGeneralDataType"
+                              type="file" 
+                              accept="image/*" 
+                              id="photo" 
+                              name="photo" 
+                              style={{ display: "none" }} 
+                              onChange={(e)=>handleImageCoverChange(e)}
+                      />
+                    </div>
+                    <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button>
+                  </div>
+                </form>
               </div>
-              <div className="clientUpdateItem">
-                <label>Email</label>
-                <input
-                  className="clientUpdateInput"
-                  type="email"
-                  placeholder={clientData.email}
-                  onChange={handleChange}
-                  name="email"
-                  value={clientData.email || ''}  
-                  autoComplete="off"                
-                />
-              </div>
-              <div className="clientUpdateItem">
-                <label>Celular</label>
-                <input
-                  className="clientUpdateInput"
-                  type="text"
-                  placeholder={clientData.cellPhone}
-                  onChange={handleChange}
-                  name="cellPhone"
-                  value={clientData.cellPhone || ''}  
-                  onInvalid={e=> e.target.setCustomValidity('El Número de Celular debe ser menor a 20 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  maxLength="20"
-                  autoComplete="off"     
-                />
-              </div>
-              <div className="clientUpdateItem">
-                <label>Teléfono Fijo</label>
-                <input
-                  className="clientUpdateInput"
-                  type="text"
-                  placeholder={clientData.fixedPhone}
-                  onChange={handleChange}
-                  name="fixedPhone"
-                  value={clientData.fixedPhone || ''} 
-                  onInvalid={e=> e.target.setCustomValidity('El Número de Teléfono debe ser menor a 20 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  maxLength="20"
-                  autoComplete="off"                                   
-                />
-              </div>              
-              <div className="clientUpdateItem">
-                <label>Dirección</label>
-                <input
-                  className="clientUpdateInput"
-                  type="text"
-                  placeholder={clientData.businessAddress}
-                  onChange={handleChange}
-                  name="businessAddress"
-                  value={clientData.businessAddress || ''}   
-                  onInvalid={e=> e.target.setCustomValidity('La Dirección debe tener menos de 100 caracteres')} 
-                  onInput={e=> e.target.setCustomValidity('')} 
-                  maxLength="100"
-                  autoComplete="off"               
-                />
-              </div>
-              
-              <div className="clientUpdateItemCheckbox">
-                <label htmlFor="esMayorista" className="labelCheckboxUpdate">¿Es Mayorista?</label>
-                <input
-                    className="inputCheckboxDataType"
-                    type="checkbox" 
-                    id="esMayorista" 
-                    checked={clientData.esMayorista}
-                    onChange={handleChange}
-                    name="esMayorista"
-                    value={clientData.esMayorista}
-                />
-              </div>
-              {/* <div className="clientUpdateItem">
-                <label>Es Mayorista</label>
-                <select className="newClientSelect" name="esmayorista" id="esmayorista">
-                  <option value="no">No</option>
-                  <option value="yes">Yes</option>
-                </select>
-              </div> */}
-
-              {/* <input
-                type="text"
-                placeholder={data.imageCover}
-                onChange={handleChange}
-                name="imageCover"
-                value={data.imageCover}
-            /> */}
-            </div>
-            <div className="clientUpdateRight">
-              <div className="clientUpdateUpload">
-                <img
-                  className="clientUpdateImg"
-                  src= {
-                          // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
-                          fileBlob ? fileBlob : clientData.imageCover ?
-                          `${clientData.imageCover}` : defaultCameraImage
-                       }
-                  alt=""
-                /> 
-
-                <label htmlFor="photo">
-                  <FaCloudUploadAlt className="clientUpdateIcon__upload" />
-                </label>
-                <input  
-                        className="inputGeneralDataType"
-                        type="file" 
-                        accept="image/*" 
-                        id="photo" 
-                        name="photo" 
-                        style={{ display: "none" }} 
-                        onChange={(e)=>handleImageCoverChange(e)}
-                />
-              </div>
-              <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+            </div>          
+          </div>         
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />       
+      }
+    </>
   );
 }

@@ -1,9 +1,9 @@
 import "./newClient.css";
 import defaultCameraImage from "../../../../camera.webp"
-
-// import axios from "axios";
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
+import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
@@ -12,7 +12,6 @@ import { useEffect, useRef, useState } from 'react';
 /**************************    Snackbar    **********************************/
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
-// import CloseIcon from '@mui/icons-material/Close';
 import {FaCloudUploadAlt, FaTimes} from "react-icons/fa";
 import { Alert } from '@mui/material';
 /****************************************************************************/
@@ -31,6 +30,12 @@ const INITIAL_STATE = {
 }
 
 export default function NewClient() {
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
 
   /**************************    useRef    **********************************/
   // inputRef lo uso para que al cargar la pagina ponga el focus en el nombre
@@ -69,7 +74,7 @@ export default function NewClient() {
   /**************************    useEffect    **********************************/
   // Al cargar la pagina pone el focus en el nombre del producto
   useEffect(()=>{
-    inputRef.current.focus();
+    inputRef?.current?.focus();
   },[])
   /*****************************************************************************/
 
@@ -124,7 +129,7 @@ export default function NewClient() {
 
         setItemData(INITIAL_STATE);
         setFileBlob(null);
-        inputRef.current.focus();
+        inputRef?.current?.focus();
       } 
     }
     catch(err) {
@@ -248,177 +253,187 @@ export default function NewClient() {
   
 
   return (
-    <div className="newClient">
+    <>
+      {
+        isOnline && (
+          <div className="newClient">
 
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {updateSuccess ?  "success" : "error"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {updateSuccess ?  "success" : "error"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>
+      
+            <h1 className="newClientTitle">Nuevo Cliente</h1>
+      
+            <form className="newClientForm" onSubmit={handleSubmit}>
+              <div className="newClientLeft">
+                <div className="newClientItem">
+                  <label>SKU *</label>
+                  <input 
+                      className="inputGeneralDataType"
+                      ref={inputRef}
+                      type="text" 
+                      placeholder="12345" 
+                      onChange={handleChange}
+                      name="sku"
+                      value={itemData.sku || ''}  
+                      required
+                      onInvalid={e=> e.target.setCustomValidity('Escribe el SKU')} 
+                      onInput={e=> e.target.setCustomValidity('')}   
+                      autoComplete="off"
+                      minLength="1"
+                      maxLength="25"
+                  />
+                </div>
+                <div className="newClientItem">
+                  <label>Negocio *</label>
+                  <input 
+                      className="inputGeneralDataType"
+                      type="text" 
+                      placeholder="Mi Tiendita" 
+                      onChange={handleChange}
+                      name="businessName"
+                      value={itemData.businessName || ''}  
+                      required
+                      onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 5 y 80 caracteres')} 
+                      onInput={e=> e.target.setCustomValidity('')}   
+                      minLength="5"
+                      maxLength="80"
+                      autoComplete="off"
+                  />
+                </div>
+                <div className="newClientItem">
+                  <label>Contacto *</label>
+                  <input 
+                      className="inputGeneralDataType"
+                      type="text" 
+                      placeholder="Carlos Treviño" 
+                      onChange={handleChange}
+                      name="ownerName"
+                      value={itemData.ownerName || ''}  
+                      required
+                      onInvalid={e=> e.target.setCustomValidity('El Nombre del Contacto debe tener entre 5 y 80 caracteres')} 
+                      onInput={e=> e.target.setCustomValidity('')} 
+                      minLength="5"
+                      maxLength="80"
+                      autoComplete="off"
+                  />
+                </div>
+                <div className="newClientItem">
+                  <label>Dirección</label>
+                  <input 
+                      className="inputGeneralDataType"
+                      type="text" 
+                      placeholder="Av. Juárez 2222 Col. Centro, Monterrey, N.L." 
+                      onChange={handleChange}
+                      name="businessAddress"
+                      value={itemData.businessAddress || ''}  
+                      onInvalid={e=> e.target.setCustomValidity('La Dirección debe tener menos de 100 caracteres')} 
+                      onInput={e=> e.target.setCustomValidity('')} 
+                      maxLength="100"
+                      autoComplete="off"         
+                  />
+                </div>
+                <div className="newClientItem">
+                  <label>Celular</label>
+                  <input 
+                      className="inputGeneralDataType"
+                      type="text" 
+                      placeholder="81 8011 8990" 
+                      onChange={handleChange}
+                      name="cellPhone"
+                      value={itemData.cellPhone || ''}  
+                      onInvalid={e=> e.target.setCustomValidity('El Número de Celular debe ser menor a 20 caracteres')} 
+                      onInput={e=> e.target.setCustomValidity('')} 
+                      maxLength="20"
+                      autoComplete="off"
+                  />
+                </div>
+                <div className="newClientItem">
+                  <label>Teléfono Fijo</label>
+                  <input 
+                      className="inputGeneralDataType"
+                      type="text" 
+                      placeholder="81 1234 5678" 
+                      onChange={handleChange}
+                      name="fixedPhone"
+                      value={itemData.fixedPhone || ''}   
+                      onInvalid={e=> e.target.setCustomValidity('El Número de Teléfono debe ser menor a 20 caracteres')} 
+                      onInput={e=> e.target.setCustomValidity('')} 
+                      maxLength="20"
+                      autoComplete="off"       
+                  />
+                </div>
+                <div className="newClientItem">
+                  <label>Email</label>
+                  <input 
+                      className="inputGeneralDataType"
+                      type="email" 
+                      placeholder="carlos.trevino@gmail.com" 
+                      onChange={handleChange}
+                      name="email"
+                      value={itemData.email || ''}   
+                      autoComplete="off"             
+                  />
+                </div>
+      
+                <div className="newClientItemCheckbox">
+                    <label htmlFor="esMayorista" className="labelCheckbox">¿Es Mayorista?</label>
+                    <input 
+                        className="inputCheckboxDataType"
+                        type="checkbox" 
+                        id="esMayorista" 
+                        checked={itemData.esMayorista}
+                        onChange={handleChange}
+                        name="esMayorista"
+                        value={itemData.esMayorista}
+                    />
+                </div>
+              </div>
+      
+              <div className="newClientRight">
+                <div className="newClientUpload">
+                  <img
+                    className="newClientImg"
+                    src= {
+                            // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${itemData.imageCover}`
+                            // fileBlob ? fileBlob : `${BASE_URL}/img/clients/${itemData.imageCover}`
+                            fileBlob ? fileBlob : defaultCameraImage
+                          }
+                    alt=""
+                  />                
+                  <label htmlFor="photo">
+                    <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer"}} />
+                  </label>
+                  <input  
+                          className="inputGeneralDataType"
+                          type="file" 
+                          accept="image/*" 
+                          id="photo" 
+                          name="photo" 
+                          style={{ display: "none" }} 
+                          onChange={(e)=>handleImageCoverChange(e)}
+                  />
+                </div>   
+      
+                <button className="newClientButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Crear'}</button>
+              </div>
+            </form>
+          </div>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />
+      }
+    </>
 
-      <h1 className="newClientTitle">Nuevo Cliente</h1>
-
-      <form className="newClientForm" onSubmit={handleSubmit}>
-        <div className="newClientLeft">
-          <div className="newClientItem">
-            <label>SKU *</label>
-            <input 
-                className="inputGeneralDataType"
-                ref={inputRef}
-                type="text" 
-                placeholder="12345" 
-                onChange={handleChange}
-                name="sku"
-                value={itemData.sku || ''}  
-                required
-                onInvalid={e=> e.target.setCustomValidity('Escribe el SKU')} 
-                onInput={e=> e.target.setCustomValidity('')}   
-                autoComplete="off"
-                minLength="1"
-                maxLength="25"
-            />
-          </div>
-          <div className="newClientItem">
-            <label>Negocio *</label>
-            <input 
-                className="inputGeneralDataType"
-                type="text" 
-                placeholder="Mi Tiendita" 
-                onChange={handleChange}
-                name="businessName"
-                value={itemData.businessName || ''}  
-                required
-                onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 5 y 80 caracteres')} 
-                onInput={e=> e.target.setCustomValidity('')}   
-                minLength="5"
-                maxLength="80"
-                autoComplete="off"
-            />
-          </div>
-          <div className="newClientItem">
-            <label>Contacto *</label>
-            <input 
-                className="inputGeneralDataType"
-                type="text" 
-                placeholder="Carlos Treviño" 
-                onChange={handleChange}
-                name="ownerName"
-                value={itemData.ownerName || ''}  
-                required
-                onInvalid={e=> e.target.setCustomValidity('El Nombre del Contacto debe tener entre 5 y 80 caracteres')} 
-                onInput={e=> e.target.setCustomValidity('')} 
-                minLength="5"
-                maxLength="80"
-                autoComplete="off"
-            />
-          </div>
-          <div className="newClientItem">
-            <label>Dirección</label>
-            <input 
-                className="inputGeneralDataType"
-                type="text" 
-                placeholder="Av. Juárez 2222 Col. Centro, Monterrey, N.L." 
-                onChange={handleChange}
-                name="businessAddress"
-                value={itemData.businessAddress || ''}  
-                onInvalid={e=> e.target.setCustomValidity('La Dirección debe tener menos de 100 caracteres')} 
-                onInput={e=> e.target.setCustomValidity('')} 
-                maxLength="100"
-                autoComplete="off"         
-            />
-          </div>
-          <div className="newClientItem">
-            <label>Celular</label>
-            <input 
-                className="inputGeneralDataType"
-                type="text" 
-                placeholder="81 8011 8990" 
-                onChange={handleChange}
-                name="cellPhone"
-                value={itemData.cellPhone || ''}  
-                onInvalid={e=> e.target.setCustomValidity('El Número de Celular debe ser menor a 20 caracteres')} 
-                onInput={e=> e.target.setCustomValidity('')} 
-                maxLength="20"
-                autoComplete="off"
-            />
-          </div>
-          <div className="newClientItem">
-            <label>Teléfono Fijo</label>
-            <input 
-                className="inputGeneralDataType"
-                type="text" 
-                placeholder="81 1234 5678" 
-                onChange={handleChange}
-                name="fixedPhone"
-                value={itemData.fixedPhone || ''}   
-                onInvalid={e=> e.target.setCustomValidity('El Número de Teléfono debe ser menor a 20 caracteres')} 
-                onInput={e=> e.target.setCustomValidity('')} 
-                maxLength="20"
-                autoComplete="off"       
-            />
-          </div>
-          <div className="newClientItem">
-            <label>Email</label>
-            <input 
-                className="inputGeneralDataType"
-                type="email" 
-                placeholder="carlos.trevino@gmail.com" 
-                onChange={handleChange}
-                name="email"
-                value={itemData.email || ''}   
-                autoComplete="off"             
-            />
-          </div>
-
-          <div className="newClientItemCheckbox">
-              <label htmlFor="esMayorista" className="labelCheckbox">¿Es Mayorista?</label>
-              <input 
-                  className="inputCheckboxDataType"
-                  type="checkbox" 
-                  id="esMayorista" 
-                  checked={itemData.esMayorista}
-                  onChange={handleChange}
-                  name="esMayorista"
-                  value={itemData.esMayorista}
-              />
-          </div>
-        </div>
-
-        <div className="newClientRight">
-          <div className="newClientUpload">
-            <img
-              className="newClientImg"
-              src= {
-                      // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${itemData.imageCover}`
-                      // fileBlob ? fileBlob : `${BASE_URL}/img/clients/${itemData.imageCover}`
-                      fileBlob ? fileBlob : defaultCameraImage
-                    }
-              alt=""
-            />                
-            <label htmlFor="photo">
-              <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer"}} />
-            </label>
-            <input  
-                    className="inputGeneralDataType"
-                    type="file" 
-                    accept="image/*" 
-                    id="photo" 
-                    name="photo" 
-                    style={{ display: "none" }} 
-                    onChange={(e)=>handleImageCoverChange(e)}
-            />
-          </div>   
-
-          <button className="newClientButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Crear'}</button>
-        </div>
-      </form>
-    </div>
   );
 }

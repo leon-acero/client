@@ -1,6 +1,9 @@
 import "./reportWeeklySalesByMonth.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
+
 /*******************************    React     *******************************/
 import React, { useEffect, useRef, useState } from 'react'
 /****************************************************************************/
@@ -34,6 +37,12 @@ import { Alert } from '@mui/material';
 
 
 export default function ReportWeeklySalesByMonth() {
+
+  /***********************     useNavigatorOnLine    ***************************/
+  // isOnline es para saber si el usuario esta Online
+  const isOnline = useNavigatorOnLine();
+  /*****************************************************************************/
+
 
   /************************    useRef    ********************************* /
   // Agregué estos dos useRefs porque en React18 se hace un re-render
@@ -71,6 +80,10 @@ export default function ReportWeeklySalesByMonth() {
   // y asi se calcula la Venta
   /**************************    useEffect    ******************************* */
   useEffect (() => {
+
+    if (!isOnline) {
+      return;
+    }
 
     const fetchVentasDelNegocio = async () => {
 
@@ -117,7 +130,7 @@ export default function ReportWeeklySalesByMonth() {
       }
     }
     fetchVentasDelNegocio();
-  }, [startDate, endDate]);
+  }, [startDate, endDate, isOnline]);
   
 
   /***********************    handleChangeDatePicker    ***********************/
@@ -156,60 +169,70 @@ export default function ReportWeeklySalesByMonth() {
   );  
 
   return (
-    <div className="reportWeeklySalesByMonth">
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert 
-            severity= {"success"} 
-            action={action}
-            sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-        >{mensajeSnackBar}
-        </Alert>
-      </Snackbar>  
-            
-      <div className="reportWeeklySalesByMonth__container">
-        <div className='reportWeeklySalesByMonth__selectorDeFecha'>
-          <p 
-            className="reportWeeklySalesByMonth__title">Selecciona un Rango de Fechas:
-          </p>
-          <DatePicker 
-            className="datePicker"
-            selectsRange={true}
-            startDate={startDate}
-            endDate={endDate}
-            onChange={(update) => handleChangeDatePicker(update)}
-            dateFormat="yyyy-MMM-dd" 
-          />
-          <FaRegCalendarAlt className="calendario" />
-        </div>
-        {
-          isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
-        }
-        {
-          chartData && (
-            <Chart 
-                className="reportWeeklySalesByMonth__chart"
-                data={chartData} 
-                title={
-                    <NumericFormat 
-                          value={totalAcumulado} 
-                          decimalScale={2} 
-                          thousandSeparator="," 
-                          prefix={'$'} 
-                          decimalSeparator="." 
-                          displayType="text" 
-                          renderText={(value) => <span>Venta Acumulada {value}</span>}
-                    />} 
-                grid 
-                dataKey="SubTotal"
-            />
-          )
-        }
-        
-      </div>
-    </div>
+    <>
+      {
+        isOnline && (
+          <div className="reportWeeklySalesByMonth">
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={5000}
+              onClose={handleCloseSnackbar}
+            >
+              <Alert 
+                  severity= {"success"} 
+                  action={action}
+                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+              >{mensajeSnackBar}
+              </Alert>
+            </Snackbar>  
+                  
+            <div className="reportWeeklySalesByMonth__container">
+              <div className='reportWeeklySalesByMonth__selectorDeFecha'>
+                <p 
+                  className="reportWeeklySalesByMonth__title">Selecciona un Rango de Fechas:
+                </p>
+                <DatePicker 
+                  className="datePicker"
+                  selectsRange={true}
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={(update) => handleChangeDatePicker(update)}
+                  dateFormat="yyyy-MMM-dd" 
+                />
+                <FaRegCalendarAlt className="calendario" />
+              </div>
+              {
+                isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
+              }
+              {
+                chartData && (
+                  <Chart 
+                      className="reportWeeklySalesByMonth__chart"
+                      data={chartData} 
+                      title={
+                          <NumericFormat 
+                                value={totalAcumulado} 
+                                decimalScale={2} 
+                                thousandSeparator="," 
+                                prefix={'$'} 
+                                decimalSeparator="." 
+                                displayType="text" 
+                                renderText={(value) => <span>Venta Acumulada {value}</span>}
+                          />} 
+                      grid 
+                      dataKey="SubTotal"
+                  />
+                )
+              }
+              
+            </div>
+          </div>
+        )
+      }
+      {
+        !isOnline && <OfflineFallback />
+      }
+    </>
+
   )
 }
