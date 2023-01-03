@@ -13,7 +13,8 @@ import {
 /****************************************************************************/
 
 /*******************************    Format     *******************************/
-import { NumericFormat } from 'react-number-format';
+// import { NumericFormat } from 'react-number-format';
+  import { formateaCurrency } from '../../utils/formatea';
 /****************************************************************************/
 
 
@@ -25,13 +26,15 @@ export default function Chart({ title, data, dataKey, grid }) {
         <div className="tooltip">
           <p className="label">{label}</p>
           <p className="payload">
-            <NumericFormat 
+            { formateaCurrency(payload[0].value) }
+            {/* <NumericFormat 
                 value={payload[0].value} 
                 decimalScale={2} 
                 thousandSeparator="," 
                 prefix={'$'} 
                 decimalSeparator="." 
-                displayType="text" /></p>
+                displayType="text" /> */}
+          </p>
         </div>
       );
     }

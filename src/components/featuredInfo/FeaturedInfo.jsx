@@ -5,7 +5,8 @@ import {FaArrowUp, FaArrowDown} from "react-icons/fa";
 /****************************************************************************/
 
 /*******************************    Format     ******************************/
-import { NumericFormat } from 'react-number-format';
+// import { NumericFormat } from 'react-number-format';
+import { formateaCurrency } from '../../utils/formatea';
 /****************************************************************************/
 
 
@@ -16,7 +17,7 @@ export default function FeaturedInfo() {
       <div className="featuredItem">
         <span className="featuredTitle">Ganancias</span>
         <div className="featuredMoneyContainer">
-          <span className="featuredMoney"><NumericFormat value={3000} displayType={'text'} thousandSeparator={true} prefix={'$'} /></span>
+          <span className="featuredMoney">{formateaCurrency(3000)}</span>
           <span className="featuredMoneyRate">
             -11.4 <FaArrowDown  className="featuredIcon negative"/>
           </span>
@@ -27,7 +28,7 @@ export default function FeaturedInfo() {
       <div className="featuredItem">
         <span className="featuredTitle">Ventas</span>
         <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$4,415</span>
+          <span className="featuredMoney">{formateaCurrency(4415)}</span>
           <span className="featuredMoneyRate">
             -1.4 <FaArrowDown className="featuredIcon negative"/>
           </span>
@@ -38,7 +39,7 @@ export default function FeaturedInfo() {
       <div className="featuredItem">
         <span className="featuredTitle">Compras</span>
         <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$2,225</span>
+          <span className="featuredMoney">{formateaCurrency(2225)}</span>
           <span className="featuredMoneyRate">
             +2.4 <FaArrowUp className="featuredIcon"/>
           </span>

@@ -1,0 +1,28 @@
+.itemShowInfo{
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.6rem;
+  color: #444;
+  font-size: 1.4rem;
+  font-weight: 400;
+  padding-left: 1rem;
+}
+
+.itemShowInfoTitle__container {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: flex-end;
+  width: 100%;
+}
+
+.itemShowInfoTitle__alinearSpaceBetween {
+  justify-content: space-between;
+}
+
+.itemShowIcon{
+  font-size: 1.6rem !important;
+}
+
+.itemShowInfoTitle__label{
+  margin-left: 1rem;
+}

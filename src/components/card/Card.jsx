@@ -6,7 +6,9 @@ export default function Card(
     uniqueKey, 
     product, 
     esMayorista, 
-    addProductToBasket 
+    addProductToBasket,
+    isSaving,
+    isDeleting 
   }) {
   
   return (
@@ -29,7 +31,9 @@ export default function Card(
           </p>
         </div>
 
-        <button className="buttonAddProductToBasket" 
+        <button 
+                disabled={isSaving || isDeleting}
+                className="buttonAddProductToBasket" 
                 onClick={()=>addProductToBasket(product.id)}>Agregar al Carrito
         </button>
       </div>

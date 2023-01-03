@@ -1,7 +1,12 @@
 import "./updateOrder.css"
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
+
+
+import { SE_APLICA_DESCUENTO } from '../../../utils/seAplicaDescuento';
 
 /****************************    React    ***********************************/
 import { useState, useEffect, useRef, useContext } from 'react';
@@ -13,6 +18,7 @@ import ProductInput from '../../../components/productInput/ProductInput';
 import ProductOrdered from '../../../components/productOrdered/ProductOrdered';
 import BasicDialog from '../../../components/basicDialog/BasicDialog';
 import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
 /**************************    Context API    *******************************/
@@ -20,20 +26,22 @@ import { stateContext } from '../../../context/StateProvider';
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
-/**************************    React-Icons    **********************************/
+/**************************    React-Icons    *******************************/
 import {FaShoppingCart, FaSearch} from "react-icons/fa";
 /****************************************************************************/
 
+import axios, { regresaMensajeDeError } from '../../../utils/axios';
+// import { NumericFormat } from 'react-number-format';
+import { formateaCurrency } from '../../../utils/formatea';
+
 /**************************    Framer-Motion    **********************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
-import axios, { regresaMensajeDeError } from '../../../utils/axios';
-import { NumericFormat } from 'react-number-format';
 
 const containerVariants = {
   hidden: { 
@@ -60,7 +68,7 @@ export default function UpdateOrder() {
   /*****************************************************************************/
 
 
-  /****************************    useParams    *******************************/
+  /****************************    useContext    *******************************/
   // El id del usuario de la App, es decir el id del Vendedor que esta usando la App
 
   const { currentUser } = useContext(stateContext);
@@ -84,10 +92,10 @@ export default function UpdateOrder() {
           esMayorista, 
           fecha,
           usarComponenteComo,
-          businessImageCover } = useLocation().state;
+          businessImageCover,
+          client } = useLocation().state;
 
   /****************************************************************************/
-
 
   /**************************    useRef    **********************************/
   // avoidRerenderFetchClient evita que se mande llamar dos veces al
@@ -141,7 +149,7 @@ export default function UpdateOrder() {
 
   // searchBarQuery es lo que el usuario captura para buscar un producto
 
-  // updateSuccess es boolean que indica si tuvo exito o no el grabado en la BD
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no el grabado en la BD
   // me sirve para mandar un mensaje de exito o error en el SnackBar
 
   // productCatalog contiene el catálogo de Productos
@@ -181,7 +189,7 @@ export default function UpdateOrder() {
    // Aqui guardo lo que escribo en el input className="searchInput"
   // PREGUNTA: porque NO tengo value, id, name??
   const [searchBarQuery, setSearchBarQuery] = useState("");
-  const [updateSuccess, setUpdateSuccess] = useState (true);
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [productCatalog, setProductCatalog] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -256,6 +264,8 @@ export default function UpdateOrder() {
       }
       catch(err) {
         console.log("err");
+
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));
         setOpenSnackbar(true);
       }
@@ -295,6 +305,8 @@ export default function UpdateOrder() {
 
     if (yaExisteProducto) {
       // console.log("Producto ya existe en theBasket");
+
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar("El producto ya fue agregado al carrito.")
       setOpenSnackbar(true);
       return;
@@ -404,7 +416,7 @@ export default function UpdateOrder() {
           item.quantity === "" || 
           item.quantity === null 
           ? 0 
-          : item.descuento = (item.priceDeVenta * item.quantity) * (10/100);
+          : item.descuento = (item.priceDeVenta * item.quantity) * (SE_APLICA_DESCUENTO/100);
         }
         else {
           item.descuento = 0;
@@ -478,6 +490,8 @@ export default function UpdateOrder() {
 
     if (theBasket?.productOrdered?.length === 0) {
       continuarConElPedido = false;
+
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar("Agrega productos para crear el pedido")
       setOpenSnackbar(true);
     }
@@ -486,6 +500,8 @@ export default function UpdateOrder() {
       if (item.quantity === "" || item.quantity === "0") {
         // console.log(`Captura una cantidad para ${item.productName}`)
         continuarConElPedido = false;
+
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar(`Captura una cantidad para ${item.productName}`)
         setOpenSnackbar(true);
         break;
@@ -494,6 +510,8 @@ export default function UpdateOrder() {
 
     if (theBasket.estatusPedido === 0) {
       continuarConElPedido = false;
+
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar("Selecciona el Estatus del pedido para poder grabarlo")
       setOpenSnackbar(true);
     }
@@ -506,6 +524,8 @@ export default function UpdateOrder() {
       return;
 
     if (theBasket.estatusPedido === "" || theBasket.estatusPedido === "empty") {
+
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar('Selecciona un Estatus para el Pedido');
       setOpenSnackbar(true);
       return;
@@ -529,6 +549,7 @@ export default function UpdateOrder() {
 
         setIsSaving(true);
 
+        let mensajeDeExito = "";
         let res;
 
         if (usarComponenteComo === "nuevoPedido") {
@@ -567,7 +588,7 @@ export default function UpdateOrder() {
         if (res.data.status === 'success') {
 
           console.log ('El pedido fue realizado con éxito!');
-          setUpdateSuccess(true);
+          // setIconoSnackBarDeExito(true);
 
           // estatusPedido donde 
           // 1 es Por Entregar
@@ -575,25 +596,35 @@ export default function UpdateOrder() {
           console.log("el estatus pedido", theBasket.estatusPedido);
 
           if (theBasket.estatusPedido === 1) {
-            setMensajeSnackBar("El pedido fue grabado. Por Entregar. Espera un momento...");
+            // setMensajeSnackBar("El pedido fue grabado. Por Entregar. Espera un momento...");
+            mensajeDeExito="El pedido fue grabado. Estatus: Por Entregar.";
           }
           else if (theBasket.estatusPedido === 2) {
-            setMensajeSnackBar("El pedido fue grabado y Entregado. Inventario actualizado. Espera un momento...");
+            // setMensajeSnackBar("El pedido fue grabado y Entregado. Inventario actualizado. Espera un momento...");
+            mensajeDeExito="El pedido fue grabado y Entregado. Inventario actualizado."
           }
           
-          setOpenSnackbar(true);
+          // setOpenSnackbar(true);
 
           // Redirecciono después de 5 segundos a SearchClient osea /search-client
-          setTimeout(()=>{
-            history.replace("/search-client");
-          }, 5000);
+          // setTimeout(()=>{
+          //   history.replace("/search-client");
+          // }, 5000);
+
+
+          history.replace( `/ticket/${clientId}`, {
+              clientId,
+              theBasket,
+              mensajeDeExito 
+          });
+    
         } 
     }
     catch(err) {
       console.log(err);
       setIsSaving(false);
-      setUpdateSuccess(false);
 
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError(err));      
       setOpenSnackbar(true);
     }
@@ -689,6 +720,8 @@ export default function UpdateOrder() {
       catch (err) {
         console.log("error", err);
         setIsLoading(false);
+
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));      
         setOpenSnackbar(true);
       }
@@ -701,30 +734,30 @@ export default function UpdateOrder() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        {/* <CloseIcon fontSize="small" /> */}
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       {/* <CloseIcon fontSize="small" /> */}
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
 
   /************************     handleDeleteOrder    ************************/
@@ -768,7 +801,6 @@ export default function UpdateOrder() {
         if (res.status === 204) {
 
           console.log ('El pedido fue borrado con éxito!');
-          setUpdateSuccess(true);
 
           // Inicializo theBasket
           setTheBasket(
@@ -787,22 +819,31 @@ export default function UpdateOrder() {
               }
           );
 
+          setIconoSnackBarDeExito(true);
           setMensajeSnackBar("El pedido fue borrado. Espera un momento...");          
           setOpenSnackbar(true);
 
           // Redirecciono después de 5 segundos a SearchClient osea /search-client
-          setTimeout(()=>{
-            history.replace("/search-client");
-          }, 5000);
+          // setTimeout(()=>{
+          //   history.replace(
+          //     {
+          //       pathname:"/search-client", 
+          //       state: {
+          //         openVentana: "CrearPedido"
+          //       }
+          //     }
+          //   );
+          // }, 5000);  
           
+          history.replace( "/order-was-deleted");
         } 
     }
     catch(err) {
       console.log(err);
       setIsDeleting(false);
 
-      setUpdateSuccess(false);
       // setMensajeSnackBar("Hubo un error al borrar el pedido. Intente más tarde.")
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError(err));      
       setOpenSnackbar(true);
     }
@@ -839,46 +880,67 @@ export default function UpdateOrder() {
               animate="visible"      
             >
       
-                <BasicDialog
-                  open={openModal}
-                  onClose={() => setOpenModal(false)}
-                  message= {`¿Estas seguro que deseas borrar el Pedido?`}
-                  onSubmit={handleDeleteOrder}
-                  captionAceptar={"Borrar"}
-                  captionCancelar={"Cancelar"}
-                />
-      
-                <BasicDialog
-                  open={openModalEstatusPedido}
-                  onClose={() => setOpenModalEstatusPedido(false)}
-                  message= {`El Pedido aun tiene estatus: Por Entregar, si deseas cerrar el pedido selecciona Cancelar, cambia el estatus a Entregado y vuelve a Grabar. Si deseas que el Pedido siga abierto selecciona Aceptar para grabar.`}
-                  onSubmit={handlePlaceOrder}
-                  captionAceptar={"Aceptar"}
-                  captionCancelar={"Cancelar"}
-                />
-                    
-              <Snackbar
+              <BasicDialog
+                open={openModal}
+                onClose={() => setOpenModal(false)}
+                message= {`¿Estas seguro que deseas borrar el Pedido?`}
+                onSubmit={handleDeleteOrder}
+                captionAceptar={"Borrar"}
+                captionCancelar={"Cancelar"}
+              />
+    
+              <BasicDialog
+                open={openModalEstatusPedido}
+                onClose={() => setOpenModalEstatusPedido(false)}
+                message= {`El Pedido aun tiene estatus: Por Entregar, si deseas cerrar el pedido selecciona Cancelar, cambia el estatus a Entregado y vuelve a Grabar. Si deseas que el Pedido siga abierto selecciona Aceptar para grabar.`}
+                onSubmit={handlePlaceOrder}
+                captionAceptar={"Aceptar"}
+                captionCancelar={"Cancelar"}
+              />
+
+              <SnackBarCustom 
+                  openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                  iconoSnackBarDeExito={iconoSnackBarDeExito} />    
+
+              {/* <Snackbar
                 open={openSnackbar}
                 autoHideDuration={5000}
                 onClose={handleCloseSnackbar}
               >
                 <Alert 
-                    severity= {updateSuccess ?  "success" : "error"} 
+                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                     action={action}
                     sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
                 >{mensajeSnackBar}
                 </Alert>
-              </Snackbar>      
+              </Snackbar>       */}
       
               <div className="businessInfo">
-                <p className="businessInfo__businessName">{businessName}</p>
-                <p className="businessInfo__cellPhone">{cellPhone}</p>
-                <p className="businessInfo__esMayorista">{esMayorista ? "Mayorista" : "Minorista"}</p>
+                <p className="businessInfo__businessName">{client.businessName}</p>
+                <p className="businessInfo__clientDetails">
+                      {client.ownerName}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      {client.businessAddress}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      Celular: {client.cellPhone}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      Teléfono Fijo: {client.fixedPhone}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      Email: {client.email}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      {client.esMayorista ? "Mayorista" : "Minorista"}
+                    </p>
               </div>
       
               <div className="salesHeader">
                 <div className="searchBar">
                     <input 
+                          disabled={isSaving || isDeleting}
                           type="text" 
                           placeholder='Buscar Producto...'
                           className="searchInput" 
@@ -948,6 +1010,8 @@ export default function UpdateOrder() {
                                       product={product} 
                                       addProductToBasket={addProductToBasket}
                                       esMayorista={esMayorista}
+                                      isSaving={isSaving}
+                                      isDeleting={isDeleting}
                               />
                             )
                           )
@@ -981,6 +1045,8 @@ export default function UpdateOrder() {
                               product={product}
                               handleQuantityChange={handleQuantityChange} 
                               removeProductFromBasket={removeProductFromBasket} 
+                              isSaving={isSaving}
+                              isDeleting={isDeleting}
                               // seAplicaDescuento={seAplicaDescuento}
                             />
                           )
@@ -990,6 +1056,7 @@ export default function UpdateOrder() {
       
                     <div className="descuento">
                       <input 
+                          disabled={isSaving || isDeleting}
                           className="descuento__checkbox"
                           type="checkbox" 
                           id="aplicarDescuento" 
@@ -998,7 +1065,7 @@ export default function UpdateOrder() {
                           value={theBasket.seAplicaDescuento}
                           onChange={handleAplicaDescuento}
                       />
-                      <label className="descuento__label" htmlFor="aplicarDescuento">¿Aplicar 10% de Descuento?</label>
+                      <label className="descuento__label" htmlFor="aplicarDescuento">¿Aplicar {SE_APLICA_DESCUENTO}% de Descuento?</label>
                     </div>
       
                     <div className="totalPedido">
@@ -1011,15 +1078,16 @@ export default function UpdateOrder() {
                         <span className="totalPedido__currency">
                           {
                             // `$${totalBasket}`
-                            <NumericFormat 
-                                    value={totalBasket} 
-                                    decimalScale={2} 
-                                    thousandSeparator="," 
-                                    prefix={'$'} 
-                                    decimalSeparator="." 
-                                    displayType="text" 
-                                    renderText={(value) => <span>{value}</span>}
-                            />
+                            formateaCurrency(totalBasket)
+                            // <NumericFormat 
+                            //         value={totalBasket} 
+                            //         decimalScale={2} 
+                            //         thousandSeparator="," 
+                            //         prefix={'$'} 
+                            //         decimalSeparator="." 
+                            //         displayType="text" 
+                            //         renderText={(value) => <span>{value}</span>}
+                            // />
                           }
                         </span>
                       </div>
@@ -1031,15 +1099,16 @@ export default function UpdateOrder() {
                         <span className="totalPedido__currency">
                           {
                             // `- $${totalDescuento}`
-                            <NumericFormat 
-                                    value={totalDescuento} 
-                                    decimalScale={2} 
-                                    thousandSeparator="," 
-                                    prefix={'$'} 
-                                    decimalSeparator="." 
-                                    displayType="text" 
-                                    renderText={(value) => <span>{value}</span>}
-                            />
+                            formateaCurrency(totalDescuento)
+                            // <NumericFormat 
+                            //         value={totalDescuento} 
+                            //         decimalScale={2} 
+                            //         thousandSeparator="," 
+                            //         prefix={'$'} 
+                            //         decimalSeparator="." 
+                            //         displayType="text" 
+                            //         renderText={(value) => <span>{value}</span>}
+                            // />
                           }
                         </span>
                       </div>
@@ -1051,7 +1120,10 @@ export default function UpdateOrder() {
                         {/* <span className="totalPedido__currency pedidoTotal">{`$${totalBasket - totalDescuento}`}</span>          */}
                         <span className="totalPedido__currency pedidoTotal">
                           {/* {`$${totalBasket - totalDescuento}`} */}
-                          <NumericFormat 
+                          {
+                            formateaCurrency(totalBasket - totalDescuento)
+                          }
+                          {/* <NumericFormat 
                                     value={totalBasket - totalDescuento} 
                                     decimalScale={2} 
                                     thousandSeparator="," 
@@ -1059,7 +1131,7 @@ export default function UpdateOrder() {
                                     decimalSeparator="." 
                                     displayType="text" 
                                     renderText={(value) => <span>{value}</span>}
-                          />
+                          /> */}
                         </span>         
                       </div>
                     </div>
@@ -1084,7 +1156,7 @@ export default function UpdateOrder() {
                   {
                     usarComponenteComo === "actualizarPedido" && 
                           <button className="deleteOrderButton"
-                                  disabled={isDeleting}
+                                  disabled={isSaving || isDeleting}
                                   // onClick={handleDeleteOrder}
                                   onClick={openDeleteDialog}
                           >{isDeleting ? 'Borrando...' : 'Borrar'}
@@ -1094,6 +1166,7 @@ export default function UpdateOrder() {
                   <div className="container-estatusPedido">
                     <label htmlFor="estatusPedido">Estatus Pedido</label>
                     <select 
+                        disabled={isSaving || isDeleting}
                         className="container-estatusPedido__select"
                         id="estatusPedido" 
                         // value={estatusPedido}
@@ -1111,7 +1184,7 @@ export default function UpdateOrder() {
                   </div>
       
                   <button className="placeOrderButton"
-                          disabled={isSaving}
+                          disabled={isSaving || isDeleting}
                           // onClick={handlePlaceOrder}
                           onClick={
                               usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 1 

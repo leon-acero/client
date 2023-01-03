@@ -1,19 +1,21 @@
-import { useState } from 'react'
-
 /**************************    Snackbar    **********************************/
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import {FaTimes} from "react-icons/fa";
 import { Alert } from '@mui/material';
 /****************************************************************************/
 
 
-export default function SnackBarCustom () {
-
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
-  const [updateSuccess, setUpdateSuccess] = useState (true);
+export default function SnackBarCustom (
+      {
+        openSnackbar, setOpenSnackbar, 
+        mensajeSnackBar, 
+        iconoSnackBarDeExito
+      }) {
   
+  /************************     handleCloseSnackbar    **********************/
+  // Es el handle que se encarga cerrar el Snackbar
+  /**************************************************************************/
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -21,6 +23,7 @@ export default function SnackBarCustom () {
 
     setOpenSnackbar(false);
   };
+
 
 
   /*****************************     action    ******************************/
@@ -34,9 +37,9 @@ export default function SnackBarCustom () {
         color="inherit"
         onClick={handleCloseSnackbar}
       >
-        <CloseIcon fontSize="small" />
+        <FaTimes />
       </IconButton>
-    </>
+  </>
   );
 
 
@@ -48,7 +51,7 @@ export default function SnackBarCustom () {
         onClose={handleCloseSnackbar}
       >
         <Alert 
-            severity= {updateSuccess ?  "success" : "error"} 
+            severity= {iconoSnackBarDeExito ?  "success" : "error"} 
             action={action}
             sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
         >{mensajeSnackBar}

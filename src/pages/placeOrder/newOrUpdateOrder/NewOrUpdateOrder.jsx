@@ -1,8 +1,11 @@
 import "./newOrUpdateOrder.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
+
 
 /*******************************    React     *******************************/
 import { useEffect, useRef, useState } from 'react';
@@ -10,24 +13,23 @@ import { Link, useLocation, useHistory } from 'react-router-dom';
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
 /***************************    Components     ******************************/
 import SkeletonElement from '../../../components/skeletons/SkeletonElement';
-/****************************************************************************/
-
-/**************************    Framer-Motion    *****************************/
-import { domAnimation, LazyMotion, m } from 'framer-motion';
+import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
 /*******************************    React Icons    *************************/
 import { FaArrowLeft } from 'react-icons/fa';
 /****************************************************************************/
 
+/**************************    Framer-Motion    *****************************/
+import { domAnimation, LazyMotion, m } from 'framer-motion';
 
 const containerVariants = {
   hidden: { 
@@ -42,6 +44,7 @@ const containerVariants = {
     transition: { duration: .4, ease: 'easeInOut' }
   }
 };
+/****************************************************************************/
 
 
 export default function NewOrUpdateOrder() {
@@ -57,12 +60,30 @@ export default function NewOrUpdateOrder() {
 
   /**************************    useRef    **********************************/
   // ultimosCincoPedidos es un Array que contiene las Fechas de los ultimos 5 pedidos
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no la operacion
+  // de AXIOS
 
   // const [ultimosCincoPedidos, setUltimosCincoPedidos] = useState([]);
-  const [ultimosCincoPedidos, setUltimosCincoPedidos] = useState(null);
+  const [ultimosCincoPedidos, setUltimosCincoPedidos] = useState(null); 
 
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
+
+  const [clientData, setClientData] = useState(
+    {
+      _id: 0,
+      sku: 0,
+      ownerName: "", 
+      businessName: "", 
+      businessAddress: "",
+      cellPhone: "", 
+      fixedPhone: "",
+      email: "", 
+      esMayorista: false,
+      imageCover: ""
+    }
+  )
   /*****************************************************************************/
 
 
@@ -71,14 +92,57 @@ export default function NewOrUpdateOrder() {
   // cliente y por lo mismo que se pinte dos veces
   
   const avoidRerenderFetchClient = useRef(false);
+  const avoidRerenderFetchUltimosCincoPedidos = useRef(false);
   /*****************************************************************************/
 
   /****************************    useLocation    *****************************/
   // Estos datos del Cliente los obtengo con useLocation los cuales los mandé
   // desde clientFound.jsx
 
-  const {clientId, businessName, cellPhone, esMayorista, businessImageCover} = useLocation().state;
+  // const {clientId, businessName, cellPhone, esMayorista, businessImageCover, client} = useLocation().state;
+  const {clientId} = useLocation().state;
   /****************************************************************************/
+
+
+  /************************     useEffect    *******************************/
+  // fetchClient mandao cargar desde la BD el Cliente que me ineteresa
+  // actualizar
+  /**************************************************************************/
+
+  useEffect (() => {
+
+    if (!isOnline) {
+      return;
+    }
+
+    if (avoidRerenderFetchClient.current) {
+      return;
+    }
+
+    const fetchClient = async () => {
+
+      // solo debe de cargar datos una vez, osea al cargar la pagina
+      avoidRerenderFetchClient.current = true;
+
+      try {
+   
+        const res = await axios.get (`/api/v1/clients/${clientId}`);
+  
+        // console.log(res.data.data.data);
+        setClientData(res.data.data.data)
+      }
+      catch (err) {
+        console.log(err); 
+
+        setIconoSnackBarDeExito(false);
+        setMensajeSnackBar (regresaMensajeDeError(err));
+        setOpenSnackbar(true);
+      }
+    }
+
+    fetchClient();
+   
+  }, [clientId, isOnline]);
 
 
   /****************************    useEffect    *******************************/
@@ -91,14 +155,14 @@ export default function NewOrUpdateOrder() {
       return;
     }
 
-    if (avoidRerenderFetchClient.current) {
+    if (avoidRerenderFetchUltimosCincoPedidos.current) {
       return;
     }
 
     const fetchUltimosCincoPedidosPorEntregar = async ()=> {
       
       // solo debe de cargar datos una vez, osea al cargar la pagina
-      avoidRerenderFetchClient.current = true;
+      avoidRerenderFetchUltimosCincoPedidos.current = true;
 
       try {
         setUltimosCincoPedidos(null);
@@ -118,6 +182,8 @@ export default function NewOrUpdateOrder() {
       }
       catch (err) {
         console.log(err);
+        
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));
         setOpenSnackbar(true);
       }
@@ -139,32 +205,34 @@ export default function NewOrUpdateOrder() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-  </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  // </>
+  // );
+
 
   return (
     <>
+
       {
         isOnline && (
           <LazyMotion features={domAnimation} >
@@ -173,18 +241,21 @@ export default function NewOrUpdateOrder() {
               initial="hidden"
               animate="visible"
             >
-              <Snackbar
+              <SnackBarCustom  
+                  openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                  iconoSnackBarDeExito={iconoSnackBarDeExito} />              
+              {/* <Snackbar
                 open={openSnackbar}
                 autoHideDuration={5000}
                 onClose={handleCloseSnackbar}
               >
                 <Alert 
-                    severity= {"error"} 
+                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                     action={action}
                     sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
                 >{mensajeSnackBar}
                 </Alert>
-              </Snackbar>
+              </Snackbar> */}
       
               <div className="regresarAPaginaAnterior">
                 <FaArrowLeft onClick={handleGoBackOnePage} className="arrowLeftGoBack" />
@@ -194,13 +265,30 @@ export default function NewOrUpdateOrder() {
                 <div className="form-newOrUpdateOrder">
                   <div className="businessInfo">
                     <div className="editarCliente">
-                      <p className="businessInfo__businessName">{businessName}</p>
+                      <p className="businessInfo__businessName">{clientData.businessName}</p>
                       <Link to={"/client/" + clientId}>
                         <button className="clientListEdit">Editar</button>
                       </Link>
                     </div>
-                    <p className="businessInfo__cellPhone">{cellPhone}</p>
-                    <p className="businessInfo__esMayorista">{esMayorista ? "Mayorista" : "Minorista"}</p>
+
+                    <p className="businessInfo__clientDetails">
+                      {clientData.ownerName}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      {clientData.businessAddress}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      Celular: {clientData.cellPhone}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      Teléfono Fijo: {clientData.fixedPhone}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      Email: {clientData.email}
+                    </p>
+                    <p className="businessInfo__clientDetails">
+                      {clientData.esMayorista ? "Mayorista" : "Minorista"}
+                    </p>
                   </div>
       
                   <div className="ultimosPedidos__container">
@@ -209,11 +297,13 @@ export default function NewOrUpdateOrder() {
                           pathname: `/update-order/client/${clientId}`,
                           state: {
                                   clientId,
-                                  businessName, 
-                                  cellPhone, 
-                                  esMayorista,
+                                  businessName: clientData.businessName, 
+                                  cellPhone: clientData.cellPhone, 
+                                  esMayorista: clientData.esMayorista,
                                   usarComponenteComo: "nuevoPedido",
-                                  businessImageCover,
+                                  businessImageCover: clientData.imageCover,
+                                  // client,
+                                  client: clientData,
                                   // en un nuevo pedido NO uso fecha, solo en actualizar
                                   // le paso de todos modos una fecha para que no haya undefined
                                   fecha: new Date()
@@ -243,12 +333,14 @@ export default function NewOrUpdateOrder() {
                                           pathname: `/update-order/client/${clientId}`,
                                           state: {
                                             clientId: clientId,
-                                            businessName: businessName, 
-                                            cellPhone: cellPhone, 
-                                            esMayorista: esMayorista,
-                                            businessImageCover: businessImageCover,
+                                            businessName: clientData.businessName, 
+                                            cellPhone: clientData.cellPhone, 
+                                            esMayorista: clientData.esMayorista,
+                                            businessImageCover: clientData.imageCover,
                                             fecha: current._id.Fecha,
-                                            usarComponenteComo: "actualizarPedido"
+                                            usarComponenteComo: "actualizarPedido",
+                                            // client: client
+                                            client: clientData
                                           }
                                         }}
                                       >

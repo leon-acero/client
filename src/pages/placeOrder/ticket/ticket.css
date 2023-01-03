@@ -1,0 +1,201 @@
+.ticket {
+  height: calc(100vh - 5rem);
+  flex: 4;
+  overflow-x: hidden;
+  padding: 2rem 0;
+}
+
+.ticket__main {
+  padding: 1rem 1rem;
+  /* -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1; */
+  /* position: relative; */
+}
+
+.ticket__container {
+  margin: 0 auto;
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; */
+  max-width: 55rem;
+
+  /* ESTILIZAR */
+  background-color: rgba(255, 255, 255, .65);
+  -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
+  border-radius: 5px;
+
+  padding: 5rem 7rem;
+}
+
+.ticket__title {
+  font-size: 3rem;
+  margin-bottom: 2.4rem;  
+}
+
+.ticket__headerInfo {
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  padding: 1rem 0rem;
+}
+
+.ticket__headerInfo-title {
+  color: gray;
+}
+
+.ticket__businessInfo {
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  padding: 1rem 0rem;
+}
+
+.ticket__totalPedido{
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  /* padding: 0 2rem; */
+}
+
+.ticket__totalPedido__container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ticket__totalPedido__item {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: .7rem;
+  width: 24rem;
+}
+
+.ticket__totalPedido__currency {
+  color: #555;
+  width: 20rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: .7rem;
+  text-align: right;
+}
+
+.ticket__pedidoTotal {
+  border-top: 1px solid black;
+}
+
+.styleSeAplicaDescuento {
+  font-size: 1.8rem;
+}
+
+.whatsapp_item {
+  /* FLEX */
+  display: flex;
+  justify-content: center;
+}
+
+/* LINK */
+.whatsapp_link:link,
+.whatsapp_link:visited {
+  /* INLINE BLOCK */
+  display: inline-block;
+
+  /* ESTILIZAR */
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.8rem;
+  transition: all 0.3s;
+  border-radius: 9px;
+  color: #fff;
+  /* COLOR WHATSAPP */
+  background-color: #25d366;
+
+  /* SPACING */
+  padding: 1.2rem 2.4rem;
+
+  /* FLEX */
+  display: flex;
+  /* align-items: center;
+  justify-content: center; */
+  gap: 0.5rem;
+}
+
+.whatsapp_link:hover,
+.whatsapp_link:active {
+
+  background-color: #15a74b;
+
+  /* color: #25d366;
+  stroke: #25d366;
+  fill: #25d366; */
+
+  /* background-color: #fff; */
+}
+
+.ticket__avisoClienteSinCelular {
+  text-align: center;
+  font-size: 1.6rem;
+  color: red;
+}
+
+/* 680px */
+@media (max-width:42.5em) {
+
+  .whatsapp_link:link,
+  .whatsapp_link:visited {
+
+    font-weight: 500;
+    font-size: 1.35rem;
+    padding: 1.2rem 1rem;
+    text-align: center;
+  }
+}
+
+/* 580px */
+@media (max-width:36.25em) {
+ 
+}
+
+/* 480px */
+@media (max-width:30em) {
+  
+  .ticket__title {
+    font-size: 2.6rem;
+    margin-bottom: 2.4rem;  
+  }
+
+   .ticket__main {
+    padding: 1rem 2rem;  
+  }
+
+  /* .ticket__container { */
+    /* margin: 0; */
+    /* width: 33rem; */
+    /* padding: 5rem 6rem;
+  } */
+
+  .ticket__container { 
+    padding: 5rem 3rem;
+  }
+
+  .businessInfo__businessName {
+    font-size: 1.8rem;
+  }
+}
+
+/* 440px */
+@media (max-width:27.5em) {
+
+  .styleSeAplicaDescuento {
+    font-size: 1.4rem;
+  }
+
+  .ticket__totalPedido__item {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  
+  .ticket__totalPedido__currency {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+}

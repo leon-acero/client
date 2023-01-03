@@ -1,4 +1,5 @@
 .updateOrder {
+  height: calc(100vh - 5rem);
   flex: 4;
   overflow-x: hidden;
 }
@@ -34,14 +35,9 @@
   color: #444;
 }
 
-.businessInfo__cellPhone {
+.businessInfo__clientDetails {
   font-size: 1.6rem;
   color: #444;
-}
-
-.businessInfo__esMayorista {
-  font-size: 1.6rem;
-  color: #444; 
 }
 
 .searchBar {
@@ -163,8 +159,18 @@
 }
 
 .placeOrderButton:disabled,
-.placeOrderButton[disabled] {
-  background-color: gray;
+.placeOrderButton[disabled],
+.searchInput:disabled,
+.searchInput[disabled],
+.descuento__checkbox:disabled,
+.descuento__checkbox[disabled],
+.deleteOrderButton:disabled,
+.deleteOrderButton[disabled],
+.container-estatusPedido__select:disabled,
+.container-estatusPedido__select[disabled] {
+  background-color: #c7c7c7;
+  border-color: #c7c7c7;
+  color: #222;
 }
 
 .productListTitle {
@@ -235,7 +241,7 @@
   justify-content: space-between;
 }
 
-.totalPedido__item{
+.totalPedido__item {
   font-size: 2rem;
   margin-bottom: .7rem;
   width: 24rem;

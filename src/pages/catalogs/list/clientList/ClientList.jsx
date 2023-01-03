@@ -3,8 +3,11 @@ import defaultCameraImage from "../../../../camera.webp"
 
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
+
 
 /*******************************    React     *******************************/
 import { useEffect, useRef, useState } from "react";
@@ -16,10 +19,10 @@ import {FaTrashAlt} from "react-icons/fa";
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
 import { DataGrid } from "@mui/x-data-grid";
@@ -27,6 +30,7 @@ import { DataGrid } from "@mui/x-data-grid";
 /**************************    Components    ********************************/
 import BasicDialog from '../../../../components/basicDialog/BasicDialog';
 import SkeletonElement from '../../../../components/skeletons/SkeletonElement';
+import SnackBarCustom from '../../../../components/snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
 
@@ -52,7 +56,7 @@ export default function ClientList() {
   // mensajeSnackBar es el mensaje que se mostrara en el SnackBar, puede ser 
   // de exito o de error segun si se grabó la informacion en la BD
 
-  // updateSuccess es boolean que indica si tuvo exito o no el grabado en la BD
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no el grabado en la BD
   
   // openSnackbar es boolean que manda abrir y cerrar el Snackbar
 
@@ -68,7 +72,7 @@ export default function ClientList() {
   // en React18 lo hace dos veces, y para mostrar los dulces bailando (Skeleton)
   // si es necesario
 
-  const [updateSuccess, setUpdateSuccess] = useState (true);
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -100,16 +104,17 @@ export default function ClientList() {
         console.log ('El cliente fue borrado con éxito!');
 
         // Borro el cliente del Grid Y del State        
-        setUpdateSuccess(true);
         setClientList(clientList.filter((item) => item._id !== currentClient.id));
+
+        setIconoSnackBarDeExito(true);
         setMensajeSnackBar(`El cliente ${currentClient.businessName} fue borrado.`)
         setOpenSnackbar(true);
       } 
     }
     catch(err) {
       console.log(err);
-      setUpdateSuccess(false);
       // setMensajeSnackBar("Hubo un error al borrar el cliente. Revisa que estes en línea.");
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
@@ -168,6 +173,8 @@ export default function ClientList() {
       catch(err) {
         console.log("err", err);
         setIsLoading(false);
+        
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));       
         setOpenSnackbar(true);
       }
@@ -190,30 +197,30 @@ export default function ClientList() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/  
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
 
   /***************************     columns    *******************************/
@@ -267,7 +274,7 @@ export default function ClientList() {
                   // src={`${params.row.imageCover}`} 
                   
                   src={`${params.row.imageCover}` } 
-                  alt="" 
+                  alt="Imagen del Cliente o Imagen Default" 
               />)
               : (
                 <img className="clientListImg" src={defaultCameraImage} alt =""/>
@@ -312,18 +319,22 @@ export default function ClientList() {
         isOnline && (
           <div className="clientList">
 
-            <Snackbar
+            <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />
+
+            {/* <Snackbar
             open={openSnackbar}
             autoHideDuration={5000}
             onClose={handleCloseSnackbar}
             >
               <Alert 
-                  severity= {updateSuccess ?  "success" : "error"} 
+                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                   action={action}
                   sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
               >{mensajeSnackBar}
               </Alert>
-            </Snackbar>
+            </Snackbar> */}
       
             {
             /* ////////////////////////////////////////////////////////////////

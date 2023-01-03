@@ -2,9 +2,12 @@ import "./product.css";
 import defaultCameraImage from "../../../../camera.webp"
 
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
+import {clsx} from "clsx";
 
+/****************************************************************************/
 import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
@@ -16,12 +19,17 @@ import {FaDollyFlatbed, FaDollarSign, FaCloudUploadAlt, FaChrome } from "react-i
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
+/**************************    Components    ********************************/
+import ItemShowInfo from '../../../../components/itemShowInfo/ItemShowInfo';
+import SnackBarCustom from '../../../../components/snackBarCustom/SnackBarCustom';
+import { formateaCurrency, formateaThousand } from '../../../../utils/formatea';
+/****************************************************************************/
 
 
 export default function Product() {
@@ -46,7 +54,7 @@ export default function Product() {
   // mensajeSnackBar es el mensaje que se mostrara en el SnackBar, puede ser 
   // de exito o de error segun si se grabó la informacion en la BD
 
-  // updateSuccess es boolean que indica si tuvo exito o no el grabado en la BD
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no el grabado en la BD
   
   // productData es un Object con toda la informacion a grabar en la BD
 
@@ -59,7 +67,7 @@ export default function Product() {
   const [fileBlob, setFileBlob] = useState(null);
   
   const [isSaving, setIsSaving] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState (true);
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
@@ -153,7 +161,7 @@ export default function Product() {
         if (res.data.status === 'success') {
           // console.log(res.data.data.data);
           console.log ('El producto fue actualizado con éxito!');
-          setUpdateSuccess(true);
+          setIconoSnackBarDeExito(true);
           setMensajeSnackBar("Producto actualizado")
           setOpenSnackbar(true);
         } 
@@ -161,8 +169,8 @@ export default function Product() {
     catch(err) {
       console.log("err", err);
       setIsSaving(false);
-      setUpdateSuccess(false);
- 
+
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
@@ -205,6 +213,8 @@ export default function Product() {
       }
       catch (err) {
         console.log(err);    
+
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));
         setOpenSnackbar(true);
       }
@@ -266,30 +276,33 @@ export default function Product() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
+  // console.log("productData.inventarioActual", productData.inventarioActual)
+  // console.log("productData.inventarioMinimo", productData.inventarioMinimo)
+  // console.log(parseInt(productData.inventarioActual,10) < parseInt(productData.inventarioMinimo, 10))
  
   return (
     <>
@@ -297,18 +310,22 @@ export default function Product() {
         isOnline && (
           <div className="product">
       
-            <Snackbar
+            <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />
+
+            {/* <Snackbar
               open={openSnackbar}
               autoHideDuration={5000}
               onClose={handleCloseSnackbar}
             >
               <Alert 
-                  severity= {updateSuccess ?  "success" : "error"} 
+                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                   action={action}
                   sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
               >{mensajeSnackBar}
               </Alert>
-            </Snackbar>
+            </Snackbar> */}
       
             <div className="productTitleContainer">
               <h1 className="productTitle">Editar Producto</h1>
@@ -327,7 +344,7 @@ export default function Product() {
                             fileBlob ? fileBlob : productData.imageCover ?
                             `${productData.imageCover}` : defaultCameraImage
                           }
-                    alt=""
+                    alt="Imagen del Producto o Imagen Default"
                   />            
       
                   <div className="productShowTopTitle">
@@ -335,32 +352,38 @@ export default function Product() {
                     <span className="productShowProductTitle">SKU: {productData.sku}</span>
                   </div>
                 </div>
+                
                 <div className="productShowBottom">
                   <span className="productShowTitle">Detalle</span>
-                  <div className="productShowInfo">
-                    <FaDollyFlatbed className="productShowIcon" />
-                    <span className="productShowInfoTitle">Inventario Actual: {productData.inventarioActual}</span>
-                  </div>
-                  <div className="productShowInfo">
-                    <FaDollyFlatbed className="productShowIcon" />
-                    <span className="productShowInfoTitle">Inventario Mínimo: {productData.inventarioMinimo}</span>
-                  </div>
-                  <div className="productShowInfo">
-                    <FaDollarSign className="productShowIcon" />
-                    <span className="productShowInfoTitle">Precio Menudeo: ${productData.priceMenudeo}</span>
-                  </div>           
-                  <div className="productShowInfo">
-                    <FaDollarSign className="productShowIcon" />
-                    <span className="productShowInfoTitle">Precio Mayoreo: ${productData.priceMayoreo}</span>
-                  </div> 
-                  <div className="productShowInfo">
-                    <FaDollarSign className="productShowIcon" />
-                    <span className="productShowInfoTitle">Costo: ${productData.costo}</span>
-                  </div>             
-                  <div className="productShowInfo">
-                    <FaChrome className="productShowIcon" />
-                    <span className="productShowInfoTitle">{productData.slug}</span>
-                  </div>              
+                  <ItemShowInfo CustomIcon={FaDollyFlatbed} 
+                      labelData= {"Inventario Actual:"} 
+                      itemData={formateaThousand(productData.inventarioActual)} 
+                      alinearSpaceBetween={true} />
+
+                  <ItemShowInfo CustomIcon={FaDollyFlatbed} 
+                      labelData= {"Inventario Mínimo:"} 
+                      itemData={formateaThousand(productData.inventarioMinimo)} 
+                      alinearSpaceBetween={true} />
+ 
+                  <ItemShowInfo CustomIcon={FaDollarSign} 
+                      labelData= {"Precio Menudeo:"} 
+                      itemData={formateaCurrency(productData.priceMenudeo)} 
+                      alinearSpaceBetween={true} />
+
+                  <ItemShowInfo CustomIcon={FaDollarSign} 
+                      labelData= {"Precio Mayoreo:"} 
+                      itemData={formateaCurrency(productData.priceMayoreo)} 
+                      alinearSpaceBetween={true} />
+ 
+                  <ItemShowInfo CustomIcon={FaDollarSign} 
+                      labelData= {"Costo:"} 
+                      itemData={formateaCurrency(productData.costo)} 
+                      alinearSpaceBetween={true} />
+  
+                  <ItemShowInfo CustomIcon={FaChrome} 
+                      labelData={""} itemData={productData.slug} 
+                      alinearSpaceBetween={false} />
+  
                 </div>
               </div>
               <div className="productUpdate">
@@ -371,18 +394,24 @@ export default function Product() {
                     <div className="productUpdateItem">
                       <label>SKU *</label>
                       <input
-                        type="text"
+                        // type="text"
                         placeholder={productData.sku}
                         className="productUpdateInput"                  
                         onChange={handleChange}
                         name="sku"
                         value={productData.sku || ''}
                         required
-                        onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
+                        onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter. El valor mínimo es 1 y el máximo es 999,999')} 
                         onInput={e=> e.target.setCustomValidity('')} 
-                        minLength="1"
-                        maxLength="5"
+                        // minLength="1"
+                        // maxLength="5"
                         autoComplete="off"
+
+                        type="number" 
+                        pattern="/[^0-9]|(?<=\..*)\./g" 
+                        step="1" 
+                        min="1"
+                        max="999999"
                       />
                     </div>              
                     <div className="productUpdateItem">
@@ -411,13 +440,17 @@ export default function Product() {
                         min="1"
                         max="999999"
                         placeholder={productData.inventarioActual}
-                        className="productUpdateInput"
+                        className={clsx (
+                          { 
+                            inventarioActualNegativo: parseInt(productData.inventarioActual, 10) < parseInt(productData.inventarioMinimo, 10), 
+                            productUpdateInput: true,
+                          })}
                         onChange={handleChange}
                         onKeyPress={(e)=>handleNumbers(e)}
                         name="inventarioActual"
                         value={productData.inventarioActual || ''}
                         required
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual')} 
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual. El valor más alto que puedes capturar es 999,999')} 
                         onInput={e=> e.target.setCustomValidity('')}
                         autoComplete="off" 
                       />
@@ -437,7 +470,7 @@ export default function Product() {
                         name="inventarioMinimo"
                         value={productData.inventarioMinimo || ''}  
                         required         
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo')} 
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo. El valor más alto que puedes capturar es 999,999')} 
                         onInput={e=> e.target.setCustomValidity('')}
                         autoComplete="off"                 
                       />
@@ -457,7 +490,7 @@ export default function Product() {
                         name="priceMenudeo"
                         value={productData.priceMenudeo || ''}
                         required 
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo')} 
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo. El valor máximo es $999,999')} 
                         onInput={e=> e.target.setCustomValidity('')}
                         autoComplete="off"                
                       />
@@ -494,7 +527,7 @@ export default function Product() {
                         name="costo"
                         value={productData.costo || ''}
                         required 
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto')} 
+                        onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto. El valor máximo es $999,999')} 
                         onInput={e=> e.target.setCustomValidity('')}
                         autoComplete="off"                 
                       />
@@ -511,7 +544,7 @@ export default function Product() {
                                 fileBlob ? fileBlob : productData.imageCover ?
                                 `${productData.imageCover}` : defaultCameraImage
                             }
-                        alt=""
+                        alt="Imagen del Producto o Imagen Default"
                       />                
                       <label htmlFor="photo">
                         <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer", "color": "#343a40"}} />

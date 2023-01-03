@@ -1,24 +1,29 @@
 import "./searchClient.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
+
 
 /*******************************    React     *******************************/
 import { useState, useRef, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 /****************************************************************************/
 
 /***************************    Components     ******************************/
 import Table from '../../../components/table/Table';
 import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
 // import ClientFound from '../clientFound/ClientFound';
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
 /**************************    Framer-Motion    *****************************/
@@ -45,15 +50,30 @@ export default function SearchClient() {
   const isOnline = useNavigatorOnLine();
   /*****************************************************************************/
 
+  /****************************    useLocation    *****************************/
+  // Estos datos del Cliente los obtengo con useLocation los cuales los mandé
+  // desde NewOrUpdateClient.jsx
+
+  const { openVentana } = useLocation().state;
+
+  console.log("openVentana SC", openVentana);
+
   /**************************    useState    **********************************/
   // query guarda lo que el usuario capturó para iniciar la busqueda
+  
   // data es un Array con el resultado de la búsqueda
+  
   // isSearching es un boolean para saber si se esta realizando una búsqueda
+
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no la operacion
+  // de AXIOS
 
   const [query, setQuery] = useState("");
   // const [data, setData] = useState([]);
   const [data, setData] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   /*****************************************************************************/
@@ -111,6 +131,7 @@ export default function SearchClient() {
         setData(res.data.data.data);
         
         if (res.data.data.data.length === 0) {
+          setIconoSnackBarDeExito(false);
           setMensajeSnackBar("No se encontró un Negocio con esa búsqueda.")
           setOpenSnackbar(true);
         }
@@ -122,6 +143,7 @@ export default function SearchClient() {
       console.log("err");
       setIsSearching(false);
       // setMensajeSnackBar("Hubo un error al realizar la búsqueda. Vuelva a intentar.")
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
@@ -131,29 +153,29 @@ export default function SearchClient() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
   return (
     <>
@@ -165,26 +187,38 @@ export default function SearchClient() {
               initial="hidden"
               animate="visible"
             >
-              <Snackbar
+              <SnackBarCustom 
+                  openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                  iconoSnackBarDeExito={iconoSnackBarDeExito} />              
+              {/* <Snackbar
                 open={openSnackbar}
                 autoHideDuration={5000}
                 onClose={handleCloseSnackbar}
               >
                 <Alert 
-                    severity= {"success"} 
+                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                     action={action}
                     sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
                 >{mensajeSnackBar}
                 </Alert>
-              </Snackbar>
+              </Snackbar> */}
       
-              {/* <h2><span>PASO 1: </span>BUSCAR Y ELEGIR UN NEGOCIO</h2> */}
+              <h1 className="searchClientTitle">
+                  {
+                    openVentana === "CrearPedido" 
+                    ? "Busca Cliente para Crear o Entregar Pedido" 
+                    : openVentana === "EditarCliente" 
+                    ? "Busca Cliente para Editarlo"
+                    : "Error, repórtalo"
+                  }
+              </h1>
+
               <form className='searchClientInput' onSubmit={handleSearch}>
                 {/* <label>Buscar Cliente</label> */}
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Buscar Negocio, ejemplo: Abarrotes El Puerto"
+                  placeholder="Ejemplo: Abarrotes El Puerto"
                   className="clientSearchInput"                  
                   onChange={(e) => setQuery(e.target.value.toLowerCase())}
                   required
@@ -199,7 +233,7 @@ export default function SearchClient() {
               </form>
               
               {
-                data && <Table data={data} />
+                data && <Table data={data} openVentana={openVentana} />
               }
       
               {

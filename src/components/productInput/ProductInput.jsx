@@ -5,7 +5,9 @@ export default function ProductInput({
   index, 
   product, 
   addProductToBasket,
-  esMayorista}) {
+  esMayorista,
+  isSaving,
+  isDeleting}) {
 
   const uniqueKey = `product-${product.id}`;
 
@@ -13,6 +15,8 @@ export default function ProductInput({
     <Card uniqueKey={uniqueKey} 
           product={product} 
           esMayorista={esMayorista} 
-          addProductToBasket={addProductToBasket} />
+          addProductToBasket={addProductToBasket}
+          isSaving={isSaving}
+          isDeleting={isDeleting} />
   )
 }

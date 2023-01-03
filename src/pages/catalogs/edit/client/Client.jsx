@@ -2,8 +2,10 @@ import "./client.css";
 import defaultCameraImage from "../../../../camera.webp"
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
@@ -14,13 +16,17 @@ import { Link, useParams } from "react-router-dom";
 import {FaHouzz, FaEnvelope, FaBarcode, FaLocationArrow, FaChrome, FaMobileAlt, FaPhoneAlt, FaCloudUploadAlt} from "react-icons/fa";
 /****************************************************************************/
 
-/**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
-/****************************************************************************/
+// /**************************    Snackbar    **********************************/
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
+// /****************************************************************************/
 
+/**************************    Components    *********************************/
+import SnackBarCustom from '../../../../components/snackBarCustom/SnackBarCustom';
+import ItemShowInfo from '../../../../components/itemShowInfo/ItemShowInfo';
+/****************************************************************************/
 
 
 export default function Client() {
@@ -46,7 +52,7 @@ export default function Client() {
   // mensajeSnackBar es el mensaje que se mostrara en el SnackBar, puede ser 
   // de exito o de error segun si se grabó la informacion en la BD
 
-  // updateSuccess es boolean que indica si tuvo exito o no el grabado en la BD
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no el grabado en la BD
   
   // clientData es un Object con toda la informacion a grabar en la BD
 
@@ -59,8 +65,8 @@ export default function Client() {
   const [fileBlob, setFileBlob] = useState(null);
 
   const [isSaving, setIsSaving] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState (true);
 
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
 
@@ -108,7 +114,7 @@ export default function Client() {
       return;
 
     if (!isOnline) {
-      setUpdateSuccess(false);
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar("No estas en línea, checa tu conexión a Internet.")
       setOpenSnackbar(true);
       return;
@@ -160,16 +166,16 @@ export default function Client() {
         if (res.data.status === 'success') {
           // console.log(res.data.data.data);
           console.log ('El cliente fue actualizado con éxito!');
-          setUpdateSuccess(true);
+          setIconoSnackBarDeExito(true);
           setMensajeSnackBar("Cliente actualizado")
           setOpenSnackbar(true);
         } 
       }
       catch(err) {
         setIsSaving(false);
-        setUpdateSuccess(false);
-        setMensajeSnackBar (regresaMensajeDeError(err));
 
+        setIconoSnackBarDeExito(false);
+        setMensajeSnackBar (regresaMensajeDeError(err));
         setOpenSnackbar(true);
         console.log(err);
       }
@@ -212,7 +218,9 @@ export default function Client() {
         setClientData(res.data.data.data)
       }
       catch (err) {
-        console.log(err);    
+        console.log(err);   
+        
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));
         setOpenSnackbar(true);
       }
@@ -263,29 +271,29 @@ export default function Client() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-  </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  // </>
+  // );
 
   return (
  
@@ -293,18 +301,21 @@ export default function Client() {
       {
         isOnline && (
           <div  className="client">
-            <Snackbar
+            <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />
+            {/* <Snackbar
               open={openSnackbar}
               autoHideDuration={5000}
               onClose={handleCloseSnackbar}
             >
               <Alert 
-                  severity= {updateSuccess ?  "success" : "error"} 
+                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                   action={action}
                   sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
               >{mensajeSnackBar}
               </Alert>
-            </Snackbar>
+            </Snackbar> */}
 
             <div className="clientTitleContainer">
               <h1 className="clientTitle">Editar Cliente</h1>
@@ -312,6 +323,7 @@ export default function Client() {
                 <button className="clientAddButton">Crear</button>
               </Link>
             </div>
+
             <div className="clientContainer">
               <div className="clientShow">
                 <div className="clientShowTop">
@@ -323,7 +335,7 @@ export default function Client() {
                             fileBlob ? fileBlob : clientData.imageCover ?
                             `${clientData.imageCover}` : defaultCameraImage
                         }
-                    alt=""
+                    alt={clientData.businessName}
                   /> 
       
                   <div className="clientShowTopTitle">
@@ -333,36 +345,30 @@ export default function Client() {
                 </div>
                 <div className="clientShowBottom">
                   <span className="clientShowTitle">Detalle</span>
-                  <div className="clientShowInfo">
-                    <FaBarcode className="clientShowIcon" />
-                    <span className="clientShowInfoTitle">SKU: {clientData.sku}</span>
-                  </div>
-                  <div className="clientShowInfo">
-                    <FaLocationArrow className="clientShowIcon" />
-                    <span className="clientShowInfoTitle">{clientData.businessAddress}</span>
-                  </div>
-                  <div className="clientShowInfo">
-                    <FaHouzz className="clientShowIcon" />
-                    <span className="clientShowInfoTitle">{clientData.esMayorista ? "Es Mayorista" : "Es Minorista"}</span>
-                  </div>
-                  <div className="clientShowInfo">
-                    <FaChrome className="clientShowIcon" />
-                    <span className="clientShowInfoTitle">{clientData.slug}</span>
-                  </div>           
+                  <ItemShowInfo CustomIcon={FaBarcode} labelData= {"SKU:"} 
+                  itemData={clientData.sku} alinearSpaceBetween={false} />
+ 
+                  <ItemShowInfo CustomIcon={FaLocationArrow} labelData= {""} 
+                  itemData={clientData.businessAddress} alinearSpaceBetween={false} />
+
+                  <ItemShowInfo CustomIcon={FaHouzz} labelData= {""} 
+                  itemData={clientData.esMayorista ? "Es Mayorista" : "Es Minorista"} 
+                  alinearSpaceBetween={false} />
+ 
+                  <ItemShowInfo CustomIcon={FaChrome} labelData= {""} 
+                  itemData={clientData.slug} alinearSpaceBetween={false} />
+ 
       
                   <span className="clientShowTitle">Contacto</span>
-                  <div className="clientShowInfo">
-                    <FaMobileAlt className="clientShowIcon" />
-                    <span className="clientShowInfoTitle">{clientData.cellPhone}</span>
-                  </div>
-                  <div className="clientShowInfo">
-                    <FaPhoneAlt className="clientShowIcon" />
-                    <span className="clientShowInfoTitle">{clientData.fixedPhone}</span>
-                  </div>
-                  <div className="clientShowInfo">
-                    <FaEnvelope className="clientShowIcon" />
-                    <span className="clientShowInfoTitle">{clientData.email}</span>
-                  </div>
+                  <ItemShowInfo CustomIcon={FaMobileAlt} labelData= {""} 
+                  itemData={clientData.cellPhone} alinearSpaceBetween={false} />
+
+                  <ItemShowInfo CustomIcon={FaPhoneAlt} labelData= {""} 
+                  itemData={clientData.fixedPhone} alinearSpaceBetween={false} />
+ 
+                  <ItemShowInfo CustomIcon={FaEnvelope} labelData= {""} 
+                  itemData={clientData.email} alinearSpaceBetween={false} />
+ 
                 </div>
               </div>
               <div className="clientUpdate">
@@ -374,17 +380,23 @@ export default function Client() {
                       <label>SKU *</label>
                       <input
                         className="clientUpdateInput"                  
-                        type="text"
+                        // type="text"
                         placeholder={clientData.sku}
                         onChange={handleChange}
                         name="sku"
                         value={clientData.sku || ''}
                         required
-                        onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
+                        onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter. El valor mínimo es 1 y el máximo es 999,999')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         autoComplete="off"
-                        minLength="1"
-                        maxLength="25"
+                        // minLength="1"
+                        // maxLength="25"
+
+                        type="number" 
+                        pattern="/[^0-9]|(?<=\..*)\./g" 
+                        step="1" 
+                        min="1"
+                        max="999999"
                       />
                     </div>              
                     <div className="clientUpdateItem">
@@ -397,6 +409,8 @@ export default function Client() {
                         name="businessName"
                         value={clientData.businessName || ''}
                         required
+                        title={'El Nombre del Negocio debe tener entre 5 y 80 caracteres'}
+                        pattern="^.{5,80}$"
                         onInvalid={e=> e.target.setCustomValidity('El Nombre del Negocio debe tener entre 5 y 80 caracteres')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         minLength="5"
@@ -414,6 +428,8 @@ export default function Client() {
                         name="ownerName"
                         value={clientData.ownerName || ''}
                         required
+                        title={'El Nombre del Contacto debe tener entre 5 y 80 caracteres'}
+                        pattern="^.{5,80}$"
                         onInvalid={e=> e.target.setCustomValidity('El Nombre del Contacto debe tener entre 5 y 80 caracteres')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         minLength="5"
@@ -429,9 +445,12 @@ export default function Client() {
                         placeholder={clientData.email}
                         onChange={handleChange}
                         name="email"
+                        // title="Escribe un correo válido"
+                        // onInvalid={e=> e.target.setCustomValidity('Escribe un correo válido')} 
+                        // onInput={e=> e.target.setCustomValidity('')} 
                         value={clientData.email || ''}  
                         autoComplete="off"                
-                      />
+                        />
                     </div>
                     <div className="clientUpdateItem">
                       <label>Celular</label>
@@ -441,7 +460,9 @@ export default function Client() {
                         placeholder={clientData.cellPhone}
                         onChange={handleChange}
                         name="cellPhone"
-                        value={clientData.cellPhone || ''}  
+                        value={clientData.cellPhone || ''} 
+                        title={'El Número de Celular debe ser menor a 20 caracteres'}
+                        pattern="^.{0,20}$" 
                         onInvalid={e=> e.target.setCustomValidity('El Número de Celular debe ser menor a 20 caracteres')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         maxLength="20"
@@ -457,7 +478,9 @@ export default function Client() {
                         onChange={handleChange}
                         name="fixedPhone"
                         value={clientData.fixedPhone || ''} 
-                        onInvalid={e=> e.target.setCustomValidity('El Número de Teléfono debe ser menor a 20 caracteres')} 
+                        title={'El Número de Teléfono Fijo debe ser menor a 20 caracteres'}
+                        pattern="^.{0,20}$" 
+                        onInvalid={e=> e.target.setCustomValidity('El Número de Teléfono Fijo debe ser menor a 20 caracteres')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         maxLength="20"
                         autoComplete="off"                                   
@@ -471,7 +494,9 @@ export default function Client() {
                         placeholder={clientData.businessAddress}
                         onChange={handleChange}
                         name="businessAddress"
-                        value={clientData.businessAddress || ''}   
+                        value={clientData.businessAddress || ''} 
+                        title={'La Dirección debe tener menos de 100 caracteres'}
+                        pattern="^.{0,100}$"  
                         onInvalid={e=> e.target.setCustomValidity('La Dirección debe tener menos de 100 caracteres')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         maxLength="100"
@@ -505,7 +530,7 @@ export default function Client() {
                       onChange={handleChange}
                       name="imageCover"
                       value={data.imageCover}
-                  /> */}
+                  /> */}                    
                   </div>
                   <div className="clientUpdateRight">
                     <div className="clientUpdateUpload">
@@ -516,7 +541,7 @@ export default function Client() {
                                 fileBlob ? fileBlob : clientData.imageCover ?
                                 `${clientData.imageCover}` : defaultCameraImage
                             }
-                        alt=""
+                        alt={clientData.businessName}
                       /> 
       
                       <label htmlFor="photo">

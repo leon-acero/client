@@ -1,0 +1,23 @@
+.inputTypeText {
+  border: none;
+  width: 25rem;
+  height: 3rem;
+  border-bottom: .1rem solid gray;
+  padding: 1rem;
+  font-size: 1.4rem;
+}
+
+.inputTypeText>label{
+  margin-bottom: 0rem;
+  font-size: 1.4rem;
+}
+
+
+
+/* 480px */
+@media (max-width:30em) {
+ 
+  .inputTypeText {
+    width: 28rem;
+  }
+}

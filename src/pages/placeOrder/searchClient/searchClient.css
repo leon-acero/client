@@ -4,10 +4,9 @@
   overflow: hidden;
 }
 
-h2 {
-  font-size: 1.6rem;
-  margin-bottom: 1.6rem;
-  padding: 1rem 1rem;
+.searchClientTitle {
+  font-size: 2rem;
+  color: #343a40;
 }
 
 .searchClientInput {
@@ -146,6 +145,10 @@ h2 {
   }
 
   .searchClient {
-    padding: 2rem .5rem;
+    padding: 2rem 2rem;
+  }
+
+  .searchClientTitle {
+    font-size: 1.8rem;
   }
 }

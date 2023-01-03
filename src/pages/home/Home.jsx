@@ -1,14 +1,37 @@
 import "./home.css";
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
 
-
-import FeaturedInfo from "../../components/featuredInfo/FeaturedInfo";
-import ReportMonthlySalesByYear from '../reports/reportMonthlySalesByYear/ReportMonthlySalesByYear';
-
-import { useMatchMedia } from "../../hooks/useMatchMedia";
+/***************************   Components     *******************************/
 import SplashScreen from '../../components/splashScreen/SplashScreen';
+import FeaturedInfo from "../../components/featuredInfo/FeaturedInfo";
+/****************************************************************************/
+
+/*****************************   Pages     **********************************/
+import ReportMonthlySalesByYear from '../reports/reportMonthlySalesByYear/ReportMonthlySalesByYear';
+/****************************************************************************/
+
+/***************************   Custom Hooks     *****************************/
+import { useMatchMedia } from "../../hooks/useMatchMedia";
+/****************************************************************************/
+
+
+/**************************    Framer-Motion    *****************************/
+import { domAnimation, LazyMotion, m } from 'framer-motion';
+
+const svgVariants = {
+  hidden: { 
+    opacity: 0, 
+  },
+  visible: { 
+    opacity: 1, 
+    transition: { delay: .5, duration: 2 }
+  }
+};
+/****************************************************************************/
 
 
 export default function Home() {
@@ -28,23 +51,29 @@ export default function Home() {
     <>
       {
         isOnline && (
-          <div className="home">
-            {
-            isDesktopResolution && (
-              <>
-                <FeaturedInfo />
-                <ReportMonthlySalesByYear />
-              </>
-              )
-            }
-            {
-            !isDesktopResolution && (
-              <>
-                <SplashScreen />
-              </>
-              )
-            }
-          </div>
+          <LazyMotion features={domAnimation} >
+            <m.div  className="home"
+                    variants={svgVariants}
+                    initial="hidden"
+                    animate="visible"
+            >
+              {
+              isDesktopResolution && (
+                <>
+                  <FeaturedInfo />
+                  <ReportMonthlySalesByYear />
+                </>
+                )
+              }
+              {
+              !isDesktopResolution && (
+                <>
+                  <SplashScreen />
+                </>
+                )
+              }
+            </m.div>
+          </LazyMotion>
         )
       }
       {

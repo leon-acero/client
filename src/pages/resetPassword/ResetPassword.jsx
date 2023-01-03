@@ -1,18 +1,26 @@
 import "./resetPassword.css"
 import axios, { regresaMensajeDeError } from '../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
 
+/*******************************    React     *******************************/
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+/****************************************************************************/
+
+/*******************************    Components    ***************************/
+import SnackBarCustom from '../../components/snackBarCustom/SnackBarCustom';
+/****************************************************************************/
 
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
 
@@ -26,6 +34,13 @@ function ResetPassword() {
 
   /****************************    useState    *******************************/
 
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no la operacion
+  // de AXIOS
+
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
+
   const [isSending, setIsSending] = useState(false);
   const [data, setData] = useState(
     {
@@ -33,9 +48,6 @@ function ResetPassword() {
       confirmPassword: ""
     }
   )
-
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   /****************************************************************************/
 
 
@@ -64,6 +76,7 @@ function ResetPassword() {
       return;
 
     if (!isOnline) {
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar("No estas en línea, checa tu conexión a Internet.")
       setOpenSnackbar(true);
       return;
@@ -72,6 +85,7 @@ function ResetPassword() {
     try {
 
         if (resetToken === "") {
+          setIconoSnackBarDeExito(false);
           setMensajeSnackBar("No existe un Token para hacer el cambio de Password.")
           setOpenSnackbar(true);
           return;
@@ -90,7 +104,8 @@ function ResetPassword() {
 
         if (res.data.status === 'success') {
           // console.log(res.data.data.data);
-          console.log ('El pasword fue actualizado con éxito!');
+          console.log ('El password fue actualizado con éxito!');
+          setIconoSnackBarDeExito(true);
           setMensajeSnackBar("Password actualizado. Vuelve a iniciar Sesión.")
           setOpenSnackbar(true);
 
@@ -103,6 +118,8 @@ function ResetPassword() {
       catch(err) {
         console.log(err);
         setIsSending(false);
+        
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));
         setOpenSnackbar(true);
       }
@@ -125,29 +142,29 @@ function ResetPassword() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-  </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  // </>
+  // );
 
 
   return (
@@ -156,19 +173,21 @@ function ResetPassword() {
         isOnline && (
           <div className='resetPassword'>
 
-            <Snackbar
+            <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />
+            {/* <Snackbar
               open={openSnackbar}
               autoHideDuration={5000}
               onClose={handleCloseSnackbar}
             >
               <Alert 
-                  // severity= {updateSuccess ?  "success" : "error"} 
-                  severity= {"success"} 
+                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                   action={action}
                   sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
               >{mensajeSnackBar}
               </Alert>
-            </Snackbar>
+            </Snackbar> */}
       
             <main className="main-resetPassword">
               <div className="form-resetPassword">

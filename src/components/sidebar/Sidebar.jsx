@@ -30,7 +30,15 @@ export default function Sidebar() {
           <h3 className="sidebarTitle">Transacciones</h3>
           <ul className="sidebarList">      
             <li className="sidebarListItem">
-              <NavLink activeClassName='sideBar__link-active' to="/search-client" className="sideBar__link">     
+              <NavLink  activeClassName='sideBar__link-active' 
+                        // to="/search-client" 
+                        to={{
+                          pathname: '/search-client',
+                          state: {
+                            openVentana: "CrearPedido"
+                          }
+                        }}
+                        className="sideBar__link">     
                 <FaHandshake className="sidebarIcon iconos__placeOrder" />
                 Ventas
               </NavLink>
@@ -59,33 +67,33 @@ export default function Sidebar() {
           </ul>
         </div>
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Reportes</h3>
+          <h3 className="sidebarTitle">Reportes de Ventas</h3>
           <ul className="sidebarList">
             <li className="sidebarListItem">
               <NavLink activeClassName='sideBar__link-active' to="/sales/whole-year-sales" className="sideBar__link">
                 <FaChartLine className="sidebarIcon" />
-                Venta Anual
+                Anual
               </NavLink>
             </li>
             <li className="sidebarListItem">
               <NavLink activeClassName='sideBar__link-active' to="/sales/monthly-sales" className="sideBar__link">
                 <FaChartLine className="sidebarIcon" />
-                Venta Mensual
+                Mensual
               </NavLink>
             </li>
             <li className="sidebarListItem">
               <NavLink activeClassName='sideBar__link-active' to="/sales/weekly-sales" className="sideBar__link">
                 <FaChartLine className="sidebarIcon" />
-                Venta Semanal
+                Semanal
               </NavLink>
             </li>
             <li className="sidebarListItem">
               <FaChartLine className="sidebarIcon" />
-              Venta por Cliente
+              Por Cliente
             </li>
             <li className="sidebarListItem">
               <FaChartLine className="sidebarIcon" />
-              Venta por Producto
+              Por Producto
             </li>
           </ul>
         </div>

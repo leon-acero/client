@@ -1,8 +1,10 @@
 import "./login.css"
 import axios, { regresaMensajeDeError } from "../../utils/axios";
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
 
 
 /****************************    React    **********************************/
@@ -16,11 +18,16 @@ import { stateContext } from '../../context/StateProvider';
 
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
+
+/***************************    Components     ******************************/
+import SnackBarCustom from '../../components/snackBarCustom/SnackBarCustom';
+/****************************************************************************/
+
 
 /**************************    Framer-Motion    *****************************/
 
@@ -52,8 +59,13 @@ export default function Login() {
 
 
   /****************************    useState    ********************************/
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no la operacion
+  // de AXIOS
+
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(
     {
@@ -157,13 +169,22 @@ export default function Login() {
           // setOpenSnackbar(true);
 
           // console.log(res.data.data.user);
-          setCurrentUser(res.data.data.user)          
-          history.replace("/dashboard");
+
+          setCurrentUser(res.data.data.user);       
+
+          if (res.data.data.user.role === "admin") {
+            history.replace("/dashboard");
+          }
+          else if (res.data.data.user.role === "vendedor") {
+            history.replace("/");
+          }
       } 
     }
     catch(err) {      
       console.log(err);
       setIsLoading(false);
+      
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
@@ -172,30 +193,30 @@ export default function Login() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        {/* <CloseIcon fontSize="small" /> */}
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       {/* <CloseIcon fontSize="small" /> */}
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
 
   return (
@@ -210,18 +231,21 @@ export default function Login() {
               animate="visible"
               exit="exit"
             >
-              <Snackbar
+              <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />              
+              {/* <Snackbar
                 open={openSnackbar}
                 autoHideDuration={5000}
                 onClose={handleCloseSnackbar}
               >
                 <Alert 
-                    severity= {"error"} 
+                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                     action={action}
                     sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
                 >{mensajeSnackBar}
                 </Alert>
-              </Snackbar>   
+              </Snackbar>    */}
       
               <main className="main">
                 <div className="login-form">

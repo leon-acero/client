@@ -3,8 +3,11 @@ import defaultCameraImage from "../../../../camera.webp"
 
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
+
 
 /*******************************    React     *******************************/
 import { useEffect, useRef, useState } from "react";
@@ -16,18 +19,20 @@ import {FaTrashAlt} from "react-icons/fa";
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
 import {clsx} from "clsx";
 import { DataGrid } from "@mui/x-data-grid";
+import { formateaThousand, formateaCurrency } from '../../../../utils/formatea';
 
 /**************************    Components    ********************************/
 import BasicDialog from '../../../../components/basicDialog/BasicDialog';
 import SkeletonElement from '../../../../components/skeletons/SkeletonElement';
+import SnackBarCustom from '../../../../components/snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
 
@@ -52,7 +57,7 @@ export default function ProductList() {
   // mensajeSnackBar es el mensaje que se mostrara en el SnackBar, puede ser 
   // de exito o de error segun si se grabó la informacion en la BD
 
-  // updateSuccess es boolean que indica si tuvo exito o no el grabado en la BD
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no el grabado en la BD
   
   // openSnackbar es boolean que manda abrir y cerrar el Snackbar
 
@@ -67,7 +72,7 @@ export default function ProductList() {
   // lo uso para dos cosas: que no vuelva a cargar la informacion de la BD ya que
   // en React18 lo hace dos veces, y para mostrar los dulces bailando (Skeleton)
   // si es necesario
-  const [updateSuccess, setUpdateSuccess] = useState (true);
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -99,16 +104,18 @@ export default function ProductList() {
         console.log ('El producto fue borrado con éxito!');
 
         // Borro el Producto del Grid Y del State
-        setUpdateSuccess(true);
         setProductList(productList.filter((item) => item._id !== currentProduct.id));
+
+        setIconoSnackBarDeExito(true);
         setMensajeSnackBar(`El producto ${currentProduct.productName} fue borrado.`)
         setOpenSnackbar(true);
       } 
     }
     catch(err) {
       console.log(err);
-      setUpdateSuccess(false);
       // setMensajeSnackBar("Hubo un error al borrar el producto. Revisa que estes en línea.");
+
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError (err));
       setOpenSnackbar(true);
     }
@@ -166,6 +173,8 @@ export default function ProductList() {
       catch (err) {
         console.log("err", err);
         setIsLoading(false);
+
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError (err));
         setOpenSnackbar(true);
       }
@@ -189,44 +198,44 @@ export default function ProductList() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/  
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
   /***************************     valueFormatter    ************************/
   // Formatea la celda en Moneda, osea con signo de $
   /**************************************************************************/
-  const valueFormatter = (value) => {
-    if (value === '')
-      return '';
+  // const valueFormatter = (value) => {
+  //   if (value === '')
+  //     return '';
 
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 2,
-    }).format(value);
-  }
+  //   return new Intl.NumberFormat('en-US', {
+  //     style: 'currency',
+  //     currency: 'USD',
+  //     maximumFractionDigits: 2,
+  //   }).format(value);
+  // }
 
   /***************************     columns    *******************************/
   // Formatea las columnas y tambien las celdas
@@ -277,7 +286,7 @@ export default function ProductList() {
               (
                 <img className="productListImg" 
                   src={`${params.row.imageCover}` } 
-                  alt="" />
+                  alt="Imagen del Producto o Imagen Default" />
               )
               : 
               (
@@ -295,9 +304,10 @@ export default function ProductList() {
       width: 100,
       headerAlign: 'center', 
       align: 'right',
+      valueFormatter: ({value}) => formateaThousand(value),
       cellClassName: (params) => clsx (
         { 
-          inventarioActualNegativo: params.row.inventarioActual < params.row.inventarioMinimo,
+          inventarioActualNegativo: parseInt(params.row.inventarioActual, 10) < parseInt(params.row.inventarioMinimo, 10),
         })
       ,
       // valueGetter: (params) => params.row.inventarioActual - params.row.inventarioMinimo
@@ -307,6 +317,7 @@ export default function ProductList() {
       headerName: "Inv. Minimo",
       width: 100,
       headerAlign: 'center',
+      valueFormatter: ({value}) => formateaThousand(value),
       align: 'right',
     },
     {
@@ -314,7 +325,7 @@ export default function ProductList() {
       headerName: "Precio Menudeo",
       width: 140,
       headerAlign: 'center',
-      valueFormatter: ({value}) => valueFormatter(value),
+      valueFormatter: ({value}) => formateaCurrency(value),
       align: 'right',
     },
     {
@@ -322,7 +333,7 @@ export default function ProductList() {
       headerName: "Precio Mayoreo",
       width: 140,
       headerAlign: 'center',
-      valueFormatter: ({value}) => valueFormatter(value),
+      valueFormatter: ({value}) => formateaCurrency(value),
       align: 'right',
     },
     {
@@ -330,7 +341,7 @@ export default function ProductList() {
       headerName: "Costo",
       width: 90,
       headerAlign: 'center',
-      valueFormatter: ({value}) => valueFormatter(value),
+      valueFormatter: ({value}) => formateaCurrency(value),
       align: 'right',
     },    
     { 
@@ -346,18 +357,21 @@ export default function ProductList() {
       {
         isOnline && (
           <div className="productList">
-            <Snackbar
+            <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />  
+            {/* <Snackbar
               open={openSnackbar}
               autoHideDuration={5000}
               onClose={handleCloseSnackbar}
             >
               <Alert 
-                  severity= {updateSuccess ?  "success" : "error"} 
+                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                   action={action}
                   sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
               >{mensajeSnackBar}
               </Alert>
-            </Snackbar>
+            </Snackbar> */}
       
             {
             /* ////////////////////////////////////////////////////////////////

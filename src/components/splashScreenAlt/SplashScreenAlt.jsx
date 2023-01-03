@@ -1,10 +1,15 @@
 import "./splashScreenAlt.css"
-import { Link } from 'react-router-dom'
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../offlineFallback/OfflineFallback';
+/****************************************************************************/
 
+/*******************************    React     *******************************/
+import { Link } from 'react-router-dom'
+/****************************************************************************/
 
+/**************************    Framer-Motion     ****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 
 const svgVariants = {
@@ -16,6 +21,8 @@ const svgVariants = {
     transition: { delay: .5, duration: 2 }
   }
 };
+/****************************************************************************/
+
 
 function SplashScreenAlt() {
 
@@ -51,7 +58,7 @@ function SplashScreenAlt() {
                 </div>
                 <Link className='hero__loginButton' to="/login">Iniciar sesión</Link>
               </div>
-              <img className='splashScreenAlt__mujer-modelo' src="/img/website/modelo-con-paleta-recortado_resize.png" alt="" />
+              <img className='splashScreenAlt__mujer-modelo' src="/img/website/modelo-con-paleta-recortado_resize.png" alt="Mujer con paleta" />
             </m.div>
       
           </LazyMotion>

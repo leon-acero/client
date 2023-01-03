@@ -3,19 +3,25 @@ import defaultCameraImage from "../../../../camera.webp"
 
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
+
 
 /**************************    React    **********************************/
 import { useEffect, useRef, useState } from 'react';
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaCloudUploadAlt, FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import { FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
+
+import {FaCloudUploadAlt} from "react-icons/fa";
+import SnackBarCustom from '../../../../components/snackBarCustom/SnackBarCustom';
 
 
 const INITIAL_STATE = {
@@ -36,6 +42,7 @@ export default function NewProduct() {
   const isOnline = useNavigatorOnLine();
   /*****************************************************************************/
 
+
   /**************************    useRef    **********************************/
   // inputRef lo uso para que al cargar la pagina ponga el focus en el nombre
   // del producto
@@ -49,7 +56,7 @@ export default function NewProduct() {
   // mensajeSnackBar es el mensaje que se mostrara en el SnackBar, puede ser 
   // de exito o de error segun si se grabó la informacion en la BD
 
-  // updateSuccess es boolean que indica si tuvo exito o no el grabado en la BD
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no el grabado en la BD
   
   // itemData es un Object con toda la informacion a grabar en la BD
 
@@ -66,7 +73,7 @@ export default function NewProduct() {
   const [itemData, setItemData] = useState (INITIAL_STATE);
   const [isSaving, setIsSaving] = useState(false);
 
-  const [updateSuccess, setUpdateSuccess] = useState (true);
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [fileBlob, setFileBlob] = useState(null);
@@ -80,6 +87,7 @@ export default function NewProduct() {
     inputRef?.current?.focus();
   },[])
   /*****************************************************************************/
+
 
   /************************     handleSubmit    *******************************/
   // Aqui guardo la informacion en la BD, puede ser exitoso o haber error
@@ -129,14 +137,13 @@ export default function NewProduct() {
 
       const res = await axios.post ('/api/v1/products/', formData );
 
-
       setIsSaving(false);
 
       if (res.data.status === 'success') {
         // alert ('Logged in succesfully!');
         // console.log(res.data.data.data);
         // console.log ('El cliente fue creado con éxito!');
-        setUpdateSuccess(true);
+        setIconoSnackBarDeExito(true);
         setMensajeSnackBar("El Producto fue creado")
         setOpenSnackbar(true);
 
@@ -149,9 +156,9 @@ export default function NewProduct() {
       console.log(err);
 
       setIsSaving(false);
-      setUpdateSuccess(false);
-      setMensajeSnackBar (regresaMensajeDeError(err));
 
+      setIconoSnackBarDeExito(false);
+      setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
   }
@@ -197,30 +204,30 @@ export default function NewProduct() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/  
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
 
   return (
@@ -229,41 +236,51 @@ export default function NewProduct() {
         isOnline && (
           <div className="newProduct">
       
-            <Snackbar
+            <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />
+
+            {/* <Snackbar
               open={openSnackbar}
               autoHideDuration={5000}
               onClose={handleCloseSnackbar}
             >
               <Alert 
-                  severity= {updateSuccess ?  "success" : "error"} 
+                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                   action={action}
                   sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
               >{mensajeSnackBar}
               </Alert>
-            </Snackbar>
+            </Snackbar> */}
       
-            <h1 className="addProductTitle">Nuevo Producto</h1>
+            <h1 className="newProductTitle">Nuevo Producto</h1>
       
-            <form className="addProductForm" onSubmit={handleSubmit}>
-              <div className="addproductLeft">
-                <div className="addProductItem">
+            <form className="newProductForm" onSubmit={handleSubmit}>
+              <div className="newProductLeft">
+                <div className="newProductItem">
                   <label>SKU *</label>
                   <input 
                       ref={inputRef}
-                      type="text" 
-                      placeholder="12345" 
+                      // type="text" 
+                      placeholder="123456" 
                       onChange={handleChange}
                       name="sku"
                       value={itemData.sku || ''}
                       required
-                      onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter')} 
+                      onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter. El valor mínimo es 1 y el máximo es 999,999')} 
                       onInput={e=> e.target.setCustomValidity('')} 
-                      minLength="1"
-                      maxLength="5"
+                      // minLength="1"
+                      // maxLength="5"
                       autoComplete="off"
+
+                      type="number" 
+                      pattern="/[^0-9]|(?<=\..*)\./g" 
+                      step="1" 
+                      min="1"
+                      max="999999"
                   />
                 </div>        
-                <div className="addProductItem">
+                <div className="newProductItem">
                   <label>Nombre *</label>
                   <input 
                       type="text" 
@@ -279,7 +296,7 @@ export default function NewProduct() {
                       autoComplete="off"
                   />
                 </div>
-                <div className="addProductItem">
+                <div className="newProductItem">
                   <label>Inventario Actual *</label>
                   <input 
                       type="number" 
@@ -287,7 +304,7 @@ export default function NewProduct() {
                       step="1" 
                       min="1"
                       max="999999" 
-                      placeholder="123" 
+                      placeholder="123456" 
                       onChange={handleChange}
                       name="inventarioActual"
                       value={itemData.inventarioActual || ''}  
@@ -297,7 +314,7 @@ export default function NewProduct() {
                       autoComplete="off" 
                   />
                 </div>
-                <div className="addProductItem">
+                <div className="newProductItem">
                   <label>Inventario Minimo *</label>
                   <input 
                       type="number" 
@@ -305,7 +322,7 @@ export default function NewProduct() {
                       step="1" 
                       min="1"
                       max="999999" 
-                      placeholder="123" 
+                      placeholder="123456" 
                       onChange={handleChange}
                       name="inventarioMinimo"
                       value={itemData.inventarioMinimo || ''}  
@@ -315,7 +332,7 @@ export default function NewProduct() {
                       autoComplete="off"      
                   />
                 </div>       
-                <div className="addProductItem">
+                <div className="newProductItem">
                   <label>Precio Menudeo *</label>
                   <input 
                       type="number" 
@@ -323,7 +340,7 @@ export default function NewProduct() {
                       step="0.01" 
                       min="1"
                       max="999999"
-                      placeholder="123" 
+                      placeholder="123456" 
                       onChange={handleChange}
                       name="priceMenudeo"
                       value={itemData.priceMenudeo || ''}   
@@ -333,7 +350,7 @@ export default function NewProduct() {
                       autoComplete="off" 
                   />
                 </div>
-                <div className="addProductItem">
+                <div className="newProductItem">
                   <label>Precio Mayoreo</label>
                   <input 
                       type="number" 
@@ -341,14 +358,14 @@ export default function NewProduct() {
                       step="0.01" 
                       min="1"
                       max="999999"
-                      placeholder="123" 
+                      placeholder="123456" 
                       onChange={handleChange}
                       name="priceMayoreo"
                       value={itemData.priceMayoreo || ''}
                       autoComplete="off"                            
                   />
                 </div>      
-                <div className="addProductItem">
+                <div className="newProductItem">
                   <label>Costo *</label>
                   <input 
                       type="number" 
@@ -356,7 +373,7 @@ export default function NewProduct() {
                       step="0.01" 
                       min="1"
                       max="999999"             
-                      placeholder="123" 
+                      placeholder="123456" 
                       onChange={handleChange}
                       name="costo"
                       value={itemData.costo || ''}     
@@ -368,16 +385,16 @@ export default function NewProduct() {
                 </div>  
               </div>
       
-              <div className="addproductRight">
-                <div className="productUpdateUpload">
+              <div className="newProductRight">
+                <div className="newProductUpload">
                   <img
-                    className="productUpdateImg"
+                    className="newProductImg"
                     src= {
                             // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${itemData.imageCover}`
                             // fileBlob ? fileBlob : `${BASE_URL}/img/products/${itemData.imageCover}`
                             fileBlob ? fileBlob : defaultCameraImage
                           }
-                    alt=""
+                    alt="Imagen del Producto o Imagen Default"
                   />                
                   <label htmlFor="photo">
                     <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer", "color": "#343a40"}} />
@@ -391,7 +408,7 @@ export default function NewProduct() {
                   />
                 </div>   
       
-                <button className="addProductButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Crear'}</button>
+                <button className="newProductButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Crear'}</button>
               </div>
             </form>
           </div>

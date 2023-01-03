@@ -1,8 +1,11 @@
 import "./splashScreen.css"
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../offlineFallback/OfflineFallback';
+/****************************************************************************/
 
+/*************************    Framer-Motion     *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 
 const svgVariants = {
@@ -14,6 +17,9 @@ const svgVariants = {
     transition: { delay: .5, duration: 2 }
   }
 };
+/****************************************************************************/
+
+
 
 export default function SplashScreen() {
 

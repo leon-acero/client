@@ -46,6 +46,17 @@
   text-align: center;
 }
 
+.inputItemOrdered:disabled,
+.inputItemOrdered[disabled],
+.botonRemoveProductFromBasket:disabled,
+.botonRemoveProductFromBasket[disabled],
+.botonRemoveProductFromBasket__icon:disabled,
+.botonRemoveProductFromBasket__icon[disabled] {
+  background-color: #c7c7c7;
+  border-color: #c7c7c7;
+  color: #222;
+}
+
 .productOrdered--image {
   max-width: 100%;
   display: inline-block;

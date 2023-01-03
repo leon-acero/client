@@ -1,8 +1,10 @@
 import "./forgotPassword.css";
 import axios, { FRONT_END_URL, regresaMensajeDeError } from '../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../components/offlineFallback/OfflineFallback';
+/****************************************************************************/
 
 
 /*******************************    React     *******************************/
@@ -11,11 +13,13 @@ import { useState, useRef, useEffect } from 'react'
 
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
+
+import SnackBarCustom from '../../components/snackBarCustom/SnackBarCustom';
 
 /**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
@@ -43,6 +47,9 @@ function ForgotPassword() {
 
   /**************************    useState    **********************************/
   // email guarda lo que el usuario capturó para iniciar la busqueda
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no la operacion
+  // de AXIOS
+
   // data es un Array con el resultado de la búsqueda
   // isSearching es un boolean para saber si se esta realizando una búsqueda
 
@@ -50,6 +57,8 @@ function ForgotPassword() {
   // const [data, setData] = useState([]);
   // const [data, setData] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   /*****************************************************************************/
@@ -105,12 +114,15 @@ function ForgotPassword() {
           if (!res.data.problemWithEmail) {
             console.log("The Email was sent succesfully!");
 
+            setIconoSnackBarDeExito(true);
             setMensajeSnackBar("El correo fue enviado. Favor de revisar tu correo y sigue las instrucciones para cambiar tu password. Si no ves el correo checa tu bandeja de Spam o Junk.")
             setOpenSnackbar(true);
           }
           else
           {
             console.log("There was an error sending the email. Please try again later.");
+
+            setIconoSnackBarDeExito(false);
             setMensajeSnackBar("Hubo un error al enviar el correo. Vuelve a intentarlo.")
             setOpenSnackbar(true);
             // timeout = 7000;
@@ -136,6 +148,8 @@ function ForgotPassword() {
       console.log("Hubo un error al mandar el correo electrónico");
 
       setIsSearching(false);
+      
+      setIconoSnackBarDeExito(false);
       setMensajeSnackBar (regresaMensajeDeError(err));
       setOpenSnackbar(true);
     }
@@ -144,29 +158,29 @@ function ForgotPassword() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-    </>
-  );
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );
 
   return (
 
@@ -179,18 +193,21 @@ function ForgotPassword() {
               initial="hidden"
               animate="visible"
             >
-              <Snackbar
+              <SnackBarCustom 
+                openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                iconoSnackBarDeExito={iconoSnackBarDeExito} />
+              {/* <Snackbar
                 open={openSnackbar}
                 autoHideDuration={5000}
                 onClose={handleCloseSnackbar}
               >
                 <Alert 
-                    severity= {"success"} 
+                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
                     action={action}
                     sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
                 >{mensajeSnackBar}
                 </Alert>
-              </Snackbar>
+              </Snackbar> */}
       
               <h2 className='forgotPassword__title'>Olvidaste tu Password</h2>
               <form className='formForgotPassword' onSubmit={handleForgotPassword}>

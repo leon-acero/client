@@ -1,4 +1,5 @@
 .product {
+  height: calc(100vh - 5rem);
   flex: 4;
   padding: 2rem;
 }
@@ -200,9 +201,83 @@
   font-weight: 400;
 }
 
-
 .productUpdateButton:disabled,
 .productUpdateButton[disabled] {
   background-color: gray;
 }
 
+.inventarioActualNegativo {
+  background-color: red;
+  color: white;
+}
+
+/* 780px */
+@media (max-width:48.75em) {
+
+  .productContainer {
+    flex-direction: column;
+  }
+
+  .productUpdateForm{ 
+    flex-direction: column;
+  } 
+}
+
+/* 480px */
+@media (max-width:30em) {
+
+  /* Muy Importante regreso el flex-direction a row */
+  .productContainer {
+    flex-direction: row;
+  }
+  
+  .product {
+    overflow-x: hidden;
+  }
+
+  .productShow {
+    display: none;
+  }
+
+  .productUpdate {
+    margin-left: 0rem;
+    /* margin-right: 5rem; */
+    width: 10rem;
+    /* background-color: red; */
+  }
+
+  /* .productTitleContainer { 
+    margin-left: 1.4rem;
+    margin-right: 1rem;
+  } */
+
+  /* Ya hice el flex-direction en 780px */
+  /* .productUpdateForm{ 
+    flex-direction: column;
+  } */
+
+  .productUpdateInput {
+    width: 28rem;
+  }
+
+  .productUpdateUpload {
+    flex-direction: column;
+    margin-bottom: 3rem;
+    justify-content: center;
+    margin-right: 0rem;
+  }
+
+  .productUpdateImg{
+    width: 26rem;
+    padding-right: 0;
+    margin-right: 0;
+    /* height: 26rem; */
+  }
+
+  .productUpdateRight{
+    /* padding-top: 1rem;
+    padding-bottom: 1rem;*/
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+}

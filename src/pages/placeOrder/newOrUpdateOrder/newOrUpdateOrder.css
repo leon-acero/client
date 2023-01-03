@@ -1,5 +1,7 @@
 .newOrUpdateOrder {
+  height: calc(100vh - 5rem);
   flex: 4;
+  overflow-x: hidden;
 }
 
 .main-newOrUpdateOrder {
@@ -63,14 +65,9 @@ h2 {
   color: #444;
 }
 
-.businessInfo__cellPhone {
+.businessInfo__clientDetails {
   font-size: 1.6rem;
   color: #444;
-}
-
-.businessInfo__esMayorista {
-  font-size: 1.6rem;
-  color: #444; 
 }
 
 .pedidosPorEntregar__title {

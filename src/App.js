@@ -16,6 +16,7 @@ import Logout from './components/logout/Logout';
 import SplashScreen from './components/splashScreen/SplashScreen';
 import SplashScreenAlt from './components/splashScreenAlt/SplashScreenAlt';
 import PageNotFound from './components/pageNotFound/PageNotFound';
+import OrderWasDeleted from './components/orderWasDeleted/OrderWasDeleted';
 /***********************************************************************/
 
 
@@ -31,6 +32,7 @@ import NewProduct from "./pages/catalogs/create/newProduct/NewProduct";
 
 import ClientList from "./pages/catalogs/list/clientList/ClientList";
 import ProductList from "./pages/catalogs/list/productList/ProductList";
+import SearchProduct from './pages/catalogs/edit/product/searchProduct/searchProduct';
 
 import SearchClient from './pages/placeOrder/searchClient/SearchClient';
 // import NewOrder from './pages/placeOrder/newOrder/NewOrder';
@@ -38,6 +40,7 @@ import NewOrUpdateOrder from './pages/placeOrder/newOrUpdateOrder/NewOrUpdateOrd
 import UpdateOrder from './pages/placeOrder/updateOrder/UpdateOrder';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
 import ResetPassword from './pages/resetPassword/ResetPassword';
+import Ticket from './pages/placeOrder/ticket/Ticket';
 
 import ReportWeeklySalesByMonth from './pages/reports/reportWeeklySalesByMonth/ReportWeeklySalesByMonth';
 import ReportMonthlySalesByYear from './pages/reports/reportMonthlySalesByYear/ReportMonthlySalesByYear';
@@ -91,7 +94,7 @@ function App() {
         ) 
       }
 
-      {/* Si estas loggeado y tienes rol de Vendedor solo puedes ver esto */}
+      {/* Si estas loggeado y tienes rol de VENDEDOR solo puedes ver esto */}
       {
         currentUser?.role === "vendedor" && (
           <div className="container">
@@ -102,23 +105,36 @@ function App() {
               </Route>
 
               {/* HomePage */}
-              <Route exact path="/dashboard">
+              {/* <Route exact path="/dashboard">
                 <Home />
-              </Route>
+              </Route> */}
 
               {/***********************************************************/}
               {/* Hacer un Nuevo Pedido */}
+
               <Route path="/search-client">
                 <SearchClient />
-              </Route>
+              </Route>  
 
+              {/* Component Props ESTO SI me sirve si quiero pasar
+                  los Props de Route y mis Custom Props
+              */}
               {/* <Route path="/new-order/:clientId" component={NewOrder} /> */}
+              <Route  path="/new-or-update-order/:clientId" 
+                      component={NewOrUpdateOrder} />
+              <Route path="/update-order/:clientId" component={UpdateOrder} />
+              <Route path="/ticket/:clientId" component={Ticket} />
+              <Route path="/order-was-deleted" component={OrderWasDeleted} />
+
 
               {/***********************************************************/}
               {/* Authentication */}
-              <Route path="/login">
+              {/* Login solo esta disponible si NO hay usuario loggeado */}
+              {/* <Route path="/login">
                 <Login />
               </Route>
+               */}
+
               <Route path="/logout">
                 <Logout />
               </Route>
@@ -132,7 +148,7 @@ function App() {
         )
       }
 
-      {/* Si estas loggeado y tienes rol de admin puedes ver esto */}
+      {/* Si estas loggeado y tienes rol de ADMIN puedes ver esto */}
       {
         currentUser?.role === "admin" && (
           <div className="container">
@@ -182,6 +198,10 @@ function App() {
                   <NewProduct />
                 </Route>
 
+                <Route path="/search-product">
+                  <SearchProduct />
+                </Route>  
+
 
                 {/***********************************************************/}
                 {/* Hacer un Nuevo Pedido */}
@@ -196,6 +216,8 @@ function App() {
                 {/* <Route path="/new-order/:clientId" component={NewOrder} /> */}
                 <Route path="/new-or-update-order/:clientId" component={NewOrUpdateOrder} />
                 <Route path="/update-order/:clientId" component={UpdateOrder} />
+                <Route path="/ticket/:clientId" component={Ticket} />
+                <Route path="/order-was-deleted" component={OrderWasDeleted} />
 
 
 
@@ -244,9 +266,10 @@ function App() {
 
                 {/***********************************************************/}
                 {/* Authentication */}
-                <Route path="/login">
+                {/* Login solo esta disponible si NO hay usuario loggeado */}
+                {/* <Route path="/login">
                   <Login />
-                </Route>
+                </Route> */}
 
                 <Route path="/logout">
                   <Logout />

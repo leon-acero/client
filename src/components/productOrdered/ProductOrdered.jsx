@@ -1,6 +1,7 @@
 import "./productOrdered.css"
 import defaultCameraImage from "../../camera.webp"
-import { NumericFormat } from 'react-number-format';
+// import { NumericFormat } from 'react-number-format';
+import { formateaCurrency } from '../../utils/formatea';
 
 export default function ProductOrdered({ 
   index, 
@@ -8,9 +9,11 @@ export default function ProductOrdered({
   product,
   handleQuantityChange, 
   removeProductFromBasket,
+  isSaving,
+  isDeleting
   // seAplicaDescuento 
   }) {
-
+    
     // console.log("product", product);
     // console.log("theBasket.productOrdered[index]?.quantity", theBasket.productOrdered[index]?.quantity)
 
@@ -19,6 +22,7 @@ export default function ProductOrdered({
   return (
       <div className="productOrdered" key={uniqueKey}>
         <input
+          disabled={isSaving || isDeleting}
           required
           autoFocus
           type="number" 
@@ -54,7 +58,8 @@ export default function ProductOrdered({
             {/* <span className="itemOrdered__currency">${product.priceDeVenta}</span> */}
             <span className="itemOrdered__currency">
               {/* ${product.priceDeVenta} */}
-              <NumericFormat 
+              { formateaCurrency(product.priceDeVenta)}
+              {/* <NumericFormat 
                   value={product.priceDeVenta} 
                   decimalScale={2} 
                   thousandSeparator="," 
@@ -62,7 +67,7 @@ export default function ProductOrdered({
                   decimalSeparator="." 
                   displayType="text" 
                   renderText={(value) => <span>{value}</span>}
-                />
+                /> */}
             </span>
           </div>
 
@@ -78,15 +83,16 @@ export default function ProductOrdered({
               : <span className="itemOrdered__currency"> 
               {
               // `$${theBasket.productOrdered[index]?.quantity  * product.priceDeVenta}`
-                <NumericFormat 
-                  value={theBasket.productOrdered[index]?.quantity  * product.priceDeVenta} 
-                  decimalScale={2} 
-                  thousandSeparator="," 
-                  prefix={'$'} 
-                  decimalSeparator="." 
-                  displayType="text" 
-                  renderText={(value) => <span>{value}</span>}
-                />
+                formateaCurrency(theBasket.productOrdered[index]?.quantity  * product.priceDeVenta) 
+                // <NumericFormat 
+                //   value={theBasket.productOrdered[index]?.quantity  * product.priceDeVenta} 
+                //   decimalScale={2} 
+                //   thousandSeparator="," 
+                //   prefix={'$'} 
+                //   decimalSeparator="." 
+                //   displayType="text" 
+                //   renderText={(value) => <span>{value}</span>}
+                // />
               } 
               </span>}           
           </div>
@@ -100,15 +106,16 @@ export default function ProductOrdered({
                     // : ""
                     ? <span className="itemOrdered__currency"> 
                     {
-                      <NumericFormat 
-                        value={theBasket.productOrdered[index]?.descuento} 
-                        decimalScale={2} 
-                        thousandSeparator="," 
-                        prefix={'$'} 
-                        decimalSeparator="." 
-                        displayType="text" 
-                        renderText={(value) => <span>{value}</span>}
-                      />
+                      formateaCurrency(theBasket.productOrdered[index]?.descuento)
+                      // <NumericFormat 
+                      //   value={theBasket.productOrdered[index]?.descuento} 
+                      //   decimalScale={2} 
+                      //   thousandSeparator="," 
+                      //   prefix={'$'} 
+                      //   decimalSeparator="." 
+                      //   displayType="text" 
+                      //   renderText={(value) => <span>{value}</span>}
+                      // />
                     }
                     </span>
                     : ""
@@ -125,15 +132,16 @@ export default function ProductOrdered({
                 ? <span className="itemOrdered__currency productTotal">
                   {
                     // `$${theBasket.productOrdered[index]?.quantity  * product.priceDeVenta - theBasket.productOrdered[index]?.descuento}`
-                    <NumericFormat 
-                      value={theBasket.productOrdered[index]?.quantity  * product.priceDeVenta - theBasket.productOrdered[index]?.descuento} 
-                      decimalScale={2} 
-                      thousandSeparator="," 
-                      prefix={'$'} 
-                      decimalSeparator="." 
-                      displayType="text" 
-                      renderText={(value) => <span>{value}</span>}
-                      />
+                    formateaCurrency(theBasket.productOrdered[index]?.quantity  * product.priceDeVenta - theBasket.productOrdered[index]?.descuento)
+                    // <NumericFormat 
+                    //   value={theBasket.productOrdered[index]?.quantity  * product.priceDeVenta - theBasket.productOrdered[index]?.descuento} 
+                    //   decimalScale={2} 
+                    //   thousandSeparator="," 
+                    //   prefix={'$'} 
+                    //   decimalSeparator="." 
+                    //   displayType="text" 
+                    //   renderText={(value) => <span>{value}</span>}
+                    //   />
                     // `$${theBasket.productOrdered[index]?.quantity  * product.priceDeVenta - theBasket.productOrdered[index]?.descuento}`
                   }
                   </span>
@@ -141,25 +149,30 @@ export default function ProductOrdered({
                 : <span className="itemOrdered__currency productTotal">
                   {
                   // `$${theBasket.productOrdered[index]?.quantity  * product.priceDeVenta}`
-                    <NumericFormat 
-                      value={theBasket.productOrdered[index]?.quantity  * product.priceDeVenta} 
-                      decimalScale={2} 
-                      thousandSeparator="," 
-                      prefix={'$'} 
-                      decimalSeparator="." 
-                      displayType="text" 
-                      renderText={(value) => <span>{value}</span>}
-                    />
+                    formateaCurrency(theBasket.productOrdered[index]?.quantity  * product.priceDeVenta)
+                    // <NumericFormat 
+                    //   value={theBasket.productOrdered[index]?.quantity  * product.priceDeVenta} 
+                    //   decimalScale={2} 
+                    //   thousandSeparator="," 
+                    //   prefix={'$'} 
+                    //   decimalSeparator="." 
+                    //   displayType="text" 
+                    //   renderText={(value) => <span>{value}</span>}
+                    // />
                   }
                 </span>
               }                     
           </div>
         </div>
 
-        <button className="botonRemoveProductFromBasket" onClick={()=>removeProductFromBasket(index)}>Quitar del carrito</button> 
+        <button disabled={isSaving || isDeleting}
+                className="botonRemoveProductFromBasket" 
+                onClick={()=>removeProductFromBasket(index)}>Quitar del carrito
+        </button> 
 
-        <button className="botonRemoveProductFromBasket__icon" onClick={()=>removeProductFromBasket(index)}>
-          X 
+        <button disabled={isSaving || isDeleting}
+                className="botonRemoveProductFromBasket__icon" 
+                onClick={()=>removeProductFromBasket(index)}>X 
         </button>  
       </div>  
   )

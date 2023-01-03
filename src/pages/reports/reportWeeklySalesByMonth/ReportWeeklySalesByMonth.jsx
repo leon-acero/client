@@ -1,8 +1,10 @@
 import "./reportWeeklySalesByMonth.css"
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
 
+/*************************    Offline/Online     ****************************/
 import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
 import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
+/****************************************************************************/
 
 /*******************************    React     *******************************/
 import React, { useEffect, useRef, useState } from 'react'
@@ -20,20 +22,35 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 /***************************    Components     ******************************/
 import Chart from '../../../components/chart/Chart';
 import SkeletonElement from '../../../components/skeletons/SkeletonElement';
+import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
 /*******************************    Format     ******************************/
 import { format } from 'date-fns'
-import { NumericFormat } from 'react-number-format';
+// import { NumericFormat } from 'react-number-format';
+import { formateaCurrency } from '../../../utils/formatea';
 /****************************************************************************/
 
 /**************************    Snackbar    **********************************/
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import {FaTimes} from "react-icons/fa";
-import { Alert } from '@mui/material';
+// import Snackbar from '@mui/material/Snackbar';
+// import IconButton from '@mui/material/IconButton';
+// import {FaTimes} from "react-icons/fa";
+// import { Alert } from '@mui/material';
 /****************************************************************************/
 
+/**************************    Framer-Motion    *****************************/
+import { domAnimation, LazyMotion, m } from 'framer-motion';
+
+const svgVariants = {
+  hidden: { 
+    opacity: 0, 
+  },
+  visible: { 
+    opacity: 1, 
+    transition: { delay: .5, duration: 2 }
+  }
+};
+/****************************************************************************/
 
 
 export default function ReportWeeklySalesByMonth() {
@@ -44,7 +61,7 @@ export default function ReportWeeklySalesByMonth() {
   /*****************************************************************************/
 
 
-  /************************    useRef    ********************************* /
+  /************************    useRef    ***************************************/
   // Agregué estos dos useRefs porque en React18 se hace un re-render
   // doble en useEffect, debido al StrictMode y esto causaba que la llamada a axios 
   // se hiciera DOS VECES lo que causaba ir al server dos veces
@@ -52,9 +69,10 @@ export default function ReportWeeklySalesByMonth() {
   // state Machine, Remix, NextJS, o usar un State Manager con Store y Dispatch
   // checa:
   //        https://www.youtube.com/watch?v=HPoC-k7Rxwo&ab_channel=RealWorldReact
-  ************************     useRef    *********************************/ 
 
   const avoidRerenderFetchVentasDelNegocio = useRef(false);
+  /*****************************************************************************/
+
 
   /************************    useState    *********************************/
   // chartData es la informacion del chart
@@ -62,7 +80,10 @@ export default function ReportWeeklySalesByMonth() {
   // dateRange es el Rango de Fechas que quiero consultar
   // startDate es la fecha de comienzo de busqueda
   // endDate es la fecha de término de búsqueda
+  // iconoSnackBarDeExito es boolean que indica si tuvo exito o no la operacion
+  // de AXIOS
 
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -71,14 +92,13 @@ export default function ReportWeeklySalesByMonth() {
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [isLoading, setIsLoading] = useState (false);
-  /************************     useState    *********************************/ 
+  /*****************************************************************************/
 
 
-  /************************     useEffect    *********************************/ 
+  /************************     useEffect    ***********************************/ 
   // fetchVentasDelNegocio carga la informacion que se mostrará en el Chart,
   // El cliente selecciona un Rango de Fechas, generalmente semanal
   // y asi se calcula la Venta
-  /**************************    useEffect    ******************************* */
   useEffect (() => {
 
     if (!isOnline) {
@@ -125,13 +145,16 @@ export default function ReportWeeklySalesByMonth() {
       catch (err) {
         console.log("Error", err);
         setIsLoading (false);
+        
+        setIconoSnackBarDeExito(false);
         setMensajeSnackBar (regresaMensajeDeError(err));      
         setOpenSnackbar(true);
       }
     }
     fetchVentasDelNegocio();
   }, [startDate, endDate, isOnline]);
-  
+  /*****************************************************************************/
+
 
   /***********************    handleChangeDatePicker    ***********************/
   // Actualiza el cambio del Fechas del Calendario
@@ -144,89 +167,100 @@ export default function ReportWeeklySalesByMonth() {
   /************************     handleCloseSnackbar    **********************/
   // Es el handle que se encarga cerrar el Snackbar
   /**************************************************************************/
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpenSnackbar(false);
-  };
+  //   setOpenSnackbar(false);
+  // };
 
   /*****************************     action    ******************************/
   // Se encarga agregar un icono de X al SnackBar
   /**************************************************************************/  
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <FaTimes />
-      </IconButton>
-    </>
-  );  
+  // const action = (
+  //   <>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleCloseSnackbar}
+  //     >
+  //       <FaTimes />
+  //     </IconButton>
+  //   </>
+  // );  
 
   return (
     <>
       {
         isOnline && (
-          <div className="reportWeeklySalesByMonth">
-            <Snackbar
-              open={openSnackbar}
-              autoHideDuration={5000}
-              onClose={handleCloseSnackbar}
+          <LazyMotion features={domAnimation} >
+            <m.div  className="reportWeeklySalesByMonth"
+                    variants={svgVariants}
+                    initial="hidden"
+                    animate="visible"
             >
-              <Alert 
-                  severity= {"success"} 
-                  action={action}
-                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-              >{mensajeSnackBar}
-              </Alert>
-            </Snackbar>  
-                  
-            <div className="reportWeeklySalesByMonth__container">
-              <div className='reportWeeklySalesByMonth__selectorDeFecha'>
-                <p 
-                  className="reportWeeklySalesByMonth__title">Selecciona un Rango de Fechas:
-                </p>
-                <DatePicker 
-                  className="datePicker"
-                  selectsRange={true}
-                  startDate={startDate}
-                  endDate={endDate}
-                  onChange={(update) => handleChangeDatePicker(update)}
-                  dateFormat="yyyy-MMM-dd" 
-                />
-                <FaRegCalendarAlt className="calendario" />
-              </div>
-              {
-                isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
-              }
-              {
-                chartData && (
-                  <Chart 
-                      className="reportWeeklySalesByMonth__chart"
-                      data={chartData} 
-                      title={
-                          <NumericFormat 
-                                value={totalAcumulado} 
-                                decimalScale={2} 
-                                thousandSeparator="," 
-                                prefix={'$'} 
-                                decimalSeparator="." 
-                                displayType="text" 
-                                renderText={(value) => <span>Venta Acumulada {value}</span>}
-                          />} 
-                      grid 
-                      dataKey="SubTotal"
+              <SnackBarCustom 
+                  openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
+                  iconoSnackBarDeExito={iconoSnackBarDeExito} />  
+
+              {/* <Snackbar
+                open={openSnackbar}
+                autoHideDuration={5000}
+                onClose={handleCloseSnackbar}
+              >
+                <Alert 
+                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
+                    action={action}
+                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
+                >{mensajeSnackBar}
+                </Alert>
+              </Snackbar>   */}
+                    
+              <div className="reportWeeklySalesByMonth__container">
+                <div className='reportWeeklySalesByMonth__selectorDeFecha'>
+                  <p 
+                    className="reportWeeklySalesByMonth__title">Selecciona un Rango de Fechas:
+                  </p>
+                  <DatePicker 
+                    className="datePicker"
+                    selectsRange={true}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={(update) => handleChangeDatePicker(update)}
+                    dateFormat="yyyy-MMM-dd" 
                   />
-                )
-              }
-              
-            </div>
-          </div>
+                  <FaRegCalendarAlt className="calendario" />
+                </div>
+                {
+                  isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
+                }
+                {
+                  chartData && (
+                    <Chart 
+                        className="reportWeeklySalesByMonth__chart"
+                        data={chartData} 
+                        title={`Venta Acumulada ${formateaCurrency(totalAcumulado)}`
+                            // <NumericFormat 
+                            //       value={totalAcumulado} 
+                            //       decimalScale={2} 
+                            //       thousandSeparator="," 
+                            //       prefix={'$'} 
+                            //       decimalSeparator="." 
+                            //       displayType="text" 
+                            //       renderText={(value) => <span>Venta Acumulada {value}</span>}
+                            // />
+                          } 
+                        grid 
+                        dataKey="SubTotal"
+                    />
+                  )
+                }
+                
+              </div>
+            </m.div>
+          </LazyMotion>
         )
       }
       {
