@@ -1,6 +1,6 @@
 import "./ticket.css"
 import axios, { regresaMensajeDeError } from "../../../utils/axios";
-import { formateaCurrency, formateaCaracteresEspeciales } from '../../../utils/formatea';
+import { formateaCurrency, formateaCaracteresEspeciales, formateaFechaEspaniol } from '../../../utils/formatea';
 import { SE_APLICA_DESCUENTO } from '../../../utils/seAplicaDescuento';
 
 /*******************************    React     *******************************/
@@ -90,8 +90,11 @@ function Ticket() {
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  // const [fechaActual, setFechaActual] = useState(
+  //         new Date(Date.now()).toString().split(" ", 5).join(" "))
   const [fechaActual, setFechaActual] = useState(
-          new Date(Date.now()).toString().split(" ", 5).join(" "))
+          formateaFechaEspaniol(new Date(Date.now())));
+
 
   const [mensajeWhatsApp, setMensajeWhatsApp] = useState('');
 

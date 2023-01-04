@@ -30,6 +30,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 
 /**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
+import { formateaFechaEspaniol } from '../../../utils/formatea';
 
 const containerVariants = {
   hidden: { 
@@ -345,7 +346,8 @@ export default function NewOrUpdateOrder() {
                                         }}
                                       >
                                         {
-                                          (new Date (current._id.Fecha)).toString().split(" ", 5).join(" ")
+                                          // (new Date (current._id.Fecha)).toString().split(" ", 5).join(" ")
+                                          formateaFechaEspaniol(new Date (current._id.Fecha))
                                         } 
                                       </Link>                             
                                     ) 

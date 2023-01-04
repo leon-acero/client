@@ -1,4 +1,6 @@
 .newClient {
+  height: calc(100vh - 5rem);
+  overflow-x: hidden;
   flex: 4;
 }
 

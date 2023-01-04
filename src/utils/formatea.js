@@ -21,6 +21,20 @@ export const formateaThousand = (value) => {
   return formatter;
 }
 
+// Convierte la Fecha a Espaniol
+export const formateaFechaEspaniol = (fecha) => {
+
+  const formatter = new Intl.DateTimeFormat('es-ES', 
+      { 
+        dateStyle: 'full', 
+        timeStyle: 'long' 
+      }).format(fecha);
+  
+  // console.log("format", formatter.format(value));
+
+  return formatter;
+}
+
 // Sirve para quitar estos tres caracteres: # & /
 // Para poder mandar el mensaje a Whatsapp
 export const formateaCaracteresEspeciales = (texto) => {
