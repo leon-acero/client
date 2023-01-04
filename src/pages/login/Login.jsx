@@ -247,13 +247,19 @@ export default function Login() {
                 </Alert>
               </Snackbar>    */}
       
-              <main className="main">
-                <div className="login-form">
-                  <h2 className="heading-secondary ma-bt-lg">Inicia sesión</h2>
+              <main className="login__main">
+                <div className="login__container">
+
+                  <div className="heading__container">
+                    <h2 className="heading-secondary ma-bt-lg">Inicia sesión</h2>
+                  </div>
       
-                  <form onSubmit={handleSubmit}>
-                    <div className="form__group">
-                      <label htmlFor="email" className="form__label" >Correo Electrónico</label>
+                  <form className="login__form" onSubmit={handleSubmit}>
+
+                    <div className="login__form-group">
+                      <label htmlFor="email" className="form__label" >
+                        Correo Electrónico
+                      </label>
                       <input 
                         ref={inputRef}
                         type="email" 
@@ -264,14 +270,19 @@ export default function Login() {
                         onChange={handleChange}
                         name="email"
                         value={data.email || ''}
-                        onInvalid={e=> e.target.setCustomValidity('El Email debe tener entre 5 y 20 caracteres')} 
+                        title={'El Email debe tener entre 5 y 40 caracteres'}
+                        pattern="^.{5,40}$"
+                        onInvalid={e=> e.target.setCustomValidity('El Email debe tener entre 5 y 40 caracteres')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         minLength="5"
-                        maxLength="20"
+                        maxLength="40"
                       />
                     </div>
-                    <div className="form__group">
-                      <label htmlFor="password" className="form__label" >Password</label>
+
+                    <div className="login__form-group">
+                      <label htmlFor="password" className="form__label" >
+                        Password
+                      </label>
                       <input 
                         type="password" 
                         id="password" 
@@ -279,22 +290,32 @@ export default function Login() {
                         placeholder='••••••••' 
                         required 
                         minLength="8" 
+                        maxLength="20"
                         onChange={handleChange}
                         name="password"
-                        onInvalid={e=> e.target.setCustomValidity('El Password debe ser de mínimo 8 caracteres')} 
+                        title={'El Password debe tener entre 8 y 20 caracteres'}
+                        pattern="^.{8,20}$"
+                        onInvalid={e=> e.target.setCustomValidity('El Password debe tener entre 8 y 20 caracteres')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         value={data.password || ''}
                       />
                     </div>
-                    <div className="form__group ma-bt-md">
+
+                    <div className="login__form-group align-center ma-bt-md">
                       <Link 
                             className="forgot-password" 
                             to="/forgot-password">¿Olvidaste tu Password?
                       </Link>
                     </div>
-                    <div className="form__group">
-                      <button className="btn btn--green" disabled={isLoading}>{isLoading ? 'Entrando a El Juanjo' : 'Iniciar mi sesión'}</button>
+
+                    <div className="login__form-group align-center">
+                      <button className="btn btn--green" disabled={isLoading}>
+                        {
+                          isLoading ? 'Entrando a El Juanjo' : 'Iniciar mi sesión'
+                        }
+                      </button>
                     </div>
+
                   </form>
                 </div>
               </main>

@@ -386,6 +386,7 @@ export default function Client() {
                         name="sku"
                         value={clientData.sku || ''}
                         required
+                        title={'El SKU debe tener por lo menos 1 caracter. El valor mínimo es 1 y el máximo es 999,999'}
                         onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter. El valor mínimo es 1 y el máximo es 999,999')} 
                         onInput={e=> e.target.setCustomValidity('')} 
                         autoComplete="off"

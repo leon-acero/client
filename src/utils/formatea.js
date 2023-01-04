@@ -44,3 +44,9 @@ export const formateaCaracteresEspeciales = (texto) => {
 
   return texto;
 }
+
+// Sirve para formatear el texto que se manda a WhatsApp a Bold
+export const formateaTextoWhatsAppABold = (texto) => {
+  return `*${texto}*`;
+}
+

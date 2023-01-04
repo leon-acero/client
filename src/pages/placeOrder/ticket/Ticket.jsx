@@ -1,6 +1,6 @@
 import "./ticket.css"
 import axios, { regresaMensajeDeError } from "../../../utils/axios";
-import { formateaCurrency, formateaCaracteresEspeciales, formateaFechaEspaniol } from '../../../utils/formatea';
+import { formateaCurrency, formateaCaracteresEspeciales, formateaFechaEspaniol, formateaTextoWhatsAppABold } from '../../../utils/formatea';
 import { SE_APLICA_DESCUENTO } from '../../../utils/seAplicaDescuento';
 
 /*******************************    React     *******************************/
@@ -24,6 +24,7 @@ import OfflineFallback from '../../../components/offlineFallback/OfflineFallback
 import TicketProduct from './ticketProduct/TicketProduct';
 import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
 // import { NumericFormat } from 'react-number-format';
+
 
 
 /**************************    Framer-Motion    *****************************/
@@ -70,7 +71,6 @@ function Ticket() {
   const avoidRerenderMensajeDeExito = useRef(false);
   const avoidRerenderFetchClient = useRef(false);
   /*****************************************************************************/  
-
 
   /*****************************    useState    ********************************/
 
@@ -179,12 +179,12 @@ function Ticket() {
         
           // console.log("clientData", clientData);
     
-          let mensaje ="El Juanjo | Dulcería%0a%0a";
-          mensaje+=`Fecha: ${fechaActual}%0a`;
+          let mensaje =`${formateaTextoWhatsAppABold("EL JUANJO | DULCERIA")}%0a%0a`;
+          mensaje+=`Fecha: ${formateaTextoWhatsAppABold(fechaActual)}%0a`;
           mensaje+=`Vendedor: ${formateaCaracteresEspeciales(theBasket.userName)}%0a`;
           mensaje+=`Estatus: ${theBasket.estatusPedido === 1 ? "Por Entregar" : "Entregado"}%0a%0a`;
     
-          mensaje+=`${formateaCaracteresEspeciales(res.data.data.data.businessName)}%0a`;
+          mensaje+=`${formateaTextoWhatsAppABold(formateaCaracteresEspeciales(res.data.data.data.businessName))}%0a`;
           mensaje+=`${formateaCaracteresEspeciales(res.data.data.data.ownerName)}%0a`;
           mensaje+=`${formateaCaracteresEspeciales(res.data.data.data.businessAddress)}%0a`;
           mensaje+=`${formateaCaracteresEspeciales(res.data.data.data.cellPhone)}%0a`;
@@ -194,8 +194,8 @@ function Ticket() {
           theBasket?.productOrdered?.forEach( product => {
             // console.log("product", product)
             mensaje+=`SKU: ${product.sku}%0a`;
-            mensaje+=`${formateaCaracteresEspeciales(product.productName)}%0a`;
-            mensaje+=`Cantidad: ${product.quantity}%0a`;
+            mensaje+=`*${formateaCaracteresEspeciales(product.productName)}*%0a`;
+            mensaje+=`*Cantidad: ${product.quantity}*%0a`;
             mensaje+=`Precio Unitario: ${formateaCurrency(product.priceDeVenta)}%0a`;
 
             if (theBasket.seAplicaDescuento) {
@@ -208,7 +208,7 @@ function Ticket() {
                 
               mensaje+=`Descuento (-): ${theBasket.seAplicaDescuento ? formateaCurrency(product.descuento) : ""}%0a`;
             }
-            mensaje+="-------------------------%0a"
+            mensaje+="----------------------------------------%0a"
         
             mensaje+=`Total: ${(  product.quantity !== undefined && 
                                   product.quantity !== "" && 
@@ -228,9 +228,9 @@ function Ticket() {
             mensaje+=`Total Descuento (-): ${formateaCurrency(sumDescuento)}%0a`;
           }
     
-          mensaje+="-------------------------%0a"
+          mensaje+="----------------------------------------%0a"
           
-          mensaje+=`Total Pedido: ${formateaCurrency(sumTotalSinDescuento - sumDescuento)}%0a`;
+          mensaje+=`${formateaTextoWhatsAppABold("Total Pedido:")} ${formateaTextoWhatsAppABold(formateaCurrency(sumTotalSinDescuento - sumDescuento))}%0a`;
         
           // console.log("mensaje", mensaje);
     
@@ -406,7 +406,7 @@ function Ticket() {
                         totalDescuento > 0 && (
                             
                             <div className="ticket__totalPedido__container">
-                              <span className="ticket__totalPedido__item">Total Venta: </span>
+                              <span className="ticket__totalPedido__item">*Total Venta: *</span>
                               
                               <span className="ticket__totalPedido__currency">
                                 {
@@ -454,11 +454,20 @@ function Ticket() {
         
                       {/* Total Pedido = Total Venta - Total Descuento */}
                       <div className="ticket__totalPedido__container">
-                        <span className={`ticket__totalPedido__item ${totalDescuento > 0 ? 'ticket__pedidoTotal' : ''}`}>Total Pedido: </span>
+                        <span className=
+                            {
+                              `ticket__totalPedido__item ${totalDescuento > 0 
+                                ? 'ticket__pedidoTotal' 
+                                : ''}`
+                            }>                          
+                            Total Pedido:  
+                        </span>
                         
                         <span className={`ticket__totalPedido__currency ${totalDescuento > 0 ? 'ticket__pedidoTotal' : ''}`}>
                           {/* {`$${totalBasket - totalDescuento}`} */}
-                          {formateaCurrency(totalBasket - totalDescuento)}
+                          {
+                            formateaCurrency(totalBasket - totalDescuento)
+                          }
                           {/* <NumericFormat 
                             value={totalBasket - totalDescuento} 
                             decimalScale={2} 
@@ -486,8 +495,23 @@ function Ticket() {
                             rel="noopener noreferrer"
                             >Mandar Ticket a Whatsapp {clientData.cellPhone}
                           </a>
-                        : <p className='ticket__avisoClienteSinCelular'>El cliente No tiene Número de Celular asignado, edita al cliente para poder mandarle el Ticket</p>
+                        : <p className='ticket__avisoClienteSinCelular'>El cliente No tiene Número de Celular asignado, edita al cliente para poder mandarle el Ticket
+                          </p>
                       }
+                    </div>
+                      
+                    <div className="ticket__inicioButton-container">                     
+                      <Link 
+                          className='ticket__inicioButton' 
+                          to={
+                              {
+                              pathname: '/search-client',
+                              state: {
+                                openVentana: "CrearPedido"
+                              }
+                          }
+                        }>Crear Nuevo Pedido
+                      </Link>
                     </div>
                   </div>
                 </main>

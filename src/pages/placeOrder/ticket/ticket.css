@@ -3,6 +3,8 @@
   flex: 4;
   overflow-x: hidden;
   padding: 2rem 0;
+  box-flex-group: #fdf2e9;
+  color: #333;
 }
 
 .ticket__main {
@@ -22,7 +24,8 @@
   max-width: 55rem;
 
   /* ESTILIZAR */
-  background-color: rgba(255, 255, 255, .65);
+  /* background-color: rgba(255, 255, 255, .65); */
+  background-color: hsla(26, 84%, 95%, 0.829);
   -webkit-box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
   border-radius: 5px;
@@ -90,6 +93,7 @@
   /* FLEX */
   display: flex;
   justify-content: center;
+  margin-bottom: 3rem;
 }
 
 /* LINK */
@@ -101,12 +105,15 @@
   /* ESTILIZAR */
   text-decoration: none;
   font-weight: 500;
-  font-size: 1.8rem;
+  /* font-size: 1.8rem; */
+  font-size: 1.6rem;
   transition: all 0.3s;
-  border-radius: 9px;
+  border-radius: .9rem;
   color: #fff;
+  /* color: #25d366; */
   /* COLOR WHATSAPP */
   background-color: #25d366;
+  /* background-color: #fff; */
 
   /* SPACING */
   padding: 1.2rem 2.4rem;
@@ -116,6 +123,7 @@
   /* align-items: center;
   justify-content: center; */
   gap: 0.5rem;
+  text-align: center;
 }
 
 .whatsapp_link:hover,
@@ -130,6 +138,46 @@
   /* background-color: #fff; */
 }
 
+.ticket__inicioButton-container {
+  display: flex;
+  justify-content: center;
+}
+
+.ticket__inicioButton:link, 
+.ticket__inicioButton:visited {
+  /* width: 16rem; */
+  /* background-color: #faba09;  */
+  background-color: #fff; 
+  /* color: #071b2e; */
+  color: #333;
+  cursor: pointer;
+  border: none;
+  padding: 1rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-decoration: none;
+  /* border-radius: 10rem; */
+  border-radius: .9rem;
+  display: inline-block;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+
+  /* align-self: center; */
+  width: 34rem;
+  height: 4.3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ticket__inicioButton:hover,
+.ticket__inicioButton:active {
+
+  background-color: #fdf2e9;
+  border: .3rem solid #fff;
+}
+
 .ticket__avisoClienteSinCelular {
   text-align: center;
   font-size: 1.6rem;
@@ -139,14 +187,19 @@
 /* 680px */
 @media (max-width:42.5em) {
 
-  .whatsapp_link:link,
+  /* .whatsapp_link:link,
   .whatsapp_link:visited {
 
     font-weight: 500;
     font-size: 1.35rem;
     padding: 1.2rem 1rem;
-    text-align: center;
-  }
+  } */
+/*
+  .ticket__inicioButton:link, 
+  .ticket__inicioButton:visited {
+    font-weight: 500;
+    font-size: 1.35rem;
+  } */
 }
 
 /* 580px */

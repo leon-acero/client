@@ -6,16 +6,8 @@ import OfflineFallback from '../offlineFallback/OfflineFallback';
 /****************************************************************************/
 
 /**************************    React    *************************************/
-import { useContext } from 'react';
 import { Link } from 'react-router-dom'
 /****************************************************************************/
-
-/**************************    Context API    *******************************/
-import { stateContext } from '../../context/StateProvider';
-/****************************************************************************/
-
-import { useMatchMedia } from '../../hooks/useMatchMedia';
-
 
 /**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
@@ -34,21 +26,11 @@ const svgVariants = {
 
 function OrderWasDeleted() {
 
-  // 860px
-  const isDesktopResolution = useMatchMedia("(min-width:53.75em)", true);
-
 
   /***********************     useNavigatorOnLine    ***************************/
   // isOnline es para saber si el usuario esta Online
   const isOnline = useNavigatorOnLine();
   /*****************************************************************************/
-
-
-  /****************************    useContext    *******************************/
-  // El id del usuario de la App, es decir el id del Vendedor que esta usando la App
-
-  const { currentUser } = useContext(stateContext);
-  /*****************************************************************************/  
 
   return (
     <>
@@ -75,21 +57,17 @@ function OrderWasDeleted() {
                     </div> */}
                   </div>
                   {
-                    currentUser?.role === "admin" &&
-                      <Link 
-                          className='orderWasDeleted__inicioButton' 
-                          to= {
-                                isDesktopResolution ? "/dashboard" : "/"
-                              }>
-                                { isDesktopResolution ? "Ir a Home" : "Ir al Inicio" }
-                      </Link>
-                  }
-                  {
-                    currentUser?.role === "vendedor" &&
-                      <Link 
-                          className='orderWasDeleted__inicioButton' 
-                          to="/">Ir al Inicio
-                      </Link>
+                    <Link 
+                        className='orderWasDeleted__inicioButton' 
+                        to={
+                            {
+                            pathname: '/search-client',
+                            state: {
+                              openVentana: "CrearPedido"
+                            }
+                        }
+                      }>Crear Nuevo Pedido
+                    </Link>
                   }
                 </div>
               </m.div>
