@@ -60,7 +60,7 @@
 } */
 
 .orderWasDeleted__inicioButton {
-  width: 16rem;
+  width: 20rem;
   background-color: #faba09; 
   color: #071b2e;
   cursor: pointer;
@@ -117,21 +117,21 @@
     align-self: center;
   } */
 
-  .orderWasDeleted__leftPanel {
+  /* .orderWasDeleted__leftPanel {
     padding-left: 5rem;
-  }
+  } */
 }
 
 /* 580px */
 @media (max-width:36.25em) {
   .orderWasDeleted__inicioButton {
-    width: 13rem;
+    width: 20rem;
     font-size: 1.4rem;
   }
 
-  .orderWasDeleted__leftPanel {
+  /* .orderWasDeleted__leftPanel {
     padding-left: 9rem;
-  }
+  } */
   
   .orderWasDeleted__titulo {
     font-size: 3rem;
