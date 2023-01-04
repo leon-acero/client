@@ -221,7 +221,7 @@ function Ticket() {
           // mensaje+=`%0a%0a`;
           if (theBasket.seAplicaDescuento) {
             // mensaje+=`${theBasket.seAplicaDescuento ? `Se Aplica ${SE_APLICA_DESCUENTO}% de Descuento` : ""}%0a`;
-            mensaje+=`${`Se Aplica ${SE_APLICA_DESCUENTO}% de Descuento`}%0a`;
+            mensaje+=`${`Se Aplica ${SE_APLICA_DESCUENTO}% de Descuento`}%0a%0a`;
     
             mensaje+=`Total Venta: ${formateaCurrency(sumTotalSinDescuento)}%0a`;
           
@@ -406,7 +406,7 @@ function Ticket() {
                         totalDescuento > 0 && (
                             
                             <div className="ticket__totalPedido__container">
-                              <span className="ticket__totalPedido__item">*Total Venta: *</span>
+                              <span className="ticket__totalPedido__item">Total Venta: </span>
                               
                               <span className="ticket__totalPedido__currency">
                                 {
