@@ -1,5 +1,6 @@
 import "./ticket.css"
 import axios, { regresaMensajeDeError } from "../../../utils/axios";
+
 import { formateaCurrency, formateaCaracteresEspeciales, formateaFechaEspaniol, formateaTextoWhatsAppABold } from '../../../utils/formatea';
 import { SE_APLICA_DESCUENTO } from '../../../utils/seAplicaDescuento';
 
@@ -13,18 +14,8 @@ import { useNavigatorOnLine } from '../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../components/offlineFallback/OfflineFallback';
 /****************************************************************************/
 
-
-/**************************    Snackbar    **********************************/
-// import Snackbar from '@mui/material/Snackbar';
-// import IconButton from '@mui/material/IconButton';
-// import {FaTimes} from "react-icons/fa";
-// import { Alert } from '@mui/material';
-/****************************************************************************/
-
 import TicketProduct from './ticketProduct/TicketProduct';
 import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
-// import { NumericFormat } from 'react-number-format';
-
 
 
 /**************************    Framer-Motion    *****************************/
@@ -148,8 +139,6 @@ function Ticket() {
       return;
     }
 
-    console.log("useEffect 1")
-
     const fetchClient = async () => {
 
       // solo debe de cargar datos una vez, osea al cargar la pagina
@@ -194,8 +183,11 @@ function Ticket() {
           theBasket?.productOrdered?.forEach( product => {
             // console.log("product", product)
             mensaje+=`SKU: ${product.sku}%0a`;
-            mensaje+=`*${formateaCaracteresEspeciales(product.productName)}*%0a`;
-            mensaje+=`*Cantidad: ${product.quantity}*%0a`;
+
+            mensaje+=`${formateaTextoWhatsAppABold(formateaCaracteresEspeciales(product.productName))}%0a`;
+
+            mensaje+=`${formateaTextoWhatsAppABold("Cantidad:")} ${formateaTextoWhatsAppABold(product.quantity)}%0a`;
+            
             mensaje+=`Precio Unitario: ${formateaCurrency(product.priceDeVenta)}%0a`;
 
             if (theBasket.seAplicaDescuento) {
@@ -289,33 +281,6 @@ function Ticket() {
   }, [clientId, isOnline, fechaActual, theBasket]);
 
 
-  /************************     handleCloseSnackbar    **********************/
-  // Es el handle que se encarga cerrar el Snackbar
-  /**************************************************************************/
-  // const handleCloseSnackbar = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-
-  //   setOpenSnackbar(false);
-  // };
-
-  /*****************************     action    ******************************/
-  // Se encarga agregar un icono de X al SnackBar
-  /**************************************************************************/  
-  // const action = (
-  //   <>
-  //     <IconButton
-  //       size="small"
-  //       aria-label="close"
-  //       color="inherit"
-  //       onClick={handleCloseSnackbar}
-  //     >
-  //       <FaTimes />
-  //     </IconButton>
-  //   </>
-  // );
-
   return (
     <>
       {
@@ -406,21 +371,13 @@ function Ticket() {
                         totalDescuento > 0 && (
                             
                             <div className="ticket__totalPedido__container">
-                              <span className="ticket__totalPedido__item">Total Venta: </span>
+                              <span className="ticket__totalPedido__item">
+                                Total Venta: 
+                              </span>
                               
                               <span className="ticket__totalPedido__currency">
                                 {
                                   formateaCurrency(totalBasket)
-                                  // `$${totalBasket}`
-                                  // <NumericFormat 
-                                  //   value={totalBasket} 
-                                  //   decimalScale={2} 
-                                  //   thousandSeparator="," 
-                                  //   prefix={'$'} 
-                                  //   decimalSeparator="." 
-                                  //   displayType="text" 
-                                  //   renderText={(value) => <span>{value}</span>}
-                                  // />
                                 }
                               </span>
                             </div>
@@ -431,21 +388,13 @@ function Ticket() {
                       {
                         totalDescuento > 0 && (
                             <div className="ticket__totalPedido__container">
-                              <span className="ticket__totalPedido__item">Total Descuento (-): </span>
+                              <span className="ticket__totalPedido__item">
+                                Total Descuento (-): 
+                              </span>
                               
                               <span className="ticket__totalPedido__currency">
                                 {
                                   formateaCurrency(totalDescuento)
-                                  // `- $${totalDescuento}`
-                                  // <NumericFormat 
-                                  //   value={totalDescuento} 
-                                  //   decimalScale={2} 
-                                  //   thousandSeparator="," 
-                                  //   prefix={'$'} 
-                                  //   decimalSeparator="." 
-                                  //   displayType="text" 
-                                  //   renderText={(value) => <span>{value}</span>}
-                                  // />
                                 }
                               </span>
                             </div>
@@ -468,15 +417,6 @@ function Ticket() {
                           {
                             formateaCurrency(totalBasket - totalDescuento)
                           }
-                          {/* <NumericFormat 
-                            value={totalBasket - totalDescuento} 
-                            decimalScale={2} 
-                            thousandSeparator="," 
-                            prefix={'$'} 
-                            decimalSeparator="." 
-                            displayType="text" 
-                            renderText={(value) => <span>{value}</span>}
-                          /> */}
                         </span>         
                       </div>
         
@@ -486,16 +426,17 @@ function Ticket() {
                           en blanco que pueda tener el número de celular para poder
                           mandar el mensaje a Whatsapp */}
                       {
-                        clientData?.cellPhone !== ""
-                        ? 
-                          <a
-                            className="whatsapp_link"
-                            href={`https://wa.me/52${clientData?.cellPhone?.replace(/\s+/g,'')}?text=${mensajeWhatsApp}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            >Mandar Ticket a Whatsapp {clientData.cellPhone}
-                          </a>
-                        : <p className='ticket__avisoClienteSinCelular'>El cliente No tiene Número de Celular asignado, edita al cliente para poder mandarle el Ticket
+                        // clientData?.cellPhone !== ""
+                        // ? 
+                        //   <a
+                        //     className="whatsapp_link"
+                        //     href={`https://wa.me/52${clientData?.cellPhone?.replace(/\s+/g,'')}?text=${mensajeWhatsApp}`}
+                        //     target="_blank"
+                        //     rel="noopener noreferrer"
+                        //     >Mandar Ticket a Whatsapp {clientData.cellPhone}
+                        //   </a>
+                        // : 
+                        <p className='ticket__avisoClienteSinCelular'>El cliente No tiene Número de Celular asignado, edita al cliente para poder mandarle el Ticket
                           </p>
                       }
                     </div>

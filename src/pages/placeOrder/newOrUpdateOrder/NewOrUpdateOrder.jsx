@@ -31,6 +31,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 /**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 import { formateaFechaEspaniol } from '../../../utils/formatea';
+import { Skeleton } from '@mui/material';
 
 const containerVariants = {
   hidden: { 
@@ -202,33 +203,6 @@ export default function NewOrUpdateOrder() {
   }
   /**************************************************************************/
 
-  
-  /************************     handleCloseSnackbar    **********************/
-  // Es el handle que se encarga cerrar el Snackbar
-  /**************************************************************************/
-  // const handleCloseSnackbar = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-
-  //   setOpenSnackbar(false);
-  // };
-
-  /*****************************     action    ******************************/
-  // Se encarga agregar un icono de X al SnackBar
-  /**************************************************************************/
-  // const action = (
-  //   <>
-  //     <IconButton
-  //       size="small"
-  //       aria-label="close"
-  //       color="inherit"
-  //       onClick={handleCloseSnackbar}
-  //     >
-  //       <FaTimes />
-  //     </IconButton>
-  // </>
-  // );
 
 
   return (
@@ -245,18 +219,6 @@ export default function NewOrUpdateOrder() {
               <SnackBarCustom  
                   openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
                   iconoSnackBarDeExito={iconoSnackBarDeExito} />              
-              {/* <Snackbar
-                open={openSnackbar}
-                autoHideDuration={5000}
-                onClose={handleCloseSnackbar}
-              >
-                <Alert 
-                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
-                    action={action}
-                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-                >{mensajeSnackBar}
-                </Alert>
-              </Snackbar> */}
       
               <div className="regresarAPaginaAnterior">
                 <FaArrowLeft onClick={handleGoBackOnePage} className="arrowLeftGoBack" />
@@ -266,30 +228,60 @@ export default function NewOrUpdateOrder() {
                 <div className="form-newOrUpdateOrder">
                   <div className="businessInfo">
                     <div className="editarCliente">
-                      <p className="businessInfo__businessName">{clientData.businessName}</p>
-                      <Link to={"/client/" + clientId}>
-                        <button className="clientListEdit">Editar</button>
-                      </Link>
+
+                      {
+                        clientData._id === 0 
+                        ?
+                          <>
+                            <Skeleton className="businessInfo__skeleton" animation="wave" variant="rounded" width={300} 
+                            height={60} />
+                          </>
+                        :
+                          <>
+                            <p className="businessInfo__businessName">
+                              {clientData.businessName}
+                            </p>
+                            <Link to={"/client/" + clientId}>
+                              <button className="clientListEdit">Editar</button>
+                            </Link>                       
+                          </>
+                      }
                     </div>
 
-                    <p className="businessInfo__clientDetails">
-                      {clientData.ownerName}
-                    </p>
-                    <p className="businessInfo__clientDetails">
-                      {clientData.businessAddress}
-                    </p>
-                    <p className="businessInfo__clientDetails">
-                      Celular: {clientData.cellPhone}
-                    </p>
-                    <p className="businessInfo__clientDetails">
-                      Teléfono Fijo: {clientData.fixedPhone}
-                    </p>
-                    <p className="businessInfo__clientDetails">
-                      Email: {clientData.email}
-                    </p>
-                    <p className="businessInfo__clientDetails">
-                      {clientData.esMayorista ? "Mayorista" : "Minorista"}
-                    </p>
+                    {
+                        clientData._id === 0 
+                        ? 
+                          <>
+                          
+                            <Skeleton className="businessInfo__skeleton" animation="wave" variant="rounded" width={300} height={20}  />
+
+                            <Skeleton className="businessInfo__skeleton" animation="wave" variant="rounded" width={230} height={20}  />
+
+                            <Skeleton className="businessInfo__skeleton" animation="wave" variant="rounded" width={180} height={20}  />
+                          </>
+                        :
+                          <>
+                            <p className="businessInfo__clientDetails">
+                              {clientData.ownerName}
+                            </p>
+                            <p className="businessInfo__clientDetails">
+                              {clientData.businessAddress}
+                            </p>
+                            <p className="businessInfo__clientDetails">
+                              Celular: {clientData.cellPhone}
+                            </p>
+                            <p className="businessInfo__clientDetails">
+                              Teléfono Fijo: {clientData.fixedPhone}
+                            </p>
+                            <p className="businessInfo__clientDetails">
+                              Email: {clientData.email}
+                            </p>
+                            <p className="businessInfo__clientDetails">
+                              {clientData.esMayorista ? "Mayorista" : "Minorista"}
+                            </p>                          
+                          </>
+                    }
+                    
                   </div>
       
                   <div className="ultimosPedidos__container">

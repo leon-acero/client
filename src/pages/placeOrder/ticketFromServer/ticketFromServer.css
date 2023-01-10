@@ -1,4 +1,4 @@
-.ticket {
+.ticketFromServer {
   height: calc(100vh - 5rem);
   flex: 4;
   overflow-x: hidden;
@@ -6,7 +6,11 @@
   color: #333;
 }
 
-.ticket__main {
+.skeletonElement__style {
+  padding: 5rem 5rem;
+}
+
+.ticketFromServer__main {
   padding: 1rem 1rem;
   /* -webkit-box-flex: 1;
   -ms-flex: 1;
@@ -14,7 +18,7 @@
   /* position: relative; */
 }
 
-.ticket__container {
+.ticketFromServer__container {
   margin: 0 auto;
   /* display: flex;
   justify-content: center;
@@ -32,46 +36,46 @@
   padding: 5rem 7rem;
 }
 
-.ticket__title {
+.ticketFromServer__title {
   font-size: 3rem;
   margin-bottom: 2.4rem;  
 }
 
-.ticket__headerInfo {
+.ticketFromServer__headerInfo {
   margin-bottom: 1.5rem;
   font-size: 1.4rem;
   padding: 1rem 0rem;
 }
 
-.ticket__headerInfo-title {
+.ticketFromServer__headerInfo-title {
   color: gray;
 }
 
-.ticket__businessInfo {
+.ticketFromServer__businessInfo {
   margin-bottom: 1.5rem;
   font-size: 1.6rem;
   padding: 1rem 0rem;
 }
 
-.ticket__totalPedido{
+.ticketFromServer__totalPedido{
   margin-top: 3rem;
   margin-bottom: 3rem;
   /* padding: 0 2rem; */
 }
 
-.ticket__totalPedido__container {
+.ticketFromServer__totalPedido__container {
   display: flex;
   justify-content: space-between;
 }
 
-.ticket__totalPedido__item {
+.ticketFromServer__totalPedido__item {
   font-size: 1.6rem;
   font-weight: 600;
   margin-bottom: .7rem;
   width: 24rem;
 }
 
-.ticket__totalPedido__currency {
+.ticketFromServer__totalPedido__currency {
   color: #555;
   width: 20rem;
   font-size: 1.6rem;
@@ -80,7 +84,7 @@
   text-align: right;
 }
 
-.ticket__pedidoTotal {
+.ticketFromServer__pedidoTotal {
   border-top: 1px solid black;
 }
 
@@ -137,13 +141,13 @@
   /* background-color: #fff; */
 }
 
-.ticket__inicioButton-container {
+.ticketFromServer__inicioButton-container {
   display: flex;
   justify-content: center;
 }
 
-.ticket__inicioButton:link, 
-.ticket__inicioButton:visited {
+.ticketFromServer__inicioButton:link, 
+.ticketFromServer__inicioButton:visited {
   /* width: 16rem; */
   /* background-color: #faba09;  */
   background-color: #fff; 
@@ -170,14 +174,14 @@
   align-items: center;
 }
 
-.ticket__inicioButton:hover,
-.ticket__inicioButton:active {
+.ticketFromServer__inicioButton:hover,
+.ticketFromServer__inicioButton:active {
 
   background-color: #fdf2e9;
   border: .3rem solid #fff;
 }
 
-.ticket__avisoClienteSinCelular {
+.ticketFromServer__avisoClienteSinCelular {
   text-align: center;
   font-size: 1.6rem;
   color: red;
@@ -194,8 +198,8 @@
     padding: 1.2rem 1rem;
   } */
 /*
-  .ticket__inicioButton:link, 
-  .ticket__inicioButton:visited {
+  .ticketFromServer__inicioButton:link, 
+  .ticketFromServer__inicioButton:visited {
     font-weight: 500;
     font-size: 1.35rem;
   } */
@@ -209,22 +213,22 @@
 /* 480px */
 @media (max-width:30em) {
   
-  .ticket__title {
+  .ticketFromServer__title {
     font-size: 2.6rem;
     margin-bottom: 2.4rem;  
   }
 
-   .ticket__main {
+   .ticketFromServer__main {
     padding: 1rem 2rem;  
   }
 
-  /* .ticket__container { */
+  /* .ticketFromServer__container { */
     /* margin: 0; */
     /* width: 33rem; */
     /* padding: 5rem 6rem;
   } */
 
-  .ticket__container { 
+  .ticketFromServer__container { 
     padding: 5rem 3rem;
   }
 
@@ -240,12 +244,12 @@
     font-size: 1.4rem;
   }
 
-  .ticket__totalPedido__item {
+  .ticketFromServer__totalPedido__item {
     font-size: 1.4rem;
     font-weight: 600;
   }
   
-  .ticket__totalPedido__currency {
+  .ticketFromServer__totalPedido__currency {
     font-size: 1.4rem;
     font-weight: 600;
   }

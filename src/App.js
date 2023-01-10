@@ -41,6 +41,8 @@ import UpdateOrder from './pages/placeOrder/updateOrder/UpdateOrder';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
 import ResetPassword from './pages/resetPassword/ResetPassword';
 import Ticket from './pages/placeOrder/ticket/Ticket';
+import TicketFromServer from './pages/placeOrder/ticketFromServer/TicketFromServer';
+
 
 import ReportWeeklySalesByMonth from './pages/reports/reportWeeklySalesByMonth/ReportWeeklySalesByMonth';
 import ReportMonthlySalesByYear from './pages/reports/reportMonthlySalesByYear/ReportMonthlySalesByYear';
@@ -124,6 +126,7 @@ function App() {
                       component={NewOrUpdateOrder} />
               <Route path="/update-order/:clientId" component={UpdateOrder} />
               <Route path="/ticket/:clientId" component={Ticket} />
+              <Route path="/ticket-from-server/:orderId" component={TicketFromServer} />
               <Route path="/order-was-deleted" component={OrderWasDeleted} />
 
 
@@ -217,6 +220,7 @@ function App() {
                 <Route path="/new-or-update-order/:clientId" component={NewOrUpdateOrder} />
                 <Route path="/update-order/:clientId" component={UpdateOrder} />
                 <Route path="/ticket/:clientId" component={Ticket} />
+                <Route path="/ticket-from-server/:orderId" component={TicketFromServer} />
                 <Route path="/order-was-deleted" component={OrderWasDeleted} />
 
 

@@ -50,3 +50,9 @@ export const formateaTextoWhatsAppABold = (texto) => {
   return `*${texto}*`;
 }
 
+// Sirve para quitar espacios en blanco, lo uso para quitar 
+// los espacios en blanco de un número de celular para
+// mandar el Ticket por WhatsApp
+export const formateaQuitaEspaciosEnBlanco = (texto) => {
+  return texto?.replace(/\s+/g,'');
+}

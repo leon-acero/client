@@ -17,7 +17,6 @@ import SkeletonElement from '../../../components/skeletons/SkeletonElement';
 /****************************************************************************/
 
 /*******************************    Format     ******************************/
-// import { NumericFormat } from 'react-number-format';
 import { formateaCurrency } from '../../../utils/formatea';
 /****************************************************************************/
 
@@ -26,12 +25,6 @@ import { Skeleton } from '@mui/material';
 import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
-/**************************    Snackbar    **********************************/
-// import Snackbar from '@mui/material/Snackbar';
-// import IconButton from '@mui/material/IconButton';
-// import {FaTimes} from "react-icons/fa";
-// import { Alert } from '@mui/material';
-/****************************************************************************/
 
 
 export default function ReportMonthlySalesByYear() {
@@ -219,33 +212,6 @@ export default function ReportMonthlySalesByYear() {
     avoidRerenderFetchVentasDelNegocio.current = false;
   }
 
-  /************************     handleCloseSnackbar    **********************/
-  // Es el handle que se encarga cerrar el Snackbar
-  /**************************************************************************/
-  // const handleCloseSnackbar = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-
-  //   setOpenSnackbar(false);
-  // };
-
-  /*****************************     action    ******************************/
-  // Se encarga agregar un icono de X al SnackBar
-  /**************************************************************************/  
-  // const action = (
-  //   <>
-  //     <IconButton
-  //       size="small"
-  //       aria-label="close"
-  //       color="inherit"
-  //       onClick={handleCloseSnackbar}
-  //     >
-  //       <FaTimes />
-  //     </IconButton>
-  //   </>
-  // );
-
   // console.log("ReportMonthlySalesByYear render")
 
 
@@ -258,26 +224,15 @@ export default function ReportMonthlySalesByYear() {
             <SnackBarCustom 
                 openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
                 iconoSnackBarDeExito={iconoSnackBarDeExito} />
-            {/* <Snackbar
-              open={openSnackbar}
-              autoHideDuration={5000}
-              onClose={handleCloseSnackbar}
-            >
-              <Alert 
-                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
-                  action={action}
-                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-              >{mensajeSnackBar}
-              </Alert>
-            </Snackbar>      */}
+ 
             {
               anios && (
-                      <select className="yearsList"
-                        onChange={(e)=>handleChange(e)}
-                        value={year}
-                      >
-                        {getAnios()}
-                      </select>
+                  <select className="yearsList"
+                    onChange={(e)=>handleChange(e)}
+                    value={year}
+                  >
+                    {getAnios()}
+                  </select>
               )
             }
             {
@@ -291,9 +246,6 @@ export default function ReportMonthlySalesByYear() {
                       // title={`Venta Anual ${year} de $${Total}`} 
             
                       title={`Venta Anual ${year} de ${formateaCurrency(Total)}`
-                        
-                      // <NumericFormat value={Total} decimalScale={2} thousandSeparator="," prefix={'$'} decimalSeparator="." displayType="text" renderText={(value) => <span>Venta Anual {year} de {value}</span>}
-                      // />
                     } 
                       grid dataKey="SubTotal"
                 />

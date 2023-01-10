@@ -57,6 +57,7 @@ h2 {
 .editarCliente {
   display: flex;
   gap: 2rem;
+  margin-bottom: 2rem;
 }
 
 .businessInfo__businessName {
@@ -74,6 +75,10 @@ h2 {
   font-size: 2rem;
   padding-bottom: 2rem;
   text-align: center;
+}
+
+.businessInfo__skeleton {
+  margin-bottom: .5rem;
 }
 
 .sinPedidosPorEntregar {

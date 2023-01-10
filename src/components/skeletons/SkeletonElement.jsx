@@ -53,7 +53,7 @@ export default function SkeletonElement( { type, width, height } ) {
       <div className={classes}
 
       >
-        <m.div className='candies'style={dimensionStyle}
+        <m.div className='candies' style={dimensionStyle}
           variants={loaderVariants}
           animate={animation}
         >

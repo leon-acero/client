@@ -25,19 +25,11 @@ import SnackBarCustom from '../../../components/snackBarCustom/SnackBarCustom';
 import { stateContext } from '../../../context/StateProvider';
 /****************************************************************************/
 
-/**************************    Snackbar    **********************************/
-// import Snackbar from '@mui/material/Snackbar';
-// import IconButton from '@mui/material/IconButton';
-// import {FaTimes} from "react-icons/fa";
-// import { Alert } from '@mui/material';
-/****************************************************************************/
-
 /**************************    React-Icons    *******************************/
 import {FaShoppingCart, FaSearch} from "react-icons/fa";
 /****************************************************************************/
 
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
-// import { NumericFormat } from 'react-number-format';
 import { formateaCurrency } from '../../../utils/formatea';
 
 /**************************    Framer-Motion    **********************************/
@@ -243,11 +235,13 @@ export default function UpdateOrder() {
         console.log("res.data.data.updateOrder", res.data.data.updateOrder);
   
         const updateOrder = res.data.data.updateOrder;
-  
+ 
         setTheBasket (
           { ...theBasket,
             id:             updateOrder._id,
-            createdAt:      updateOrder.createdAt,
+            // createdAt:      updateOrder.createdAt,
+            // Actualizo la Fecha mas actual en que se realizó el pedido antes de grabar
+            createdAt:      new Date(Date.now()),
             user:           updateOrder.user,
             userName:       updateOrder.userName, 
             clientId:       updateOrder.client,
@@ -443,7 +437,7 @@ export default function UpdateOrder() {
 
   const handleQuantityChange = (e, index) => {
 
-    console.log("e.target.value", e.target.value);
+    // console.log("e.target.value", e.target.value);
 
     if (e.target.value < 0) {
       // console.log("es menor que cero")
@@ -477,9 +471,9 @@ export default function UpdateOrder() {
 
     setOpenModalEstatusPedido (false);
 
-    console.log(theBasket);
+    // console.log("theBasket entrando a handlePlaceOrder", theBasket);
 
-    console.log("theBasket.estatusPedido", theBasket.estatusPedido);
+    // console.log("theBasket.estatusPedido", theBasket.estatusPedido);
 
 
     // Hago unas validaciones antes de crear el Pedido
@@ -516,9 +510,6 @@ export default function UpdateOrder() {
       setOpenSnackbar(true);
     }
 
-    // if (usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 1) {
-    //   setOpenModalEstatusPedido (true);
-    // }
 
     if (!continuarConElPedido)
       return;
@@ -536,15 +527,7 @@ export default function UpdateOrder() {
     if (isSaving)
       return;
 
-    // Actualizo la Fecha mas actual en que se realizó el pedido antes de grabar
-    setTheBasket (       
-      { ...theBasket,
-        productOrdered: [...theBasket.productOrdered ],
-        createdAt: new Date(Date.now())
-      }    
-    );
     
-    // console.log("theBasket", theBasket);
     try {
 
         setIsSaving(true);
@@ -580,10 +563,14 @@ export default function UpdateOrder() {
           res = await axios.put (`/api/v1/sales/${theBasket.id}`, theBasket );
         }
 
-
-        console.log(res)
+        // el res que me regresa Axios en caso de ser un Pedido Nuevo SI tiene el _id del
+        // Pedido, esto me ayuda mucho, ya que theBasket NO cuenta con _id en caso de ser Pedido Nuevo
+        console.log("El Pedido fue grabado con éxito y este es el resultado",res)
 
         setIsSaving(false);
+
+        // console.log("res.data.status", res.data.status);
+        // console.log("res.data.data.sale", res?.data?.data?.sale);
 
         if (res.data.status === 'success') {
 
@@ -612,7 +599,14 @@ export default function UpdateOrder() {
           // }, 5000);
 
 
-          history.replace( `/ticket/${clientId}`, {
+          // history.replace( `/ticket/${clientId}`, {
+          //     clientId,
+          //     theBasket,
+          //     mensajeDeExito 
+          // });
+
+          // Mando el _id del Pedido el cual usare para generar el Ticket de Venta
+          history.replace( `/ticket-from-server/${res?.data?.data?.sale?._id}`, {
               clientId,
               theBasket,
               mensajeDeExito 
@@ -634,8 +628,6 @@ export default function UpdateOrder() {
 
   /**************************    handleAplicaDescuento    **********************/  
   const handleAplicaDescuento = (event) =>  {
-
-    // setSeAplicaDescuento (prevState => !prevState);
 
     setTheBasket (       
       { ...theBasket,
@@ -729,35 +721,6 @@ export default function UpdateOrder() {
     fetchPosts();
   }, [isLoading, isOnline]);
   /****************************************************************************/
-  
-
-  /************************     handleCloseSnackbar    **********************/
-  // Es el handle que se encarga cerrar el Snackbar
-  /**************************************************************************/
-  // const handleCloseSnackbar = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-
-  //   setOpenSnackbar(false);
-  // };
-
-  /*****************************     action    ******************************/
-  // Se encarga agregar un icono de X al SnackBar
-  /**************************************************************************/  
-  // const action = (
-  //   <>
-  //     <IconButton
-  //       size="small"
-  //       aria-label="close"
-  //       color="inherit"
-  //       onClick={handleCloseSnackbar}
-  //     >
-  //       {/* <CloseIcon fontSize="small" /> */}
-  //       <FaTimes />
-  //     </IconButton>
-  //   </>
-  // );
 
 
   /************************     handleDeleteOrder    ************************/
@@ -867,6 +830,22 @@ export default function UpdateOrder() {
     setOpenModalEstatusPedido(true); 
   }
 
+  /***********************     calculaProductosOrdenados    ******************/
+  // Se encarga de calcular cuantos Productos han sido Ordenados por el Cliente
+  /**************************************************************************/  
+  const calculaProductosOrdenados = () => {
+
+    let productosOrdenados = 0;
+
+    theBasket?.productOrdered?.forEach(product => {
+
+      if (product.quantity !== "")
+        productosOrdenados += parseInt(product.quantity, 10);
+    })
+
+    return productosOrdenados;
+  }
+
 
   return (
     <>
@@ -901,19 +880,6 @@ export default function UpdateOrder() {
               <SnackBarCustom 
                   openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
                   iconoSnackBarDeExito={iconoSnackBarDeExito} />    
-
-              {/* <Snackbar
-                open={openSnackbar}
-                autoHideDuration={5000}
-                onClose={handleCloseSnackbar}
-              >
-                <Alert 
-                    severity= {iconoSnackBarDeExito ?  "success" : "error"} 
-                    action={action}
-                    sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-                >{mensajeSnackBar}
-                </Alert>
-              </Snackbar>       */}
       
               <div className="businessInfo">
                 <p className="businessInfo__businessName">{client.businessName}</p>
@@ -946,78 +912,43 @@ export default function UpdateOrder() {
                           className="searchInput" 
                           onChange={e=>setSearchBarQuery(e.target.value.toString().toLowerCase())}
                     />
-                    {/* <SearchIcon className="productSearch" /> */}
                     <FaSearch className="productSearch" />
-                    {/* <button className="productSearch">Buscar</button> */}
                 </div>
       
-                {/* 
-                <div className="estatusPedidoPlaceOrder">
-                  {
-                    usarComponenteComo === "actualizarPedido" && 
-                          <button className="deleteOrderButton"
-                                  disabled={isSaving}
-                                  // onClick={handleDeleteOrder}
-                                  onClick={openDeleteDialog}
-                          >{isDeleting ? 'Borrando...' : 'Borrar'}
-                          </button> 
-                  }
-      
-                  <div className="container-estatusPedido">
-                    <select 
-                        className="container-estatusPedido__select"
-                        id="estatusPedido" 
-                        value={theBasket.estatusPedido}
-                        onChange={handleEstatusPedido}
-                        name="estatusPedido"
-                    >
-                        <option value="1">Por entregar</option>
-                        <option value="2">Entregado</option>
-                    </select>          
-                  </div>
-      
-                  <button className="placeOrderButton"
-                          disabled={isSaving}
-                          onClick={handlePlaceOrder}
-                  >
-                    {usarComponenteComo === "nuevoPedido" &&
-                      (isSaving ? 'Creando...' : 'Crear')
-                    }
-                    {usarComponenteComo === "actualizarPedido" &&
-                      (isSaving ? 'Actualizando...' : 'Actualizar')
-                    }
-                  </button>
-                  
-                </div> */}
               </div>
       
               <div className="makeOrder">
                 <div className="topPanel">
-                  <p className="productListTitle">Catálogo de Productos</p>
-                  <div className="makeOrder__container">
-                    <div className="carousel">
-                      {
-                        // productCatalog?.length === 0 && <Skeleton animation="wave" variant="rounded" width={980} height={320}  />
-                        isLoading && <SkeletonElement type="rectangular" width="auto" height="auto" />
-                      }
-                      {
-                        productCatalog
-                          .filter(product => product.sku.toString().includes(searchBarQuery) ||
-                                            product.productName.toLowerCase().includes(searchBarQuery))
-                          .map((product, index) => 
-                            ( <ProductInput key={index}
-                                      index={index} 
-                                      product={product} 
-                                      addProductToBasket={addProductToBasket}
-                                      esMayorista={esMayorista}
-                                      isSaving={isSaving}
-                                      isDeleting={isDeleting}
-                              />
-                            )
-                          )
-                      }
-                    </div>
-                  </div>  
+                  {
+                    isLoading
+                    ?
+                      <SkeletonElement type="rectangular" 
+                                       width="auto" height="auto" />
+                    :
+                      <>
+                        <p className="productListTitle">Catálogo de Productos</p>
+                        <div className="makeOrder__container">
+                          <div className="carousel">
+                            {  
+                              productCatalog
+                                .filter(product => product.sku.toString().includes(searchBarQuery) ||
+                                                  product.productName.toLowerCase().includes(searchBarQuery))
+                                .map((product, index) => 
+                                  ( <ProductInput key={index}
+                                            index={index} 
+                                            product={product} 
+                                            addProductToBasket={addProductToBasket}
+                                            esMayorista={esMayorista}
+                                            isSaving={isSaving}
+                                            isDeleting={isDeleting}
+                                    />
+                                  )
+                                )
+                            }
+                          </div>
+                        </div>                       
+                      </>
+                  } 
                 </div>
       
                 <div className="bottomPanel">
@@ -1028,7 +959,12 @@ export default function UpdateOrder() {
                       <div className="newOrderIconContainer">
                         <FaShoppingCart className="newOrderIcon" />
                         {
-                          theBasket?.productOrdered?.length > 0 && <span className="newOrderIconBadge">{theBasket?.productOrdered?.length}</span>
+                          theBasket?.productOrdered?.length > 0 && 
+                              <span className="newOrderIconBadge">
+                                {
+                                  calculaProductosOrdenados()
+                                }
+                              </span>
                         }
                       </div>
                     </div>
@@ -1065,73 +1001,49 @@ export default function UpdateOrder() {
                           value={theBasket.seAplicaDescuento}
                           onChange={handleAplicaDescuento}
                       />
-                      <label className="descuento__label" htmlFor="aplicarDescuento">¿Aplicar {SE_APLICA_DESCUENTO}% de Descuento?</label>
+                      <label className="descuento__label" htmlFor="aplicarDescuento">
+                        ¿Aplicar {SE_APLICA_DESCUENTO}% de Descuento?
+                      </label>
                     </div>
       
                     <div className="totalPedido">
           
                       {/* Total Venta */}
                       <div className="totalPedido__container">
-                        <span className="totalPedido__item">Total Venta: </span>
+                        <span className="totalPedido__item">
+                          Total Venta: 
+                        </span>
                         
-                        {/* <span className="totalPedido__currency">{`$${totalBasket}`}</span> */}
                         <span className="totalPedido__currency">
                           {
-                            // `$${totalBasket}`
                             formateaCurrency(totalBasket)
-                            // <NumericFormat 
-                            //         value={totalBasket} 
-                            //         decimalScale={2} 
-                            //         thousandSeparator="," 
-                            //         prefix={'$'} 
-                            //         decimalSeparator="." 
-                            //         displayType="text" 
-                            //         renderText={(value) => <span>{value}</span>}
-                            // />
                           }
                         </span>
                       </div>
       
                       {/* Total Descuento */}
                       <div className="totalPedido__container">
-                        <span className="totalPedido__item">Total Descuento (-): </span>
+                        <span className="totalPedido__item">
+                          Total Descuento (-): 
+                        </span>
                         
                         <span className="totalPedido__currency">
                           {
-                            // `- $${totalDescuento}`
                             formateaCurrency(totalDescuento)
-                            // <NumericFormat 
-                            //         value={totalDescuento} 
-                            //         decimalScale={2} 
-                            //         thousandSeparator="," 
-                            //         prefix={'$'} 
-                            //         decimalSeparator="." 
-                            //         displayType="text" 
-                            //         renderText={(value) => <span>{value}</span>}
-                            // />
                           }
                         </span>
                       </div>
       
                       {/* Total Pedido = Total Venta - Total Descuento */}
                       <div className="totalPedido__container">
-                        <span className="totalPedido__item pedidoTotal">Total Pedido: </span>
+                        <span className="totalPedido__item pedidoTotal">
+                          Total Pedido: 
+                        </span>
                         
-                        {/* <span className="totalPedido__currency pedidoTotal">{`$${totalBasket - totalDescuento}`}</span>          */}
                         <span className="totalPedido__currency pedidoTotal">
-                          {/* {`$${totalBasket - totalDescuento}`} */}
                           {
                             formateaCurrency(totalBasket - totalDescuento)
                           }
-                          {/* <NumericFormat 
-                                    value={totalBasket - totalDescuento} 
-                                    decimalScale={2} 
-                                    thousandSeparator="," 
-                                    prefix={'$'} 
-                                    decimalSeparator="." 
-                                    displayType="text" 
-                                    renderText={(value) => <span>{value}</span>}
-                          /> */}
                         </span>         
                       </div>
                     </div>
@@ -1164,7 +1076,9 @@ export default function UpdateOrder() {
                   }
       
                   <div className="container-estatusPedido">
-                    <label htmlFor="estatusPedido">Estatus Pedido</label>
+                    <label htmlFor="estatusPedido">
+                      Estatus Pedido
+                    </label>
                     <select 
                         disabled={isSaving || isDeleting}
                         className="container-estatusPedido__select"
@@ -1217,6 +1131,5 @@ export default function UpdateOrder() {
         !isOnline && <OfflineFallback />
       }
     </>
-
   )
 }
