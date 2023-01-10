@@ -14,6 +14,7 @@ import axios from "axios";
     // timeout: 60000
   })
 
+  // Manda el Mensaje de Error a Axios
   export const regresaMensajeDeError = (err) => {
 
     let mensajeSnackBar = "";
