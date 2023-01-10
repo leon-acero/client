@@ -426,17 +426,16 @@ function Ticket() {
                           en blanco que pueda tener el número de celular para poder
                           mandar el mensaje a Whatsapp */}
                       {
-                        // clientData?.cellPhone !== ""
-                        // ? 
-                        //   <a
-                        //     className="whatsapp_link"
-                        //     href={`https://wa.me/52${clientData?.cellPhone?.replace(/\s+/g,'')}?text=${mensajeWhatsApp}`}
-                        //     target="_blank"
-                        //     rel="noopener noreferrer"
-                        //     >Mandar Ticket a Whatsapp {clientData.cellPhone}
-                        //   </a>
-                        // : 
-                        <p className='ticket__avisoClienteSinCelular'>El cliente No tiene Número de Celular asignado, edita al cliente para poder mandarle el Ticket
+                        clientData?.cellPhone !== ""
+                        ? 
+                          <a
+                            className="whatsapp_link"
+                            href={`https://wa.me/52${clientData?.cellPhone?.replace(/\s+/g,'')}?text=${mensajeWhatsApp}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >Mandar Ticket a Whatsapp {clientData.cellPhone}
+                          </a>
+                        : <p className='ticket__avisoClienteSinCelular'>El cliente No tiene Número de Celular asignado, edita al cliente para poder mandarle el Ticket
                           </p>
                       }
                     </div>
