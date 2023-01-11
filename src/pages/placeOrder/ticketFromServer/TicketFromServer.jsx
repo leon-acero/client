@@ -150,6 +150,8 @@ function TicketFromServer() {
       avoidRerenderfetchTicketDeVenta.current = true;
 
       try {
+
+        console.log("orderId", orderId);
    
         const res = await axios.get (`/api/v1/clients/${clientId}`);
   

@@ -534,6 +534,7 @@ export default function UpdateOrder() {
 
         let mensajeDeExito = "";
         let res;
+        let orderId = "";
 
         if (usarComponenteComo === "nuevoPedido") {
           console.log("nuevoPedido")
@@ -605,8 +606,17 @@ export default function UpdateOrder() {
           //     mensajeDeExito 
           // });
 
+          // Por alguna razon es necesario hacer esto para que no marque error
+          // al crear un Nuevo Pedido
+          if (usarComponenteComo === "nuevoPedido") {
+            orderId = res?.data?.data?.sale[0]?._id;
+          }
+          else if (usarComponenteComo === "actualizarPedido") {
+            orderId = res?.data?.data?.sale?._id;
+          }
+
           // Mando el _id del Pedido el cual usare para generar el Ticket de Venta
-          history.replace( `/ticket-from-server/${res?.data?.data?.sale?._id}`, {
+          history.replace( `/ticket-from-server/${orderId}`, {
               clientId,
               theBasket,
               mensajeDeExito 
