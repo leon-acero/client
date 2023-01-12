@@ -279,10 +279,15 @@ function App() {
                   <Logout />
                 </Route>
 
+                {
+                  console.log("NotFound 1")
+                }
                 <Route path="*">
                   <PageNotFound />
                 </Route>
-
+                {
+                  console.log("NotFound 2")
+                }
               </Switch>
 
           </div>

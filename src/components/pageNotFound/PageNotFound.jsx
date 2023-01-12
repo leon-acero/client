@@ -31,6 +31,7 @@ function PageNotFound() {
   const isOnline = useNavigatorOnLine();
   /*****************************************************************************/
 
+  console.log("NO ENCONTRE")
   return (
 
     <>
