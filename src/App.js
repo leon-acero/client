@@ -17,6 +17,7 @@ import SplashScreen from './components/splashScreen/SplashScreen';
 import SplashScreenAlt from './components/splashScreenAlt/SplashScreenAlt';
 import PageNotFound from './components/pageNotFound/PageNotFound';
 import OrderWasDeleted from './components/orderWasDeleted/OrderWasDeleted';
+import SearchProduct from './components/searchProduct/SearchProduct';
 /***********************************************************************/
 
 
@@ -32,7 +33,6 @@ import NewProduct from "./pages/catalogs/create/newProduct/NewProduct";
 
 import ClientList from "./pages/catalogs/list/clientList/ClientList";
 import ProductList from "./pages/catalogs/list/productList/ProductList";
-import SearchProduct from './pages/catalogs/edit/product/searchProduct/SearchProduct';
 
 import SearchClient from './pages/placeOrder/searchClient/SearchClient';
 // import NewOrder from './pages/placeOrder/newOrder/NewOrder';

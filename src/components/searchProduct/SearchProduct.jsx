@@ -1,9 +1,9 @@
 import "./searchProduct.css"
-import axios, { regresaMensajeDeError } from '../../../../../utils/axios';
+import axios, { regresaMensajeDeError } from '../../utils/axios'
 
 /*************************    Offline/Online     ****************************/
-import { useNavigatorOnLine } from '../../../../../hooks/useNavigatorOnLine';
-import OfflineFallback from '../../../../../components/offlineFallback/OfflineFallback';
+import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
+import OfflineFallback from '../offlineFallback/OfflineFallback';
 /****************************************************************************/
 
 /*******************************    React     *******************************/
@@ -11,9 +11,9 @@ import { useState, useRef, useEffect } from 'react'
 /****************************************************************************/
 
 /***************************    Components     ******************************/
-import TableItem from '../../../../../components/tableItem/TableItem';
-import SkeletonElement from '../../../../../components/skeletons/SkeletonElement';
-import SnackBarCustom from '../../../../../components/snackBarCustom/SnackBarCustom';
+import TableItem from '../tableItem/TableItem';
+import SkeletonElement from '../skeletons/SkeletonElement';
+import SnackBarCustom from '../snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
 /**************************    Framer-Motion    *****************************/
