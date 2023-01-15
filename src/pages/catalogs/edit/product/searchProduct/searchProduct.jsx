@@ -16,13 +16,6 @@ import SkeletonElement from '../../../../../components/skeletons/SkeletonElement
 import SnackBarCustom from '../../../../../components/snackBarCustom/SnackBarCustom';
 /****************************************************************************/
 
-/**************************    Snackbar    **********************************/
-// import Snackbar from '@mui/material/Snackbar';
-// import IconButton from '@mui/material/IconButton';
-// import {FaTimes} from "react-icons/fa";
-// import { Alert } from '@mui/material';
-/****************************************************************************/
-
 /**************************    Framer-Motion    *****************************/
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 
