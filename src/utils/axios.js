@@ -4,7 +4,7 @@ import axios from "axios";
   // export const BASE_URL = 'http://127.0.0.1:8000';
   // export const FRONT_END_URL = 'http://127.0.0.1:3000';
   
-  // SERVIDORES DE PRODUCTION!!
+  // SERVIDORES DE PRODUCTION
   export const BASE_URL = 'https://eljuanjo-dulces-api.onrender.com';
   export const FRONT_END_URL = 'https://eljuanjo-dulceria.onrender.com';
 
