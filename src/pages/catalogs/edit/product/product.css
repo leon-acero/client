@@ -125,6 +125,11 @@
     margin-top: 2rem;
 }
 
+.catalog_businessInfo__skeleton {
+  margin-bottom: .5rem;
+  margin-right: 4rem;
+}
+
 .productUpdateItem{
     display: flex;
     flex-direction: column;
@@ -221,6 +226,10 @@
   .productUpdateForm{ 
     flex-direction: column;
   } 
+
+  .catalog_businessInfo__skeleton {
+    margin-right: 0;
+  }
 }
 
 /* 480px */

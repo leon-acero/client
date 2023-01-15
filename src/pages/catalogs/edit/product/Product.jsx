@@ -4,7 +4,7 @@ import defaultCameraImage from "../../../../camera.webp"
 import axios, { regresaMensajeDeError } from '../../../../utils/axios';
 import {clsx} from "clsx";
 
-/****************************************************************************/
+/*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../../../hooks/useNavigatorOnLine';
 import OfflineFallback from '../../../../components/offlineFallback/OfflineFallback';
 /****************************************************************************/
@@ -30,6 +30,8 @@ import ItemShowInfo from '../../../../components/itemShowInfo/ItemShowInfo';
 import SnackBarCustom from '../../../../components/snackBarCustom/SnackBarCustom';
 import { formateaCurrency, formateaThousand } from '../../../../utils/formatea';
 /****************************************************************************/
+
+import { Skeleton } from '@mui/material';
 
 
 export default function Product() {
@@ -67,8 +69,8 @@ export default function Product() {
   const [fileBlob, setFileBlob] = useState(null);
   
   const [isSaving, setIsSaving] = useState(false);
-  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
 
+  const [iconoSnackBarDeExito, setIconoSnackBarDeExito] = useState (true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [mensajeSnackBar, setMensajeSnackBar] = useState("");
   
@@ -313,19 +315,6 @@ export default function Product() {
             <SnackBarCustom 
                 openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
                 iconoSnackBarDeExito={iconoSnackBarDeExito} />
-
-            {/* <Snackbar
-              open={openSnackbar}
-              autoHideDuration={5000}
-              onClose={handleCloseSnackbar}
-            >
-              <Alert 
-                  severity= {iconoSnackBarDeExito ?  "success" : "error"} 
-                  action={action}
-                  sx={{ fontSize: '1.4rem', backgroundColor:'#333', color: 'white', }}
-              >{mensajeSnackBar}
-              </Alert>
-            </Snackbar> */}
       
             <div className="productTitleContainer">
               <h1 className="productTitle">Editar Producto</h1>
@@ -335,229 +324,282 @@ export default function Product() {
             </div>
             <div className="productContainer">
               <div className="productShow">
-                <div className="productShowTop">
-                  <img
-                    className="productShowImg"
-                    src= {
-                            // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
-                            // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
-                            fileBlob ? fileBlob : productData.imageCover ?
-                            `${productData.imageCover}` : defaultCameraImage
-                          }
-                    alt="Imagen del Producto o Imagen Default"
-                  />            
+                {
+                  productData.productName !== "" 
+                  ?
+                    <>
+                      <div className="productShowTop">
+                        <img
+                          className="productShowImg"
+                          src= {
+                                  fileBlob ? fileBlob : productData.imageCover ?
+                                  `${productData.imageCover}` : defaultCameraImage
+                                }
+                          alt="Imagen del Producto o Imagen Default"
+                        />            
+            
+                        <div className="productShowTopTitle">
+                          <span className="productShowProductname">{productData.productName}</span>
+                          <span className="productShowProductTitle">SKU: {productData.sku}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="productShowBottom">
+                        <span className="productShowTitle">Detalle</span>
+                        <ItemShowInfo CustomIcon={FaDollyFlatbed} 
+                            labelData= {"Inventario Actual:"} 
+                            itemData={formateaThousand(productData.inventarioActual)} 
+                            alinearSpaceBetween={true} />
+
+                        <ItemShowInfo CustomIcon={FaDollyFlatbed} 
+                            labelData= {"Inventario Mínimo:"} 
+                            itemData={formateaThousand(productData.inventarioMinimo)} 
+                            alinearSpaceBetween={true} />
       
-                  <div className="productShowTopTitle">
-                    <span className="productShowProductname">{productData.productName}</span>
-                    <span className="productShowProductTitle">SKU: {productData.sku}</span>
-                  </div>
-                </div>
-                
-                <div className="productShowBottom">
-                  <span className="productShowTitle">Detalle</span>
-                  <ItemShowInfo CustomIcon={FaDollyFlatbed} 
-                      labelData= {"Inventario Actual:"} 
-                      itemData={formateaThousand(productData.inventarioActual)} 
-                      alinearSpaceBetween={true} />
+                        <ItemShowInfo CustomIcon={FaDollarSign} 
+                            labelData= {"Precio Menudeo:"} 
+                            itemData={formateaCurrency(productData.priceMenudeo)} 
+                            alinearSpaceBetween={true} />
 
-                  <ItemShowInfo CustomIcon={FaDollyFlatbed} 
-                      labelData= {"Inventario Mínimo:"} 
-                      itemData={formateaThousand(productData.inventarioMinimo)} 
-                      alinearSpaceBetween={true} />
- 
-                  <ItemShowInfo CustomIcon={FaDollarSign} 
-                      labelData= {"Precio Menudeo:"} 
-                      itemData={formateaCurrency(productData.priceMenudeo)} 
-                      alinearSpaceBetween={true} />
+                        <ItemShowInfo CustomIcon={FaDollarSign} 
+                            labelData= {"Precio Mayoreo:"} 
+                            itemData={formateaCurrency(productData.priceMayoreo)} 
+                            alinearSpaceBetween={true} />
+      
+                        <ItemShowInfo CustomIcon={FaDollarSign} 
+                            labelData= {"Costo:"} 
+                            itemData={formateaCurrency(productData.costo)} 
+                            alinearSpaceBetween={true} />
+        
+                        <ItemShowInfo CustomIcon={FaChrome} 
+                            labelData={""} itemData={productData.slug} 
+                            alinearSpaceBetween={false} />
 
-                  <ItemShowInfo CustomIcon={FaDollarSign} 
-                      labelData= {"Precio Mayoreo:"} 
-                      itemData={formateaCurrency(productData.priceMayoreo)} 
-                      alinearSpaceBetween={true} />
- 
-                  <ItemShowInfo CustomIcon={FaDollarSign} 
-                      labelData= {"Costo:"} 
-                      itemData={formateaCurrency(productData.costo)} 
-                      alinearSpaceBetween={true} />
-  
-                  <ItemShowInfo CustomIcon={FaChrome} 
-                      labelData={""} itemData={productData.slug} 
-                      alinearSpaceBetween={false} />
-  
-                </div>
+                      </div>
+                    </>
+                  :
+                    <>
+                      <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="circular" width="4rem" height="4rem" 
+                      />  
+                      <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="25rem" height="2rem" 
+                      />     
+                      <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="25rem" height="2rem" 
+                      />  
+                      <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="21rem" height="2rem" 
+                      />  
+                      <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="17rem" height="2rem" 
+                      />                 
+                    </>
+                }
+
               </div>
               <div className="productUpdate">
                 <span className="productUpdateTitle">Editar</span>
       
                 <form className="productUpdateForm" onSubmit={handleSubmit}>
                   <div className="productUpdateLeft">
-                    <div className="productUpdateItem">
-                      <label>SKU *</label>
-                      <input
-                        // type="text"
-                        placeholder={productData.sku}
-                        className="productUpdateInput"                  
-                        onChange={handleChange}
-                        name="sku"
-                        value={productData.sku || ''}
-                        required
-                        onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter. El valor mínimo es 1 y el máximo es 999,999')} 
-                        onInput={e=> e.target.setCustomValidity('')} 
-                        // minLength="1"
-                        // maxLength="5"
-                        autoComplete="off"
 
-                        type="number" 
-                        pattern="/[^0-9]|(?<=\..*)\./g" 
-                        step="1" 
-                        min="1"
-                        max="999999"
-                      />
-                    </div>              
-                    <div className="productUpdateItem">
-                      <label>Producto *</label>
-                      <input
-                        type="text"
-                        placeholder={productData.productName}
-                        className="productUpdateInput"                  
-                        onChange={handleChange}
-                        name="productName"
-                        value={productData.productName || ''}
-                        required
-                        onInvalid={e=> e.target.setCustomValidity('El Nombre del Producto debe tener entre 5 y 40 caracteres')} 
-                        onInput={e=> e.target.setCustomValidity('')} 
-                        minLength="5"
-                        maxLength="40"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div className="productUpdateItem">
-                      <label>Inventario Actual *</label>
-                      <input
-                        type="number" 
-                        pattern="/[^0-9]|(?<=\..*)\./g" 
-                        step="1" 
-                        min="1"
-                        max="999999"
-                        placeholder={productData.inventarioActual}
-                        className={clsx (
-                          { 
-                            inventarioActualNegativo: parseInt(productData.inventarioActual, 10) < parseInt(productData.inventarioMinimo, 10), 
-                            productUpdateInput: true,
-                          })}
-                        onChange={handleChange}
-                        onKeyPress={(e)=>handleNumbers(e)}
-                        name="inventarioActual"
-                        value={productData.inventarioActual || ''}
-                        required
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual. El valor más alto que puedes capturar es 999,999')} 
-                        onInput={e=> e.target.setCustomValidity('')}
-                        autoComplete="off" 
-                      />
-                    </div>
-                    <div className="productUpdateItem">
-                      <label>Inventario Minimo *</label>
-                      <input
-                        type="number" 
-                        pattern="/[^0-9]|(?<=\..*)\./g" 
-                        step="1" 
-                        min="1"
-                        max="999999"
-                        placeholder={productData.inventarioMinimo}
-                        className="productUpdateInput"
-                        onChange={handleChange}
-                        onKeyPress={(e)=>handleNumbers(e)}
-                        name="inventarioMinimo"
-                        value={productData.inventarioMinimo || ''}  
-                        required         
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo. El valor más alto que puedes capturar es 999,999')} 
-                        onInput={e=> e.target.setCustomValidity('')}
-                        autoComplete="off"                 
-                      />
-                    </div>
-                    <div className="productUpdateItem">
-                      <label>Precio Menudeo *</label>
-                      <input
-                        type="number" 
-                        pattern="/[^0-9.]|(?<=\..*)\./g" 
-                        step="0.01" 
-                        min="1"
-                        max="999999"
-                        placeholder={productData.priceMenudeo}
-                        className="productUpdateInput"
-                        onChange={handleChange}
-                        onKeyPress={(e)=>handleNumbers(e)}
-                        name="priceMenudeo"
-                        value={productData.priceMenudeo || ''}
-                        required 
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo. El valor máximo es $999,999')} 
-                        onInput={e=> e.target.setCustomValidity('')}
-                        autoComplete="off"                
-                      />
-                    </div>
-                    <div className="productUpdateItem">
-                      <label>Precio Mayoreo</label>
-                      <input
-                        type="number" 
-                        pattern="/[^0-9.]|(?<=\..*)\./g" 
-                        step="0.01" 
-                        min="1"
-                        max="999999"
-                        placeholder={productData.priceMayoreo}
-                        className="productUpdateInput"
-                        onChange={handleChange}
-                        onKeyPress={(e)=>handleNumbers(e)}
-                        name="priceMayoreo"
-                        value={productData.priceMayoreo || ''}
-                        autoComplete="off"                  
-                      />
-                    </div>              
-                    <div className="productUpdateItem">
-                      <label>Costo *</label>
-                      <input
-                        type="number" 
-                        pattern="/[^0-9.]|(?<=\..*)\./g" 
-                        step="0.01" 
-                        min="1"
-                        max="999999"
-                        placeholder={productData.costo}
-                        className="productUpdateInput"
-                        onChange={handleChange}
-                        onKeyPress={(e)=>handleNumbers(e)}
-                        name="costo"
-                        value={productData.costo || ''}
-                        required 
-                        onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto. El valor máximo es $999,999')} 
-                        onInput={e=> e.target.setCustomValidity('')}
-                        autoComplete="off"                 
-                      />
-                    </div>
+                  {
+                      productData.sku !== 0 
+                      ? 
+                        <>
+                          <div className="productUpdateItem">
+                            <label>SKU *</label>
+                            <input
+                              // type="text"
+                              placeholder={productData.sku}
+                              className="productUpdateInput"                  
+                              onChange={handleChange}
+                              name="sku"
+                              value={productData.sku || ''}
+                              required
+                              onInvalid={e=> e.target.setCustomValidity('El SKU debe tener por lo menos 1 caracter. El valor mínimo es 1 y el máximo es 999,999')} 
+                              onInput={e=> e.target.setCustomValidity('')} 
+                              // minLength="1"
+                              // maxLength="5"
+                              autoComplete="off"
+
+                              type="number" 
+                              pattern="/[^0-9]|(?<=\..*)\./g" 
+                              step="1" 
+                              min="1"
+                              max="999999"
+                            />
+                          </div>              
+                          <div className="productUpdateItem">
+                            <label>Producto *</label>
+                            <input
+                              type="text"
+                              placeholder={productData.productName}
+                              className="productUpdateInput"                  
+                              onChange={handleChange}
+                              name="productName"
+                              value={productData.productName || ''}
+                              required
+                              onInvalid={e=> e.target.setCustomValidity('El Nombre del Producto debe tener entre 5 y 40 caracteres')} 
+                              onInput={e=> e.target.setCustomValidity('')} 
+                              minLength="5"
+                              maxLength="40"
+                              autoComplete="off"
+                            />
+                          </div>
+                          <div className="productUpdateItem">
+                            <label>Inventario Actual *</label>
+                            <input
+                              type="number" 
+                              pattern="/[^0-9]|(?<=\..*)\./g" 
+                              step="1" 
+                              min="1"
+                              max="999999"
+                              placeholder={productData.inventarioActual}
+                              className={clsx (
+                                { 
+                                  inventarioActualNegativo: parseInt(productData.inventarioActual, 10) < parseInt(productData.inventarioMinimo, 10), 
+                                  productUpdateInput: true,
+                                })}
+                              onChange={handleChange}
+                              onKeyPress={(e)=>handleNumbers(e)}
+                              name="inventarioActual"
+                              value={productData.inventarioActual || ''}
+                              required
+                              onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Actual. El valor más alto que puedes capturar es 999,999')} 
+                              onInput={e=> e.target.setCustomValidity('')}
+                              autoComplete="off" 
+                            />
+                          </div>
+                          <div className="productUpdateItem">
+                            <label>Inventario Minimo *</label>
+                            <input
+                              type="number" 
+                              pattern="/[^0-9]|(?<=\..*)\./g" 
+                              step="1" 
+                              min="1"
+                              max="999999"
+                              placeholder={productData.inventarioMinimo}
+                              className="productUpdateInput"
+                              onChange={handleChange}
+                              onKeyPress={(e)=>handleNumbers(e)}
+                              name="inventarioMinimo"
+                              value={productData.inventarioMinimo || ''}  
+                              required         
+                              onInvalid={e=> e.target.setCustomValidity('Escribe el Inventario Mínimo. El valor más alto que puedes capturar es 999,999')} 
+                              onInput={e=> e.target.setCustomValidity('')}
+                              autoComplete="off"                 
+                            />
+                          </div>
+                          <div className="productUpdateItem">
+                            <label>Precio Menudeo *</label>
+                            <input
+                              type="number" 
+                              pattern="/[^0-9.]|(?<=\..*)\./g" 
+                              step="0.01" 
+                              min="1"
+                              max="999999"
+                              placeholder={productData.priceMenudeo}
+                              className="productUpdateInput"
+                              onChange={handleChange}
+                              onKeyPress={(e)=>handleNumbers(e)}
+                              name="priceMenudeo"
+                              value={productData.priceMenudeo || ''}
+                              required 
+                              onInvalid={e=> e.target.setCustomValidity('Escribe el Precio al Menudeo. El valor máximo es $999,999')} 
+                              onInput={e=> e.target.setCustomValidity('')}
+                              autoComplete="off"                
+                            />
+                          </div>
+                          <div className="productUpdateItem">
+                            <label>Precio Mayoreo</label>
+                            <input
+                              type="number" 
+                              pattern="/[^0-9.]|(?<=\..*)\./g" 
+                              step="0.01" 
+                              min="1"
+                              max="999999"
+                              placeholder={productData.priceMayoreo}
+                              className="productUpdateInput"
+                              onChange={handleChange}
+                              onKeyPress={(e)=>handleNumbers(e)}
+                              name="priceMayoreo"
+                              value={productData.priceMayoreo || ''}
+                              autoComplete="off"                  
+                            />
+                          </div>              
+                          <div className="productUpdateItem">
+                            <label>Costo *</label>
+                            <input
+                              type="number" 
+                              pattern="/[^0-9.]|(?<=\..*)\./g" 
+                              step="0.01" 
+                              min="1"
+                              max="999999"
+                              placeholder={productData.costo}
+                              className="productUpdateInput"
+                              onChange={handleChange}
+                              onKeyPress={(e)=>handleNumbers(e)}
+                              name="costo"
+                              value={productData.costo || ''}
+                              required 
+                              onInvalid={e=> e.target.setCustomValidity('Escribe el Costo del Producto. El valor máximo es $999,999')} 
+                              onInput={e=> e.target.setCustomValidity('')}
+                              autoComplete="off"                 
+                            />
+                          </div>
+                        </>
+                      :
+                        <>
+                          <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="25rem" height="2rem" 
+                          />   
+
+                          <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="25rem" height="2rem" 
+                          />    
+
+                          <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="21rem" height="2rem" 
+                          />       
+                          
+                          <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="17rem" height="2rem" 
+                          />
+                
+                      </>
+                  }
+
+
                   </div>
       
                   <div className="productUpdateRight">
-                    <div className="productUpdateUpload">
-                      <img
-                        className="productUpdateImg"
-                        src= {
-                                // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
-                                // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
-                                fileBlob ? fileBlob : productData.imageCover ?
-                                `${productData.imageCover}` : defaultCameraImage
-                            }
-                        alt="Imagen del Producto o Imagen Default"
-                      />                
-                      <label htmlFor="photo">
-                        <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer", "color": "#343a40"}} />
-                      </label>
-                      <input  type="file" 
-                              accept="image/*" 
-                              id="photo" 
-                              name="photo" 
-                              style={{ display: "none" }} 
-                              onChange={(e)=>handleImageCoverChange(e)}
-                      />
-                    </div>
-                    <button className="productUpdateButton" disabled={isSaving}>{isSaving ? 'Actualizando...' : 'Actualizar'}</button>
+
+                    {
+                      productData.productName !== ""
+                      ?
+                        <>   
+                          <div className="productUpdateUpload">
+                            <img
+                              className="productUpdateImg"
+                              src= {
+                                      // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/products/${productData.imageCover}`
+                                      // fileBlob ? fileBlob : `${BASE_URL}/img/products/${productData.imageCover}`
+                                      fileBlob ? fileBlob : productData.imageCover ?
+                                      `${productData.imageCover}` : defaultCameraImage
+                                  }
+                              alt="Imagen del Producto o Imagen Default"
+                            />                
+                            <label htmlFor="photo">
+                              <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer", "color": "#343a40"}} />
+                            </label>
+                            <input  type="file" 
+                                    accept="image/*" 
+                                    id="photo" 
+                                    name="photo" 
+                                    style={{ display: "none" }} 
+                                    onChange={(e)=>handleImageCoverChange(e)}
+                            />
+                          </div>
+                          <button className="productUpdateButton" disabled={isSaving}>{isSaving ? 'Actualizando...' : 'Actualizar'}</button>                        
+                        </>
+                      :
+                        <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="20rem" height="20rem" 
+                        />
+                    }                 
+
                   </div>
                 </form>
               </div>
