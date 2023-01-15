@@ -485,7 +485,7 @@ export default function Client() {
                             />
                           </div>
 
-                          {/* <div className="clientUpdateItem">
+                          <div className="clientUpdateItem">
                             <label>Teléfono Fijo</label>
                             <input
                               className="clientUpdateInput"
@@ -532,7 +532,7 @@ export default function Client() {
                                 name="esMayorista"
                                 value={clientData.esMayorista}
                             />
-                          </div> */}
+                          </div>
                           {/* <div className="clientUpdateItem">
                             <label>Es Mayorista</label>
                             <select className="newClientSelect" name="esmayorista" id="esmayorista">
