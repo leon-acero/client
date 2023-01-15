@@ -147,6 +147,8 @@ export default function Login() {
       //   }	
       // });
 
+      console.log("voy a loggear")
+
       setIsLoading(true);
 
       const res = await axios.post ('/api/v1/users/login', 

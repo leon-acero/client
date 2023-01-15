@@ -113,7 +113,7 @@ export default function SearchProduct() {
           setMensajeSnackBar("No se encontró un Producto con esa búsqueda.")
           setOpenSnackbar(true);
         }
-        inputRef?.current?.focus();
+        // inputRef?.current?.focus();
       }
 
     }

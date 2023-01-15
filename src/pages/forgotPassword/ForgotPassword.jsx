@@ -139,7 +139,7 @@ function ForgotPassword() {
         //   setMensajeSnackBar("No se encontró un Negocio con esa búsqueda.")
         //   setOpenSnackbar(true);
         // }
-        inputRef?.current?.focus();
+        // inputRef?.current?.focus();
       }
 
     }

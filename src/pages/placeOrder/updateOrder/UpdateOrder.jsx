@@ -26,7 +26,7 @@ import { stateContext } from '../../../context/StateProvider';
 /****************************************************************************/
 
 /**************************    React-Icons    *******************************/
-import {FaShoppingCart, FaSearch} from "react-icons/fa";
+import {FaShoppingCart, FaSearch, FaTimes} from "react-icons/fa";
 /****************************************************************************/
 
 import axios, { regresaMensajeDeError } from '../../../utils/axios';
@@ -185,6 +185,8 @@ export default function UpdateOrder() {
   const [productCatalog, setProductCatalog] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [showFaTimes, setShowFaTimes] = useState(false);
 
   // const [estatusPedido, setEstatusPedido] = useState("porEntregar");
 
@@ -856,6 +858,29 @@ export default function UpdateOrder() {
     return productosOrdenados;
   }
 
+  /************************     handleSearchTyping    *****************************/
+  // Se encarga de guardar en setSearchBarQuery, la informacion de cada input
+  /**************************************************************************/
+  function handleSearchTyping(event) {
+    // console.log(event)
+
+    if (event.target.value.toString().toLowerCase() !== "")
+      setShowFaTimes(true)
+    else
+      setShowFaTimes(false)
+
+    setSearchBarQuery(event.target.value.toString().toLowerCase());
+  }
+
+
+  /************************     handleClearSearch    *****************************/
+  // Se encarga de borrar el contenido de la busqueda de Prodductos y por consecuencia
+  // el icono de FaTime cambia a FaSearch
+  /**************************************************************************/
+  function handleClearSearch () {
+    setSearchBarQuery("");
+    setShowFaTimes(false);
+  }
 
   return (
     <>
@@ -915,14 +940,32 @@ export default function UpdateOrder() {
       
               <div className="salesHeader">
                 <div className="searchBar">
-                    <input 
-                          disabled={isSaving || isDeleting}
-                          type="text" 
-                          placeholder='Buscar Producto...'
-                          className="searchInput" 
-                          onChange={e=>setSearchBarQuery(e.target.value.toString().toLowerCase())}
-                    />
-                    <FaSearch className="productSearch" />
+                  <table className="searchBar__table">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <input 
+                            disabled={isSaving || isDeleting}
+                            type="text" 
+                            placeholder='Buscar Producto...'
+                            className="searchInput" 
+                            onChange={handleSearchTyping}
+                            value={searchBarQuery}
+                          />
+                        </td>
+                        <td>
+                          <button className="searchBar__button">
+                          {
+                            showFaTimes 
+                            ? <FaTimes className="productSearch" 
+                                       onClick={handleClearSearch} />
+                            : <FaSearch className="productSearch" />
+                          }
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
       
               </div>

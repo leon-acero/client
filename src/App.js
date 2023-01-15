@@ -32,7 +32,7 @@ import NewProduct from "./pages/catalogs/create/newProduct/NewProduct";
 
 import ClientList from "./pages/catalogs/list/clientList/ClientList";
 import ProductList from "./pages/catalogs/list/productList/ProductList";
-import SearchProduct from './pages/catalogs/edit/product/searchProduct/searchProduct';
+import SearchProduct from './pages/catalogs/edit/product/searchProduct/SearchProduct';
 
 import SearchClient from './pages/placeOrder/searchClient/SearchClient';
 // import NewOrder from './pages/placeOrder/newOrder/NewOrder';
@@ -279,15 +279,10 @@ function App() {
                   <Logout />
                 </Route>
 
-                {
-                  console.log("NotFound 1")
-                }
                 <Route path="*">
                   <PageNotFound />
                 </Route>
-                {
-                  console.log("NotFound 2")
-                }
+
               </Switch>
 
           </div>

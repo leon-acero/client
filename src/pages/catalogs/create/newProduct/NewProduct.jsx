@@ -149,7 +149,7 @@ export default function NewProduct() {
 
         setItemData(INITIAL_STATE);
         setFileBlob(null);
-        inputRef?.current?.focus();
+        // inputRef?.current?.focus();
       } 
     }
     catch(err) {

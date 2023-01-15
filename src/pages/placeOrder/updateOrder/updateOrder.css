@@ -44,14 +44,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border: .1rem solid black;
+}
+
+.searchInput {
+  border: none;
+  width: 45rem;
+  height: 3rem;
+  /* border: .1rem solid black; */
+  padding: 1rem;
+  font-size: 1.4rem;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.searchBar__button {
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .5rem;
 }
 
 .productSearch {
   /* font-size: 3rem !important; */
-  font-size: 3rem !important;
-  border-top: .1rem solid black;
+  font-size: 2.4rem !important;
+  font-weight: 400;
+  /* border-top: .1rem solid black;
   border-right: .1rem solid black;
-  border-bottom: .1rem solid black;
+  border-bottom: .1rem solid black; */
+  cursor: pointer;
 }
 
 .estatusPedidoPlaceOrder {
@@ -60,16 +85,6 @@
   justify-content: center;
   gap: 2.4rem;
 }
-
-.searchInput {
-  border: none;
-  width: 45rem;
-  height: 3rem;
-  border: .1rem solid black;
-  padding: 1rem;
-  font-size: 1.4rem;
-}
-
 
 .descuento{
   display: flex;
