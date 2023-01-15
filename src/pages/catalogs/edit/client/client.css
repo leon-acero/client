@@ -317,7 +317,9 @@
     padding-bottom: 1rem;*/
     padding-left: 0rem;
     padding-right: 0rem;
+    justify-content: space-evenly;
   }
+  
 
   /* .clientUpdateIcon__upload {
     margin-right: 1rem;
