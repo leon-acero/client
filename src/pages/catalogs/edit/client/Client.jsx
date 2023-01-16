@@ -576,7 +576,7 @@ export default function Client() {
                       ?
                         <>
                           <div className="clientUpdateUpload">
-                            <img
+                            {/* <img
                               className="clientUpdateImg"
                               src= {
                                       // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
@@ -584,7 +584,7 @@ export default function Client() {
                                       `${clientData.imageCover}` : defaultCameraImage
                                   }
                               alt={clientData.businessName}
-                            /> 
+                            />  */}
             
                             {/* <label htmlFor="photo">
                               <FaCloudUploadAlt className="clientUpdateIcon__upload" />
