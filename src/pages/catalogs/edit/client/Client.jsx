@@ -598,8 +598,8 @@ export default function Client() {
                                     style={{ display: "none" }} 
                                     onChange={(e)=>handleImageCoverChange(e)}
                             />
+                            <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button>                        
                           </div>
-                          <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button>                        
                         </>
                       :
                         <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="20rem" height="20rem" 
