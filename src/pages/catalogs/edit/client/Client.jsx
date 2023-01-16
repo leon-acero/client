@@ -598,7 +598,9 @@ export default function Client() {
                                     style={{ display: "none" }} 
                                     onChange={(e)=>handleImageCoverChange(e)}
                             />
-                            <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button>                        
+
+                            <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button> 
+                                                   
                           </div>
                         </>
                       :
