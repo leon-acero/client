@@ -586,7 +586,7 @@ export default function Client() {
                               alt={clientData.businessName}
                             /> 
             
-                            <label htmlFor="photo">
+                            {/* <label htmlFor="photo">
                               <FaCloudUploadAlt className="clientUpdateIcon__upload" />
                             </label>
                             <input  
@@ -597,7 +597,7 @@ export default function Client() {
                                     name="photo" 
                                     style={{ display: "none" }} 
                                     onChange={(e)=>handleImageCoverChange(e)}
-                            />
+                            /> */}
                           </div>
                           <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button>                        
                         </>
