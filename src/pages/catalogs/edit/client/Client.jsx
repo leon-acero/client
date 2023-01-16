@@ -316,7 +316,7 @@ export default function Client() {
             </div>
 
             <div className="clientContainer">
-              {/* <div className="clientShow">
+              <div className="clientShow">
                 {
                   clientData.businessName !== "" 
                   ?
@@ -379,7 +379,7 @@ export default function Client() {
                     </>
                 }
 
-              </div> */}
+              </div>
               <div className="clientUpdate">
                 <span className="clientUpdateTitle">Editar</span>
       
