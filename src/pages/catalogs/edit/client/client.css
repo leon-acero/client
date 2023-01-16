@@ -33,10 +33,10 @@
   font-size: 1.4rem;
 }
 
-/* .clientContainer {
+.clientContainer {
   display: flex;
   margin-top: 2rem;
-} */
+}
 
 .clientShow {
   flex: 1;
