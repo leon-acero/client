@@ -213,6 +213,10 @@
   cursor: pointer;
 }
 
+.clientUpdateUpload__fileImage {
+  margin-bottom: 3rem;
+}
+
 .clientUpdateButton{
   /* width: 24rem; */
   width: 18rem;
@@ -234,6 +238,8 @@
   /* color: #111; */
   font-size: 1.4rem;
   font-weight: 400;
+
+  margin-bottom: 2rem;
 }
 
 .clientUpdateButton:disabled,
