@@ -306,10 +306,7 @@
   }
 
   .clientUpdateImg{
-    /* width: 26rem; */
-    width: 10rem;
-    height: 10rem;
-    
+    width: 26rem;
     padding-right: 0;
     margin-right: 0;
     /* height: 26rem; */

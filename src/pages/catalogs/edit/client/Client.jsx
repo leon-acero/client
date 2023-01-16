@@ -316,7 +316,7 @@ export default function Client() {
             </div>
 
             <div className="clientContainer">
-              <div className="clientShow">
+              {/* <div className="clientShow">
                 {
                   clientData.businessName !== "" 
                   ?
@@ -379,7 +379,7 @@ export default function Client() {
                     </>
                 }
 
-              </div>
+              </div> */}
               <div className="clientUpdate">
                 <span className="clientUpdateTitle">Editar</span>
       
@@ -576,7 +576,7 @@ export default function Client() {
                       ?
                         <>
                           <div className="clientUpdateUpload">
-                            {/* <img
+                            <img
                               className="clientUpdateImg"
                               src= {
                                       // fileBlob ? fileBlob : `http://127.0.0.1:8000/img/clients/${clientData.imageCover}`
@@ -584,9 +584,9 @@ export default function Client() {
                                       `${clientData.imageCover}` : defaultCameraImage
                                   }
                               alt={clientData.businessName}
-                            />  */}
+                            /> 
             
-                            {/* <label htmlFor="photo">
+                            <label htmlFor="photo">
                               <FaCloudUploadAlt className="clientUpdateIcon__upload" />
                             </label>
                             <input  
@@ -597,7 +597,7 @@ export default function Client() {
                                     name="photo" 
                                     style={{ display: "none" }} 
                                     onChange={(e)=>handleImageCoverChange(e)}
-                            /> */}
+                            />
                           </div>
                           <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button>                        
                         </>
