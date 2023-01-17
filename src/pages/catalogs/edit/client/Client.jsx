@@ -591,7 +591,7 @@ export default function Client() {
                               <FaCloudUploadAlt className="clientUpdateIcon__upload" />
                             </label>
                             <input  
-                                    className="inputGeneralDataType clientUpdateUpload__fileImage"
+                                    className="inputGeneralDataType"
                                     type="file" 
                                     accept="image/*" 
                                     id="photo" 

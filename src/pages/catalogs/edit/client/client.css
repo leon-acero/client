@@ -215,9 +215,9 @@
   cursor: pointer;
 }
 
-.clientUpdateUpload__label {
+/* .clientUpdateUpload__label {
   margin-bottom: 4rem;
-}
+} */
 
 .clientUpdateButton{
   /* width: 24rem; */
@@ -240,7 +240,7 @@
   /* color: #111; */
   font-size: 1.4rem;
   font-weight: 400;
-  margin-bottom: 3rem;
+  margin-bottom: 7rem;
 }
 
 .clientUpdateButton:disabled,
