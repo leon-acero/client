@@ -215,9 +215,9 @@
   cursor: pointer;
 }
 
-/* .clientUpdateUpload__label {
-  margin-bottom: 4rem;
-} */
+.clientUpdateUpload__label {
+  margin-bottom: 4.4rem;
+}
 
 .clientUpdateButton{
   /* width: 24rem; */
