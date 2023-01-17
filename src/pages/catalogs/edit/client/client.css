@@ -36,6 +36,7 @@
 .clientContainer {
   display: flex;
   margin-top: 2rem;
+  border-color: pink;
 }
 
 .clientShow {
@@ -43,6 +44,7 @@
   padding: 2rem;
   -webkit-box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
   box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+  background-color: green;
 }
 
 .clientUpdate {
@@ -52,6 +54,8 @@
   box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
   margin-left: 2rem;
   /* margin-bottom: 6rem; */
+  background-color: black;
+
 }
 
 .clientShowTop {
@@ -124,6 +128,8 @@
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
+    background-color: blue;
+
 }
 
 .catalog_businessInfo__skeleton {
@@ -193,6 +199,8 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  background-color: red;
+
 }
 
 .clientUpdateUpload{
@@ -240,7 +248,6 @@
   /* color: #111; */
   font-size: 1.4rem;
   font-weight: 400;
-  margin-bottom: 7rem;
 }
 
 .clientUpdateButton:disabled,
