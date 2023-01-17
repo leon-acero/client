@@ -63,7 +63,7 @@
   /* color: #111; */
   font-size: 1.4rem;
   font-weight: 400;
-
+  margin-bottom: 7rem;
 }
 
 .newProductButton:disabled,
@@ -103,6 +103,16 @@
   object-fit: cover;
   /* margin-right: 2rem; */
   margin-bottom: 1.5rem;
+}
+
+.newProductIcon__upload {
+  font-size: 3rem;
+  cursor: pointer;
+  color: #343a40;
+}
+
+.newProductUpload__label {
+  margin-bottom: 4.4rem;
 }
 
 /* 780px */

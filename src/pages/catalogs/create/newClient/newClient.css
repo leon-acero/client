@@ -26,15 +26,6 @@
   margin-bottom: 2rem;
 }
 
-.newClientItemCheckbox {
-  width: 7rem;
-  display: flex;
-  flex-direction: column;
-  /* margin-right: 2rem;
-  margin-bottom: 2rem; */
-}
-
-
 .newClientItem > label {
   color: rgb(151, 150, 150);
   font-size: 1.4rem;
@@ -42,19 +33,8 @@
   margin-bottom: .25rem;
 }
 
-.labelCheckbox {
-  color: rgb(151, 150, 150);
-  font-size: 1.4rem;
-  font-weight: 600;
-  width: 12rem;
-}
-
 .inputGeneralDataType {
   width: 40rem;
-}
-
-.inputCheckboxDataType {
-  width: 2rem;
 }
 
 .inputGeneralDataType,
@@ -139,6 +119,25 @@
   margin-bottom: 4.4rem;
 }
 
+/* Checkbox */
+.newClientItemCheckbox {
+  width: 7rem;
+  display: flex;
+  flex-direction: column;
+  /* margin-right: 2rem;
+  margin-bottom: 2rem; */
+}
+
+.labelCheckbox {
+  color: rgb(151, 150, 150);
+  font-size: 1.4rem;
+  font-weight: 600;
+  width: 12rem;
+}
+
+.inputCheckboxDataType {
+  width: 2rem;
+}
 
 /* 780px */
 @media (max-width:48.75em) {
