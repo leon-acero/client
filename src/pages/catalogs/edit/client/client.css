@@ -240,7 +240,7 @@
   /* color: #111; */
   font-size: 1.4rem;
   font-weight: 400;
-
+  margin-bottom: 7rem;
 }
 
 .clientUpdateButton:disabled,
@@ -307,7 +307,6 @@
 
   .clientUpdateUpload {
     flex-direction: column;
-    margin-bottom: 7rem;
     justify-content: center;
     margin-right: 0rem;
   }
