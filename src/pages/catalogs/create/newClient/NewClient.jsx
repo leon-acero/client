@@ -425,8 +425,14 @@ export default function NewClient() {
                           }
                     alt="Imagen del Cliente o Imagen Default"
                   />                
-                  <label htmlFor="photo">
-                    <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer"}} />
+
+                    {/* <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer"}} /> */}
+
+                  <label htmlFor="photo"
+                         className="newClientUpload__label">
+                    <FaCloudUploadAlt 
+                          className="newClientIcon__upload" 
+                    />
                   </label>
                   <input  
                           className="inputGeneralDataType"
@@ -437,9 +443,16 @@ export default function NewClient() {
                           style={{ display: "none" }} 
                           onChange={(e)=>handleImageCoverChange(e)}
                   />
+
+                  <button 
+                          className="newClientButton" 
+                          disabled={isSaving}
+                  >
+                          {isSaving ? 'Grabando...' : 'Crear'}
+                  </button>
                 </div>   
       
-                <button className="newClientButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Crear'}</button>
+                
               </div>
             </form>
           </div>
