@@ -36,6 +36,8 @@
 .clientContainer {
   display: flex;
   margin-top: 2rem;
+  background-color: red;
+
 }
 
 .clientShow {
@@ -43,6 +45,8 @@
   padding: 2rem;
   -webkit-box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
   box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
+  background-color: pink;
+
 }
 
 .clientUpdate {
@@ -52,6 +56,8 @@
   box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
   margin-left: 2rem;
   /* margin-bottom: 6rem; */
+  background-color: black;
+
 }
 
 .clientShowTop {
@@ -124,6 +130,8 @@
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
+    background-color: yellow;
+
 }
 
 .catalog_businessInfo__skeleton {
@@ -199,6 +207,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    background-color: blue;
+
 }
 
 .clientUpdateImg{
