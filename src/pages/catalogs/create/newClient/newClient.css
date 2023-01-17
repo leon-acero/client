@@ -87,6 +87,7 @@
   /* color: #111; */
   font-size: 1.4rem;
   font-weight: 400;
+  margin-bottom: 7rem;
 }
 
 .newClientButton:disabled,
@@ -134,9 +135,9 @@
   color: #343a40;
 }
 
-/* .newClientUpload__label {
+.newClientUpload__label {
   margin-bottom: 4.4rem;
-} */
+}
 
 
 /* 780px */
