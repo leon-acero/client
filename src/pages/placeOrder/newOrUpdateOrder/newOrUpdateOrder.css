@@ -187,6 +187,10 @@ h2 {
   width: 25rem;
 }
 
+.linkActualizarPedido__button:last-child {
+  margin-bottom: 7rem;
+}
+
 
 
 .linkActualizarPedido__button:after,

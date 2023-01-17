@@ -307,7 +307,10 @@ export default function NewOrUpdateOrder() {
                       {
                         // ultimosCincoPedidos?.length > 0 && (
                           <div className="pedidosPorEntregar__container">
-                            <p className="pedidosPorEntregar__title">Pedidos Por Entregar por Fecha</p>
+                            
+                            <p className="pedidosPorEntregar__title">
+                              Pedidos Por Entregar por Fecha
+                            </p>
       
                             <div className="ultimosCincoPedidos_group">
                               {
@@ -345,7 +348,9 @@ export default function NewOrUpdateOrder() {
                                     ) 
                                   ) 
                                 :
-                                  <p className='sinPedidosPorEntregar'>No hay pedidos por Entregar</p>                                      
+                                  <p className='sinPedidosPorEntregar'>
+                                    No hay pedidos por Entregar
+                                  </p>                                      
                               }
                             </div>              
                           </div>                
