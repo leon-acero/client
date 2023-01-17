@@ -1114,68 +1114,69 @@ export default function UpdateOrder() {
                     onChange={handleEstatusPedido}
                     isSearchable={false}
                   />
-                </div> */}        
-              </div> 
-              <div className="salesFooter">
-                <div className="estatusPedidoPlaceOrder">
-                  {
-                    usarComponenteComo === "actualizarPedido" && 
-                          <button className="deleteOrderButton"
-                                  disabled={isSaving || isDeleting}
-                                  // onClick={handleDeleteOrder}
-                                  onClick={openDeleteDialog}
-                          >{isDeleting ? 'Borrando...' : 'Borrar'}
-                          </button> 
-                  }
-      
-                  <div className="container-estatusPedido">
-                    <label htmlFor="estatusPedido">
-                      Estatus Pedido
-                    </label>
-                    <select 
-                        disabled={isSaving || isDeleting}
-                        className="container-estatusPedido__select"
-                        id="estatusPedido" 
-                        // value={estatusPedido}
-                        value={theBasket.estatusPedido}
-                        onChange={handleEstatusPedido}
-                        name="estatusPedido"
-                    >
-                        {/* <option value="porEntregar">Por entregar</option>
-                        <option value="entregado">Entregado</option> */}
-                        {/* 1 es Por Entregar y 2 es Entregado */}
-                        <option value="0">Selecciona el Estatus</option>
-                        <option value="1">Por entregar</option>
-                        <option value="2">Entregado</option>
-                    </select>          
-                  </div>
-      
-                  <button className="placeOrderButton"
-                          disabled={isSaving || isDeleting}
-                          // onClick={handlePlaceOrder}
-                          onClick={
-                              usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 1 
-                              ? openUpdateEstatusPedido 
-                              : usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 2 
-                              ? handlePlaceOrder 
-                              : usarComponenteComo === "nuevoPedido" 
-                              ? handlePlaceOrder 
-                              : handlePlaceOrder
-                              // usarComponenteComo === "nuevoPedido" ? handlePlaceOrder : openUpdateEstatusPedido
-                            
-                          }
-                  >
-                    {usarComponenteComo === "nuevoPedido" &&
-                      (isSaving ? 'Creando...' : 'Crear')
-                    }
-                    {usarComponenteComo === "actualizarPedido" &&
-                      (isSaving ? 'Grabando...' : 'Grabar')
-                    }
-                  </button>
+                </div> */}    
+                <div className="salesFooter">
+                    <div className="estatusPedidoPlaceOrder">
+                      {
+                        usarComponenteComo === "actualizarPedido" && 
+                              <button className="deleteOrderButton"
+                                      disabled={isSaving || isDeleting}
+                                      // onClick={handleDeleteOrder}
+                                      onClick={openDeleteDialog}
+                              >{isDeleting ? 'Borrando...' : 'Borrar'}
+                              </button> 
+                      }
+          
+                      <div className="container-estatusPedido">
+                        <label htmlFor="estatusPedido">
+                          Estatus Pedido
+                        </label>
+                        <select 
+                            disabled={isSaving || isDeleting}
+                            className="container-estatusPedido__select"
+                            id="estatusPedido" 
+                            // value={estatusPedido}
+                            value={theBasket.estatusPedido}
+                            onChange={handleEstatusPedido}
+                            name="estatusPedido"
+                        >
+                            {/* <option value="porEntregar">Por entregar</option>
+                            <option value="entregado">Entregado</option> */}
+                            {/* 1 es Por Entregar y 2 es Entregado */}
+                            <option value="0">Selecciona el Estatus</option>
+                            <option value="1">Por entregar</option>
+                            <option value="2">Entregado</option>
+                        </select>          
+                      </div>
+          
+                      <button className="placeOrderButton"
+                              disabled={isSaving || isDeleting}
+                              // onClick={handlePlaceOrder}
+                              onClick={
+                                  usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 1 
+                                  ? openUpdateEstatusPedido 
+                                  : usarComponenteComo === "actualizarPedido" && theBasket.estatusPedido === 2 
+                                  ? handlePlaceOrder 
+                                  : usarComponenteComo === "nuevoPedido" 
+                                  ? handlePlaceOrder 
+                                  : handlePlaceOrder
+                                  // usarComponenteComo === "nuevoPedido" ? handlePlaceOrder : openUpdateEstatusPedido
+                                
+                              }
+                      >
+                        {usarComponenteComo === "nuevoPedido" &&
+                          (isSaving ? 'Creando...' : 'Crear')
+                        }
+                        {usarComponenteComo === "actualizarPedido" &&
+                          (isSaving ? 'Grabando...' : 'Grabar')
+                        }
+                      </button>
+                      
+                    </div>      
                   
-                </div>      
-              
-              </div>     
+                  </div>                     
+              </div> 
+     
             </m.div>
           </LazyMotion>
         )
