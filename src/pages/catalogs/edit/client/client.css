@@ -51,6 +51,7 @@
   -webkit-box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
   box-shadow: 0rem 0rem 1.5rem -1rem rgba(0, 0, 0, 0.75);
   margin-left: 2rem;
+  /* margin-bottom: 6rem; */
 }
 
 .clientShowTop {
@@ -197,6 +198,7 @@
 .clientUpdateUpload{
     display: flex;
     align-items: center;
+    flex-direction: column;
 }
 
 .clientUpdateImg{
@@ -239,7 +241,6 @@
   font-size: 1.4rem;
   font-weight: 400;
 
-  margin-bottom: 2rem;
 }
 
 .clientUpdateButton:disabled,
@@ -306,7 +307,7 @@
 
   .clientUpdateUpload {
     flex-direction: column;
-    margin-bottom: 3rem;
+    margin-bottom: 7rem;
     justify-content: center;
     margin-right: 0rem;
   }
