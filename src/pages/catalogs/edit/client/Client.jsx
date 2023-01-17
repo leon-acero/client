@@ -304,6 +304,7 @@ export default function Client() {
       {
         isOnline && (
           <div  className="client">
+
             <SnackBarCustom 
                 openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar} mensajeSnackBar={mensajeSnackBar} 
                 iconoSnackBarDeExito={iconoSnackBarDeExito} />
@@ -571,6 +572,7 @@ export default function Client() {
                   </div>
 
                   <div className="clientUpdateRight">
+
                     {
                       clientData.businessName !== ""
                       ?
@@ -588,7 +590,9 @@ export default function Client() {
             
                             <label  htmlFor="photo" 
                                     className="clientUpdateUpload__label">
-                              <FaCloudUploadAlt className="clientUpdateIcon__upload" />
+                              <FaCloudUploadAlt 
+                                    className="clientUpdateIcon__upload" 
+                              />
                             </label>
                             <input  
                                     className="inputGeneralDataType"
@@ -600,9 +604,14 @@ export default function Client() {
                                     onChange={(e)=>handleImageCoverChange(e)}
                             />
 
-                            <button className="clientUpdateButton" disabled={isSaving}>{isSaving ? 'Grabando...' : 'Actualizar'}</button> 
+                            <button className="clientUpdateButton" 
+                                    disabled={isSaving}
+                            >
+                                    {isSaving ? 'Actualizando...' : 'Actualizar'}
+                            </button> 
 
                           </div>
+
                         </>
                       :
                         <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="20rem" height="20rem" 

@@ -307,6 +307,7 @@ export default function Product() {
   // console.log(parseInt(productData.inventarioActual,10) < parseInt(productData.inventarioMinimo, 10))
  
   return (
+
     <>
       {
         isOnline && (
@@ -322,6 +323,7 @@ export default function Product() {
                 <button className="productAddButton">Crear</button>
               </Link>
             </div>
+
             <div className="productContainer">
               <div className="productShow">
                 {
@@ -335,7 +337,7 @@ export default function Product() {
                                   fileBlob ? fileBlob : productData.imageCover ?
                                   `${productData.imageCover}` : defaultCameraImage
                                 }
-                          alt="Imagen del Producto o Imagen Default"
+                          alt={productData.productName}
                         />            
             
                         <div className="productShowTopTitle">
@@ -580,10 +582,13 @@ export default function Product() {
                                       fileBlob ? fileBlob : productData.imageCover ?
                                       `${productData.imageCover}` : defaultCameraImage
                                   }
-                              alt="Imagen del Producto o Imagen Default"
+                              alt={productData.productName}
                             />                
-                            <label htmlFor="photo">
-                              <FaCloudUploadAlt style={{"fontSize": "3rem", "cursor": "pointer", "color": "#343a40"}} />
+                            <label  htmlFor="photo"
+                                    className="productUpdateUpload__label">
+                              <FaCloudUploadAlt 
+                                    className="productUpdateIcon__upload" 
+                              />
                             </label>
                             <input  type="file" 
                                     accept="image/*" 
@@ -592,8 +597,15 @@ export default function Product() {
                                     style={{ display: "none" }} 
                                     onChange={(e)=>handleImageCoverChange(e)}
                             />
+
+                            <button className="productUpdateButton" 
+                                    disabled={isSaving}
+                            >
+                                    {isSaving ? 'Actualizando...' : 'Actualizar'}
+                            </button>  
+
                           </div>
-                          <button className="productUpdateButton" disabled={isSaving}>{isSaving ? 'Actualizando...' : 'Actualizar'}</button>                        
+                        
                         </>
                       :
                         <Skeleton className="catalog_businessInfo__skeleton" animation="wave" variant="rounded" width="20rem" height="20rem" 
