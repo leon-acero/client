@@ -20,7 +20,7 @@
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
     ),
-    url("/img/website/Offline.webp");
+    url('/img/website/Offline.webp');
 
   background-size: cover;
   background-position: center;
