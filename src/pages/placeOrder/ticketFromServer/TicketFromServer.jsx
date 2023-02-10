@@ -169,8 +169,8 @@ function TicketFromServer() {
         let mensaje =`${formateaTextoWhatsAppABold("EL JUANJO | DULCERIA")}%0a%0a`;
         mensaje+=`Fecha: ${formateaTextoWhatsAppABold(fechaActual)}%0a`;
         mensaje+=`Vendedor: ${formateaCaracteresEspeciales(theBasket.userName)}%0a`;
-        mensaje+=`Estatus: ${theBasket.estatusPedido === 1 ? "Por Entregar" : "Entregado"}%0a%0a`;
-        mensaje+=`Order Id: ${orderId}%0a`;
+        mensaje+=`Estatus: ${theBasket.estatusPedido === 1 ? "Por Entregar" : "Entregado"}%0a`;
+        mensaje+=`Order Id: ${orderId}%0a%0a`;
   
         mensaje+=`${formateaTextoWhatsAppABold(formateaCaracteresEspeciales(res.data.data.data.businessName))}%0a`;
         mensaje+=`${formateaCaracteresEspeciales(res.data.data.data.ownerName)}%0a`;

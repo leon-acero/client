@@ -10,11 +10,17 @@
   background-color: #bae7ee;
   color: #071b2e;
 
-  background: linear-gradient(
+  /* background: linear-gradient(
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
     ),
-    url("/public/img/website/Offline.webp");
+    url("/public/img/website/Offline.webp"); */
+
+    background: linear-gradient(
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.5)
+    ),
+    url("/img/website/Offline.webp");
 
   background-size: cover;
   background-position: center;
