@@ -1,4 +1,5 @@
 import "./offlineFallback.css"
+import offlineImage from "../../Offline.webp";
 
 import { domAnimation, LazyMotion, m } from 'framer-motion';
 
@@ -14,9 +15,15 @@ const svgVariants = {
 
 
 function OfflineFallback() {
+
+  const styles = {
+    backgroundImage: `url(${offlineImage})`
+  }
+
   return (
     <LazyMotion features={domAnimation} >
     <m.div 
+          style={styles}
           className='offlineFallback'
           variants={svgVariants}
           initial="hidden"
