@@ -16,11 +16,10 @@
     ),
     url("/public/img/website/Offline.webp"); */
 
-    background: linear-gradient(
-      rgba(255, 255, 255, 0.5),
-      rgba(255, 255, 255, 0.5)
-    ),
-    url('/img/website/Offline.webp');
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.5)
+  );  
 
   background-size: cover;
   background-position: center;

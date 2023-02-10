@@ -1,4 +1,6 @@
 import "./orderWasDeleted.css"
+import offlineImage from "../../Offline.webp";
+
 
 /*************************    Offline/Online     ****************************/
 import { useNavigatorOnLine } from '../../hooks/useNavigatorOnLine';
@@ -32,12 +34,17 @@ function OrderWasDeleted() {
   const isOnline = useNavigatorOnLine();
   /*****************************************************************************/
 
+  const styles = {
+    backgroundImage: `url(${offlineImage})`
+  }
+
   return (
     <>
       {
         isOnline && (
             <LazyMotion features={domAnimation} >
               <m.div 
+                    style={styles}
                     className='orderWasDeleted'
                     variants={svgVariants}
                     initial="hidden"
