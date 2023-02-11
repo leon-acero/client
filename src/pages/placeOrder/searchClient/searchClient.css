@@ -2,6 +2,18 @@
   flex: 4;
   padding: 2rem 3rem;
   overflow: hidden;
+
+  background-color: #bae7ee;
+  color: #071b2e;
+
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.93),
+      rgba(255, 255, 255, 0.93)
+    ),
+    url("../../../Offline.webp");
+
+  background-size: cover;
+  background-position: center;
 }
 
 .searchClientTitle {

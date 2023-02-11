@@ -17,8 +17,8 @@
     url("/public/img/website/Offline.webp"); */
 
   background: linear-gradient(
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0.5)
+    rgba(255, 255, 255, 0.65),
+    rgba(255, 255, 255, 0.65)
   ),
   url("./../../Offline.webp");
 
