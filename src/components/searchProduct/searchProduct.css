@@ -1,7 +1,20 @@
 .searchProduct {
   flex: 4;
+  height: calc(100vh - 5rem);
   padding: 2rem 3rem;
-  overflow: hidden;
+  overflow-x: hidden;
+
+  background-color: #bae7ee;
+  color: #071b2e;
+
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.93),
+      rgba(255, 255, 255, 0.93)
+    ),
+    url("../../Offline.webp");
+
+  background-size: cover;
+  background-position: center;
 }
 
 .searchProductTitle {

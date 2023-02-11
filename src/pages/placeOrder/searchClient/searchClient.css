@@ -1,7 +1,8 @@
 .searchClient {
   flex: 4;
+  height: calc(100vh - 5rem);
   padding: 2rem 3rem;
-  overflow: hidden;
+  overflow-x: hidden;
 
   background-color: #bae7ee;
   color: #071b2e;
